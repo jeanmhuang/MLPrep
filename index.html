@@ -497,6 +497,367 @@
 
                         {showResources ? (
                             <div className="space-y-6">
+                                {/* Quick Reference Guide Header */}
+                                <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 rounded-xl p-6 border border-cyan-500/30 mb-6">
+                                    <h1 className="text-3xl font-bold mb-2 text-cyan-300">📘 Complete Study Material & Quick Reference</h1>
+                                    <p className="text-slate-300">Everything you need to know - formulas, concepts, and explanations</p>
+                                </div>
+
+                                {/* ML Fundamentals Study Material */}
+                                <div className="bg-slate-800 rounded-xl p-6 border border-blue-500/30">
+                                    <h2 className="text-2xl font-bold mb-4 text-blue-300">🤖 Machine Learning Fundamentals</h2>
+                                    
+                                    <div className="space-y-6">
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-blue-400 mb-3">Loss Functions</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">MSE (Regression):</span> L = (1/n)∑(yᵢ - ŷᵢ)²</div>
+                                                <div><span className="font-semibold text-white">MAE (Regression):</span> L = (1/n)∑|yᵢ - ŷᵢ|</div>
+                                                <div><span className="font-semibold text-white">Cross-Entropy (Binary):</span> L = -(1/n)∑[yᵢlog(ŷᵢ) + (1-yᵢ)log(1-ŷᵢ)]</div>
+                                                <div><span className="font-semibold text-white">Cross-Entropy (Multi-class):</span> L = -(1/n)∑∑yᵢⱼlog(ŷᵢⱼ)</div>
+                                                <div><span className="font-semibold text-white">Hinge Loss (SVM):</span> L = ∑max(0, 1 - yᵢŷᵢ)</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-blue-400 mb-3">Evaluation Metrics</h3>
+                                            <div className="grid md:grid-cols-2 gap-4 text-sm text-slate-300">
+                                                <div>
+                                                    <div className="font-semibold text-white mb-1">Classification:</div>
+                                                    <div>• Accuracy = (TP + TN) / (TP + TN + FP + FN)</div>
+                                                    <div>• Precision = TP / (TP + FP)</div>
+                                                    <div>• Recall = TP / (TP + FN)</div>
+                                                    <div>• F1 = 2 × (Precision × Recall) / (Precision + Recall)</div>
+                                                    <div>• Specificity = TN / (TN + FP)</div>
+                                                    <div>• AUC-ROC: Area under ROC curve</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white mb-1">Regression:</div>
+                                                    <div>• MSE = (1/n)∑(yᵢ - ŷᵢ)²</div>
+                                                    <div>• RMSE = √MSE</div>
+                                                    <div>• MAE = (1/n)∑|yᵢ - ŷᵢ|</div>
+                                                    <div>• R² = 1 - (SS_res / SS_tot)</div>
+                                                    <div>• MAPE = (100/n)∑|yᵢ - ŷᵢ|/|yᵢ|</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-blue-400 mb-3">Activation Functions</h3>
+                                            <div className="grid md:grid-cols-2 gap-3 text-sm text-slate-300">
+                                                <div>
+                                                    <div className="font-semibold text-white">Sigmoid:</div>
+                                                    <div>σ(x) = 1/(1 + e⁻ˣ)</div>
+                                                    <div>Range: (0, 1)</div>
+                                                    <div>Derivative: σ(x)(1 - σ(x))</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Tanh:</div>
+                                                    <div>tanh(x) = (eˣ - e⁻ˣ)/(eˣ + e⁻ˣ)</div>
+                                                    <div>Range: (-1, 1)</div>
+                                                    <div>Derivative: 1 - tanh²(x)</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">ReLU:</div>
+                                                    <div>f(x) = max(0, x)</div>
+                                                    <div>Derivative: 1 if x > 0, else 0</div>
+                                                    <div>Pros: No vanishing gradient, fast</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Leaky ReLU:</div>
+                                                    <div>f(x) = max(αx, x), α = 0.01</div>
+                                                    <div>Fixes "dying ReLU" problem</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-blue-400 mb-3">Regularization Techniques</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">L1 (Lasso):</span> Cost = Loss + λ∑|wᵢ| → Sparse weights (feature selection)</div>
+                                                <div><span className="font-semibold text-white">L2 (Ridge):</span> Cost = Loss + λ∑wᵢ² → Small weights (prevent overfitting)</div>
+                                                <div><span className="font-semibold text-white">Elastic Net:</span> Cost = Loss + λ₁∑|wᵢ| + λ₂∑wᵢ² → Combines L1 + L2</div>
+                                                <div><span className="font-semibold text-white">Dropout:</span> Randomly set neurons to 0 with probability p (typically 0.5)</div>
+                                                <div><span className="font-semibold text-white">Early Stopping:</span> Stop training when validation error increases</div>
+                                                <div><span className="font-semibold text-white">Data Augmentation:</span> Create variations of training data (rotation, flip, noise)</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-blue-400 mb-3">Gradient Descent Variants</h3>
+                                            <div className="space-y-3 text-sm text-slate-300">
+                                                <div>
+                                                    <div className="font-semibold text-white">Batch GD:</div>
+                                                    <div>θ = θ - α∇J(θ) → Uses entire dataset per update. Slow but stable.</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Stochastic GD:</div>
+                                                    <div>θ = θ - α∇J(θ; xᵢ, yᵢ) → One sample per update. Fast but noisy.</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Mini-batch GD:</div>
+                                                    <div>θ = θ - α∇J(θ; x_{i:i+n}, y_{i:i+n}) → Best of both worlds. Batch size typically 32-256.</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Momentum:</div>
+                                                    <div>v = βv + α∇J(θ), θ = θ - v → Accelerates in relevant direction. β typically 0.9.</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Adam:</div>
+                                                    <div>Combines momentum + RMSprop. Most popular. Typical params: α=0.001, β₁=0.9, β₂=0.999</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Statistics Study Material */}
+                                <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/30">
+                                    <h2 className="text-2xl font-bold mb-4 text-purple-300">📊 Statistics & Probability</h2>
+                                    
+                                    <div className="space-y-6">
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-purple-400 mb-3">Probability Distributions</h3>
+                                            <div className="grid md:grid-cols-2 gap-4 text-sm text-slate-300">
+                                                <div>
+                                                    <div className="font-semibold text-white mb-2">Discrete:</div>
+                                                    <div><span className="font-semibold">Bernoulli:</span> P(X=1) = p, P(X=0) = 1-p</div>
+                                                    <div><span className="font-semibold">Binomial:</span> P(X=k) = C(n,k)pᵏ(1-p)ⁿ⁻ᵏ</div>
+                                                    <div>E[X] = np, Var(X) = np(1-p)</div>
+                                                    <div><span className="font-semibold">Poisson:</span> P(X=k) = (λᵏe⁻λ)/k!</div>
+                                                    <div>E[X] = Var(X) = λ</div>
+                                                    <div><span className="font-semibold">Geometric:</span> P(X=k) = (1-p)ᵏ⁻¹p</div>
+                                                    <div>E[X] = 1/p (expected trials to first success)</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white mb-2">Continuous:</div>
+                                                    <div><span className="font-semibold">Uniform:</span> f(x) = 1/(b-a) for x∈[a,b]</div>
+                                                    <div>E[X] = (a+b)/2, Var(X) = (b-a)²/12</div>
+                                                    <div><span className="font-semibold">Normal:</span> f(x) = (1/σ√2π)e^(-(x-μ)²/2σ²)</div>
+                                                    <div>E[X] = μ, Var(X) = σ²</div>
+                                                    <div><span className="font-semibold">Exponential:</span> f(x) = λe^(-λx)</div>
+                                                    <div>E[X] = 1/λ, Var(X) = 1/λ²</div>
+                                                    <div>Memoryless: P(X>s+t|X>s) = P(X>t)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-purple-400 mb-3">Key Theorems & Rules</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">Bayes' Theorem:</span> P(A|B) = P(B|A)P(A) / P(B)</div>
+                                                <div><span className="font-semibold text-white">Law of Total Probability:</span> P(A) = ∑P(A|Bᵢ)P(Bᵢ)</div>
+                                                <div><span className="font-semibold text-white">Central Limit Theorem:</span> X̄ → N(μ, σ²/n) as n → ∞</div>
+                                                <div><span className="font-semibold text-white">Law of Large Numbers:</span> X̄ → μ as n → ∞</div>
+                                                <div><span className="font-semibold text-white">Chebyshev's Inequality:</span> P(|X-μ| ≥ kσ) ≤ 1/k²</div>
+                                                <div><span className="font-semibold text-white">Linearity of Expectation:</span> E[X+Y] = E[X] + E[Y] (always true!)</div>
+                                                <div><span className="font-semibold text-white">Variance:</span> Var(X) = E[X²] - (E[X])²</div>
+                                                <div><span className="font-semibold text-white">Covariance:</span> Cov(X,Y) = E[(X-μₓ)(Y-μᵧ)] = E[XY] - E[X]E[Y]</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-purple-400 mb-3">Hypothesis Testing</h3>
+                                            <div className="space-y-3 text-sm text-slate-300">
+                                                <div>
+                                                    <div className="font-semibold text-white">Z-test (known σ):</div>
+                                                    <div>z = (x̄ - μ₀)/(σ/√n)</div>
+                                                    <div>Use when: Large n (n≥30) or population is normal</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">T-test (unknown σ):</div>
+                                                    <div>t = (x̄ - μ₀)/(s/√n), df = n-1</div>
+                                                    <div>Use when: Small n and population is approximately normal</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Chi-squared test:</div>
+                                                    <div>χ² = ∑(Oᵢ - Eᵢ)²/Eᵢ</div>
+                                                    <div>Use for: Goodness of fit, independence tests</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Confidence Interval:</div>
+                                                    <div>CI = x̄ ± z_{α/2}(σ/√n) or x̄ ± t_{α/2}(s/√n)</div>
+                                                    <div>95% CI: z = 1.96, 99% CI: z = 2.576</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-purple-400 mb-3">Common Probability Tricks</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">Complementary Counting:</span> P(at least one) = 1 - P(none)</div>
+                                                <div><span className="font-semibold text-white">Conditional Probability:</span> P(A∩B) = P(A|B)P(B) = P(B|A)P(A)</div>
+                                                <div><span className="font-semibold text-white">Independence:</span> P(A∩B) = P(A)P(B) ↔ P(A|B) = P(A)</div>
+                                                <div><span className="font-semibold text-white">Symmetry:</span> For identical objects, use symmetry to simplify</div>
+                                                <div><span className="font-semibold text-white">Indicator Variables:</span> E[∑Xᵢ] = ∑E[Xᵢ] where Xᵢ ∈ {0,1}</div>
+                                                <div><span className="font-semibold text-white">Geometric Series:</span> ∑rᵏ = 1/(1-r) for |r|<1</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Linear Algebra Study Material */}
+                                <div className="bg-slate-800 rounded-xl p-6 border border-green-500/30">
+                                    <h2 className="text-2xl font-bold mb-4 text-green-300">🔢 Linear Algebra for ML</h2>
+                                    
+                                    <div className="space-y-6">
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-green-400 mb-3">Matrix Operations</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">Transpose:</span> (Aᵀ)ᵢⱼ = Aⱼᵢ, (AB)ᵀ = BᵀAᵀ</div>
+                                                <div><span className="font-semibold text-white">Matrix Multiplication:</span> (AB)ᵢⱼ = ∑Aᵢₖ Bₖⱼ, O(n³) time</div>
+                                                <div><span className="font-semibold text-white">Inverse:</span> AA⁻¹ = I, (AB)⁻¹ = B⁻¹A⁻¹</div>
+                                                <div><span className="font-semibold text-white">Determinant:</span> det(AB) = det(A)det(B), det(Aᵀ) = det(A)</div>
+                                                <div><span className="font-semibold text-white">Trace:</span> tr(A) = ∑Aᵢᵢ, tr(AB) = tr(BA)</div>
+                                                <div><span className="font-semibold text-white">Rank:</span> rank(A) = # linearly independent rows/columns</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-green-400 mb-3">Eigenvalues & Eigenvectors</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">Definition:</span> Av = λv (v is eigenvector, λ is eigenvalue)</div>
+                                                <div><span className="font-semibold text-white">Finding:</span> det(A - λI) = 0 (characteristic equation)</div>
+                                                <div><span className="font-semibold text-white">Properties:</span> tr(A) = ∑λᵢ, det(A) = ∏λᵢ</div>
+                                                <div><span className="font-semibold text-white">Diagonalization:</span> A = PDP⁻¹ where D is diagonal with eigenvalues</div>
+                                                <div><span className="font-semibold text-white">Symmetric matrices:</span> All eigenvalues real, eigenvectors orthogonal</div>
+                                                <div><span className="font-semibold text-white">PCA:</span> Uses eigenvectors of covariance matrix as principal components</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-green-400 mb-3">Singular Value Decomposition (SVD)</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">Formula:</span> A = UΣVᵀ</div>
+                                                <div>U: left singular vectors (m×m), Σ: singular values (m×n diagonal), V: right singular vectors (n×n)</div>
+                                                <div><span className="font-semibold text-white">Properties:</span> σᵢ ≥ 0, σᵢ² are eigenvalues of AᵀA and AAᵀ</div>
+                                                <div><span className="font-semibold text-white">Uses:</span> Matrix approximation, dimensionality reduction, recommendation systems</div>
+                                                <div><span className="font-semibold text-white">Low-rank approximation:</span> Keep top k singular values for best rank-k approximation</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-green-400 mb-3">Norms & Distances</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">L1 norm (Manhattan):</span> ||x||₁ = ∑|xᵢ|</div>
+                                                <div><span className="font-semibold text-white">L2 norm (Euclidean):</span> ||x||₂ = √(∑xᵢ²)</div>
+                                                <div><span className="font-semibold text-white">L∞ norm:</span> ||x||∞ = max|xᵢ|</div>
+                                                <div><span className="font-semibold text-white">Frobenius norm:</span> ||A||_F = √(∑∑Aᵢⱼ²) = √(tr(AᵀA))</div>
+                                                <div><span className="font-semibold text-white">Cosine similarity:</span> cos(θ) = (x·y)/(||x|| ||y||)</div>
+                                                <div><span className="font-semibold text-white">Mahalanobis distance:</span> d = √((x-μ)ᵀΣ⁻¹(x-μ))</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Quant Finance Formulas */}
+                                <div className="bg-slate-800 rounded-xl p-6 border border-orange-500/30">
+                                    <h2 className="text-2xl font-bold mb-4 text-orange-300">💰 Quantitative Finance</h2>
+                                    
+                                    <div className="space-y-6">
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-orange-400 mb-3">Options Pricing</h3>
+                                            <div className="space-y-3 text-sm text-slate-300">
+                                                <div>
+                                                    <div className="font-semibold text-white">Black-Scholes Formula:</div>
+                                                    <div>C = S₀N(d₁) - Ke^(-rT)N(d₂)</div>
+                                                    <div>P = Ke^(-rT)N(-d₂) - S₀N(-d₁)</div>
+                                                    <div>d₁ = [ln(S₀/K) + (r + σ²/2)T] / (σ√T)</div>
+                                                    <div>d₂ = d₁ - σ√T</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Put-Call Parity:</div>
+                                                    <div>C - P = S₀ - Ke^(-rT)</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white">Binomial Model:</div>
+                                                    <div>One period: C = e^(-rΔt)[pCᵤ + (1-p)Cᵈ]</div>
+                                                    <div>Risk-neutral prob: p = (e^(rΔt) - d)/(u - d)</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-orange-400 mb-3">The Greeks</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">Delta (Δ):</span> ∂C/∂S ≈ N(d₁) for calls, -N(-d₁) for puts</div>
+                                                <div><span className="font-semibold text-white">Gamma (Γ):</span> ∂²C/∂S² = N'(d₁)/(S₀σ√T)</div>
+                                                <div><span className="font-semibold text-white">Vega (ν):</span> ∂C/∂σ = S₀√T N'(d₁)</div>
+                                                <div><span className="font-semibold text-white">Theta (Θ):</span> ∂C/∂t (time decay)</div>
+                                                <div><span className="font-semibold text-white">Rho (ρ):</span> ∂C/∂r = KTe^(-rT)N(d₂)</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-orange-400 mb-3">Risk Metrics</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">Sharpe Ratio:</span> (E[R] - Rf)/σ(R)</div>
+                                                <div><span className="font-semibold text-white">Sortino Ratio:</span> (E[R] - Rf)/σ_downside</div>
+                                                <div><span className="font-semibold text-white">Value at Risk (VaR):</span> P(Loss > VaR) = α (typically α=0.05)</div>
+                                                <div><span className="font-semibold text-white">CVaR:</span> E[Loss | Loss > VaR]</div>
+                                                <div><span className="font-semibold text-white">Beta:</span> β = Cov(R_stock, R_market)/Var(R_market)</div>
+                                                <div><span className="font-semibold text-white">CAPM:</span> E[R] = Rf + β(E[Rm] - Rf)</div>
+                                                <div><span className="font-semibold text-white">Information Ratio:</span> (R_p - R_b)/σ(R_p - R_b)</div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-orange-400 mb-3">Stochastic Processes</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">Brownian Motion:</span> dW ~ N(0, dt)</div>
+                                                <div><span className="font-semibold text-white">Geometric Brownian Motion:</span> dS = μS dt + σS dW</div>
+                                                <div><span className="font-semibold text-white">Solution:</span> S(t) = S₀ exp[(μ - σ²/2)t + σW(t)]</div>
+                                                <div><span className="font-semibold text-white">Ito's Lemma:</span> df = (∂f/∂t + μ∂f/∂S + ½σ²∂²f/∂S²)dt + σ∂f/∂S dW</div>
+                                                <div><span className="font-semibold text-white">Mean Reversion:</span> dX = κ(θ - X)dt + σdW</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Algorithm Complexity */}
+                                <div className="bg-slate-800 rounded-xl p-6 border border-cyan-500/30">
+                                    <h2 className="text-2xl font-bold mb-4 text-cyan-300">⚡ Algorithm Complexity Cheat Sheet</h2>
+                                    
+                                    <div className="space-y-4">
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-cyan-400 mb-3">Common Time Complexities</h3>
+                                            <div className="grid md:grid-cols-2 gap-3 text-sm text-slate-300">
+                                                <div>
+                                                    <div className="font-semibold text-white mb-1">Data Structures:</div>
+                                                    <div>• Array access: O(1)</div>
+                                                    <div>• Array search: O(n)</div>
+                                                    <div>• Binary search: O(log n)</div>
+                                                    <div>• Hash table avg: O(1)</div>
+                                                    <div>• Binary tree: O(log n) avg</div>
+                                                    <div>• Heap insert/delete: O(log n)</div>
+                                                </div>
+                                                <div>
+                                                    <div className="font-semibold text-white mb-1">Sorting:</div>
+                                                    <div>• Bubble/Insertion: O(n²)</div>
+                                                    <div>• Merge/Heap sort: O(n log n)</div>
+                                                    <div>• Quick sort avg: O(n log n)</div>
+                                                    <div>• Counting sort: O(n+k)</div>
+                                                    <div>• Radix sort: O(d(n+k))</div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-slate-900/50 p-4 rounded-lg">
+                                            <h3 className="font-bold text-cyan-400 mb-3">ML Algorithm Complexity</h3>
+                                            <div className="space-y-2 text-sm text-slate-300">
+                                                <div><span className="font-semibold text-white">Linear Regression:</span> Training O(n × p²), Prediction O(p)</div>
+                                                <div><span className="font-semibold text-white">Logistic Regression:</span> Training O(n × p × iter), Prediction O(p)</div>
+                                                <div><span className="font-semibold text-white">KNN:</span> Training O(1), Prediction O(n × p)</div>
+                                                <div><span className="font-semibold text-white">Decision Tree:</span> Training O(n × p × log n), Prediction O(log n)</div>
+                                                <div><span className="font-semibold text-white">Random Forest:</span> Training O(t × n × p × log n), Prediction O(t × log n)</div>
+                                                <div><span className="font-semibold text-white">SVM:</span> Training O(n² × p) to O(n³ × p)</div>
+                                                <div><span className="font-semibold text-white">K-means:</span> O(k × n × p × iter)</div>
+                                                <div><span className="font-semibold text-white">Neural Network:</span> O(layers × units² × samples × epochs)</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 {/* Interview Timeline */}
                                 <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-xl p-6 border border-blue-500/30">
                                     <h2 className="text-2xl font-bold mb-4 text-blue-300">📅 Interview Preparation Timeline</h2>
