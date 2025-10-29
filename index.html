@@ -4,1277 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ML & Quant Interview Prep</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-                sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            padding: 20px;
+            min-height: 100vh;
         }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .question {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            min-height: 200px;
+        }
+        .question h3 {
+            color: #667eea;
+            margin-top: 0;
+        }
+        .answer {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            white-space: pre-wrap;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="container">
+        <h1>🎓 ML & Quant Interview Prep</h1>
+        
+        <div class="question">
+            <h3 id="question-text"></h3>
+            <div id="answer" class="answer hidden"></div>
+            <button id="show-btn" onclick="showAnswer()">Show Answer</button>
+        </div>
+        
+        <div style="text-align: center;">
+            <button onclick="prevQuestion()" id="prev-btn">← Previous</button>
+            <span id="counter" style="margin: 0 20px;"></span>
+            <button onclick="nextQuestion()" id="next-btn">Next →</button>
+        </div>
+    </div>
 
-    <script type="text/babel">
-        const { useState } = React;
+    <script>
+        const questions = [
+            {q: "What is bias-variance tradeoff?", a: "Bias-variance describes relationship between model complexity and error.\nHigh bias = underfitting (too simple)\nHigh variance = overfitting (too complex)\nGoal: minimize bias² + variance + irreducible error"},
+            {q: "Explain L1 vs L2 regularization", a: "L1 (Lasso): λ∑|w| - creates sparse weights\nL2 (Ridge): λ∑w² - shrinks all weights\nL1 for feature selection, L2 when all features relevant"},
+            {q: "What is gradient descent?", a: "Iterative optimization: w = w - α∇L(w)\nUpdates parameters toward minimum\nCan fail: local minima, bad learning rate, vanishing gradients"},
+            {q: "Precision vs Recall?", a: "Precision = TP/(TP+FP) - accuracy of positive predictions\nRecall = TP/(TP+FN) - coverage of actual positives\nF1 = harmonic mean of both"},
+            {q: "What is the Central Limit Theorem?", a: "Sampling distribution of mean → Normal(μ, σ²/n) as n increases\nWorks regardless of original distribution\nKey for hypothesis testing and confidence intervals"},
+            {q: "Explain Bayes' Theorem", a: "P(A|B) = P(B|A)P(A) / P(B)\nUpdates beliefs given new evidence\nExample: Medical tests, spam filters"},
+            {q: "What is the Sharpe Ratio?", a: "Sharpe = (Return - RiskFree) / StdDev\nMeasures risk-adjusted return\nHigher is better: >1 good, >2 excellent"},
+            {q: "Monty Hall problem - switch or stay?", a: "ALWAYS SWITCH!\nP(win|stay) = 1/3\nP(win|switch) = 2/3\nSwitching doubles your chances"},
+            {q: "Implement gradient descent pseudocode", a: "for epoch in epochs:\n  y_pred = X @ w + b\n  dw = (1/m) * X.T @ (y_pred - y)\n  db = (1/m) * sum(y_pred - y)\n  w -= lr * dw\n  b -= lr * db"},
+            {q: "What is dropout in neural networks?", a: "Randomly sets neurons to 0 with probability p during training\nPrevents overfitting by forcing redundant representations\nTypical p=0.5 for hidden layers\nScale by 1/(1-p) during training"}
+        ];
 
-        const ChevronRight = ({ className }) => (
-            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-        );
+        let currentIndex = 0;
+        let showingAnswer = false;
 
-        const ChevronLeft = ({ className }) => (
-            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-        );
+        function displayQuestion() {
+            const q = questions[currentIndex];
+            document.getElementById('question-text').textContent = q.q;
+            document.getElementById('answer').textContent = q.a;
+            document.getElementById('answer').classList.add('hidden');
+            document.getElementById('show-btn').textContent = 'Show Answer';
+            document.getElementById('counter').textContent = `${currentIndex + 1} / ${questions.length}`;
+            showingAnswer = false;
+            
+            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            document.getElementById('next-btn').disabled = currentIndex === questions.length - 1;
+        }
 
-        const RotateCcw = ({ className }) => (
-            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
-            </svg>
-        );
+        function showAnswer() {
+            if (!showingAnswer) {
+                document.getElementById('answer').classList.remove('hidden');
+                document.getElementById('show-btn').textContent = 'Hide Answer';
+                showingAnswer = true;
+            } else {
+                document.getElementById('answer').classList.add('hidden');
+                document.getElementById('show-btn').textContent = 'Show Answer';
+                showingAnswer = false;
+            }
+        }
 
-        const BookOpen = ({ className }) => (
-            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-        );
+        function nextQuestion() {
+            if (currentIndex < questions.length - 1) {
+                currentIndex++;
+                displayQuestion();
+            }
+        }
 
-        const TrendingUp = ({ className }) => (
-            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-        );
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                displayQuestion();
+            }
+        }
 
-        const Code = ({ className }) => (
-            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
-        );
-
-        const Calculator = ({ className }) => (
-            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <rect x="4" y="2" width="16" height="20" rx="2" strokeWidth={2} />
-                <line x1="8" y1="6" x2="16" y2="6" strokeWidth={2} />
-                <line x1="8" y1="10" x2="16" y2="10" strokeWidth={2} />
-                <line x1="8" y1="14" x2="16" y2="14" strokeWidth={2} />
-                <line x1="8" y1="18" x2="16" y2="18" strokeWidth={2} />
-            </svg>
-        );
-
-        const Sparkles = ({ className }) => (
-            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-            </svg>
-        );
-
-        const InterviewPrep = () => {
-            const [activeCategory, setActiveCategory] = useState('ml-theory');
-            const [currentCard, setCurrentCard] = useState(0);
-            const [showAnswer, setShowAnswer] = useState(false);
-            const [completedCards, setCompletedCards] = useState(new Set());
-            const [showResources, setShowResources] = useState(false);
-
-            const questions = {
-                'ml-theory': [
-                    {
-                        q: "What is the bias-variance tradeoff?",
-                        a: "The bias-variance tradeoff describes the relationship between model complexity and prediction error. High bias (underfitting) means the model is too simple and makes strong assumptions. High variance (overfitting) means the model is too complex and captures noise. The goal is to find the sweet spot that minimizes total error = bias² + variance + irreducible error."
-                    },
-                    {
-                        q: "Explain the difference between L1 and L2 regularization.",
-                        a: "L1 (Lasso) adds the absolute value of coefficients as penalty (λ∑|w|), promoting sparsity and feature selection. L2 (Ridge) adds the square of coefficients (λ∑w²), shrinking all coefficients but rarely to zero. L1 is better for feature selection; L2 is better when all features are relevant."
-                    },
-                    {
-                        q: "What is gradient descent and why might it fail?",
-                        a: "Gradient descent iteratively updates parameters in the direction of steepest descent: w = w - α∇L(w). It can fail due to: 1) Getting stuck in local minima (less common in high dimensions), 2) Poor learning rate (too high causes divergence, too low causes slow convergence), 3) Saddle points in high dimensions, 4) Vanishing/exploding gradients."
-                    },
-                    {
-                        q: "Explain precision vs recall with an example.",
-                        a: "Precision = TP/(TP+FP) - of predicted positives, how many are correct. Recall = TP/(TP+FN) - of actual positives, how many did we find. Example: Email spam filter. High precision = few false alarms (good emails marked spam). High recall = catches most spam (but might flag good emails too). F1-score balances both."
-                    },
-                    {
-                        q: "What is cross-validation and why use it?",
-                        a: "Cross-validation splits data into k folds, trains on k-1 and validates on 1, rotating through all folds. Benefits: 1) Better estimate of model performance on unseen data, 2) Uses all data for both training and validation, 3) Reduces variance in performance estimates, 4) Helps detect overfitting. K-fold (k=5 or 10) is most common."
-                    },
-                    {
-                        q: "Explain the curse of dimensionality.",
-                        a: "As dimensions increase: 1) Data becomes sparse (exponentially more space to cover), 2) Distance metrics become less meaningful (all points equidistant), 3) Need exponentially more data, 4) Overfitting risk increases. Solutions include: dimensionality reduction (PCA, t-SNE), feature selection, and regularization."
-                    },
-                    {
-                        q: "What are eigenvectors and eigenvalues? Why are they important in ML?",
-                        a: "For matrix A, eigenvector v satisfies Av = λv where λ is eigenvalue. Direction doesn't change, only scaled. ML uses: 1) PCA (eigenvectors of covariance matrix are principal components), 2) Spectral clustering, 3) PageRank, 4) Understanding neural network dynamics, 5) Matrix decomposition."
-                    },
-                    {
-                        q: "Explain batch normalization and why it helps.",
-                        a: "Batch norm normalizes layer inputs to mean=0, std=1 across mini-batch, then scales/shifts with learned parameters. Benefits: 1) Allows higher learning rates, 2) Reduces internal covariate shift, 3) Acts as regularization, 4) Makes network less sensitive to initialization. Applied before or after activation function."
-                    },
-                    {
-                        q: "What's the difference between bagging and boosting?",
-                        a: "Bagging (Bootstrap Aggregating): Trains models in parallel on random subsets with replacement, then averages predictions. Reduces variance. Example: Random Forest.\n\nBoosting: Trains models sequentially, each correcting previous errors. Combines weak learners into strong learner. Reduces bias. Examples: AdaBoost, XGBoost, Gradient Boosting.\n\nKey diff: Bagging is parallel and independent; boosting is sequential and adaptive."
-                    },
-                    {
-                        q: "Explain the vanishing gradient problem and solutions.",
-                        a: "Problem: In deep networks, gradients can become exponentially small during backprop, preventing early layers from learning. Caused by: sigmoid/tanh activations (derivatives < 1), deep architectures.\n\nSolutions: 1) ReLU activation, 2) Batch normalization, 3) Residual connections (ResNets), 4) LSTM/GRU for RNNs, 5) Careful weight initialization (Xavier/He), 6) Gradient clipping, 7) Skip connections."
-                    },
-                    {
-                        q: "What is dropout and why does it work?",
-                        a: "Dropout randomly sets neurons to 0 with probability p during training. At test time, use all neurons but scale by (1-p).\n\nWhy it works: 1) Forces network to learn redundant representations, 2) Prevents co-adaptation of neurons, 3) Ensemble effect (training exponentially many thinned networks), 4) Acts as regularization. Typical p = 0.5 for hidden layers, 0.2 for input."
-                    },
-                    {
-                        q: "Explain the difference between discriminative and generative models.",
-                        a: "Discriminative: Learn P(Y|X) - decision boundary directly. Examples: Logistic regression, SVM, Neural nets. Faster to train, often better performance for classification.\n\nGenerative: Learn P(X|Y) and P(Y), then use Bayes rule for P(Y|X). Model data generation process. Examples: Naive Bayes, HMM, GANs, VAEs. Can generate new samples, handle missing data better."
-                    },
-                    {
-                        q: "What is the kernel trick in SVM?",
-                        a: "Kernel trick maps data to higher-dimensional space without explicitly computing coordinates. Uses K(x,y) = φ(x)·φ(y) where φ is implicit mapping.\n\nBenefit: Makes non-linear separable data linearly separable in higher dimensions. Common kernels: Linear K(x,y)=x·y, Polynomial K(x,y)=(x·y+c)^d, RBF/Gaussian K(x,y)=exp(-γ||x-y||²). Avoids computational cost of high dimensions."
-                    },
-                    {
-                        q: "Explain transfer learning and when to use it.",
-                        a: "Transfer learning uses knowledge from one task to improve learning on another. Typically: 1) Take pre-trained model (e.g., ImageNet), 2) Remove final layer(s), 3) Add new layers for your task, 4) Fine-tune.\n\nWhen to use: 1) Limited training data, 2) Similar tasks/domains, 3) Computational constraints. Techniques: Feature extraction (freeze early layers), Fine-tuning (train all/some layers)."
-                    },
-                    {
-                        q: "What's the difference between SGD, Adam, and RMSprop?",
-                        a: "SGD: w = w - α∇L. Simple but sensitive to learning rate.\n\nSGD+Momentum: Adds velocity term, smooths updates, accelerates convergence.\n\nRMSprop: Adapts learning rate per parameter using moving avg of squared gradients. Good for RNNs.\n\nAdam: Combines momentum + RMSprop. Computes adaptive learning rates using 1st and 2nd moment estimates. Most popular, generally good default. Includes bias correction."
-                    },
-                    {
-                        q: "Explain overfitting and how to detect/prevent it.",
-                        a: "Overfitting: Model learns training data too well, including noise. Poor generalization.\n\nDetection: 1) Large gap between train/val performance, 2) Training error ↓ but val error ↑, 3) High model complexity.\n\nPrevention: 1) More data, 2) Regularization (L1/L2, dropout), 3) Early stopping, 4) Cross-validation, 5) Simpler model, 6) Data augmentation, 7) Ensemble methods."
-                    },
-                    {
-                        q: "What is attention mechanism in neural networks?",
-                        a: "Attention allows model to focus on relevant parts of input. Computes weighted sum of values based on query-key similarity.\n\nMechanism: 1) Compute attention scores (query·key), 2) Apply softmax, 3) Weight values by scores. Self-attention: query, key, value all from same source. Used in: Transformers, machine translation, image captioning. Solves fixed-length encoding bottleneck."
-                    }
-                ],
-                'genai': [
-                    {
-                        q: "Explain the Transformer architecture and why it's revolutionary.",
-                        a: "Transformer uses self-attention instead of recurrence/convolution. Key components: 1) Multi-head self-attention (parallel attention), 2) Position encodings (no inherent sequence order), 3) Feed-forward layers, 4) Layer normalization, 5) Residual connections.\n\nWhy revolutionary: 1) Parallelizable (faster training), 2) Long-range dependencies, 3) No vanishing gradients from depth, 4) Foundation for BERT, GPT, etc. Changed NLP fundamentally."
-                    },
-                    {
-                        q: "What's the difference between GPT and BERT?",
-                        a: "GPT (Generative Pre-trained Transformer): Autoregressive, predicts next token. Decoder-only. Unidirectional (left-to-right). Best for generation tasks.\n\nBERT (Bidirectional Encoder Representations from Transformers): Masked language model, predicts masked tokens. Encoder-only. Bidirectional context. Best for understanding tasks (classification, QA).\n\nGPT sees left context; BERT sees both directions but can't generate naturally."
-                    },
-                    {
-                        q: "Explain how RLHF (Reinforcement Learning from Human Feedback) works.",
-                        a: "RLHF aligns LLMs with human preferences. Steps:\n\n1) Pre-train base model\n2) Supervised fine-tuning on demonstrations\n3) Train reward model: humans rank outputs, model learns to predict preferences\n4) RL optimization: Use PPO to maximize reward while staying close to SFT model (KL penalty)\n\nKey insight: Optimize for human preferences, not just likelihood. Used in ChatGPT, Claude."
-                    },
-                    {
-                        q: "What is temperature in LLM sampling?",
-                        a: "Temperature τ scales logits before softmax: P(token) = softmax(logits/τ).\n\nτ < 1: More deterministic, peaked distribution. Conservative, coherent but repetitive.\nτ = 1: Original distribution\nτ > 1: More random, flatter distribution. Creative but less coherent.\nτ → 0: Greedy (argmax)\nτ → ∞: Uniform random\n\nUse low τ for factual tasks, high τ for creative writing. Often τ ∈ [0.7, 1.0]."
-                    },
-                    {
-                        q: "Explain prompt engineering best practices.",
-                        a: "Key techniques:\n\n1) Be specific and detailed\n2) Provide examples (few-shot learning)\n3) Use chain-of-thought: 'Let's think step by step'\n4) Assign roles: 'You are an expert...'\n5) Specify format: 'Answer in JSON'\n6) Break down complex tasks\n7) Use delimiters for structure\n8) Iterate and test\n\nAdvanced: Self-consistency (sample multiple times), ReAct (reasoning + acting), Tree of Thoughts."
-                    },
-                    {
-                        q: "What is RAG (Retrieval-Augmented Generation)?",
-                        a: "RAG enhances LLMs with external knowledge. Process:\n\n1) Convert documents to embeddings\n2) Store in vector database\n3) At query time: retrieve relevant docs (similarity search)\n4) Augment prompt with retrieved context\n5) Generate answer using LLM\n\nBenefits: 1) Up-to-date info, 2) Reduces hallucination, 3) Citable sources, 4) No retraining needed. Combines parametric (model) and non-parametric (retrieval) knowledge."
-                    },
-                    {
-                        q: "Explain fine-tuning vs prompt engineering vs RAG. When to use each?",
-                        a: "Prompt Engineering: Craft better prompts. Fastest, no training. Use for: general tasks, quick iterations.\n\nRAG: Add external knowledge via retrieval. Use for: knowledge-intensive tasks, up-to-date info, verifiable answers.\n\nFine-tuning: Update model weights on custom data. Use for: specific domain/style, performance critical, have quality training data.\n\nCombination: Often use RAG + fine-tuned model for best results."
-                    },
-                    {
-                        q: "What are embeddings and how are they used in LLMs?",
-                        a: "Embeddings: Dense vector representations capturing semantic meaning. Similar concepts have similar vectors (cosine similarity).\n\nUses in LLMs:\n1) Input: Token embeddings + positional encodings\n2) Semantic search: Find similar documents/passages\n3) RAG: Retrieve relevant context\n4) Classification: Use embeddings as features\n5) Clustering: Group similar content\n6) Recommendation: Find similar items\n\nModels: Word2Vec (old), BERT embeddings, OpenAI Ada, sentence transformers."
-                    },
-                    {
-                        q: "What is the context window and why does it matter?",
-                        a: "Context window: Maximum tokens the model can process at once (input + output). GPT-3: 4K, GPT-4: 8K-128K, Claude: up to 200K.\n\nWhy it matters:\n1) Limits conversation length\n2) Affects cost (more tokens = more expensive)\n3) Enables/limits long-document tasks\n4) Attention is O(n²) in sequence length\n\nWorkarounds: Sliding window, summarization, retrieval (RAG), specialized long-context models."
-                    },
-                    {
-                        q: "Explain how LLMs are evaluated.",
-                        a: "Benchmarks:\n1) MMLU (Massive Multitask Language Understanding): 57 subjects\n2) HumanEval: Code generation\n3) GSM8K: Math reasoning\n4) HellaSwag: Common sense\n5) TruthfulQA: Truthfulness\n\nMetrics:\n- Perplexity (lower = better prediction)\n- BLEU/ROUGE (generation quality)\n- Accuracy on downstream tasks\n- Human evaluation (most important)\n\nChallenges: Benchmark contamination, gaming metrics, human preference variability."
-                    },
-                    {
-                        q: "What is quantization in LLMs and why use it?",
-                        a: "Quantization: Reduce precision of weights/activations (e.g., float32 → int8). Reduces model size and speeds inference.\n\nTypes:\n1) Post-training quantization: Quantize after training\n2) Quantization-aware training: Train with quantization in mind\n\nBits: 8-bit, 4-bit (QLoRA), even 2-bit. Each halving ≈ 2× speedup, 2× smaller.\n\nTrade-offs: Lower precision = faster/smaller but potential quality loss. Modern techniques (GPTQ, AWQ, GGML) minimize degradation."
-                    },
-                    {
-                        q: "What are the key challenges in LLM deployment?",
-                        a: "Technical:\n1) Latency: Large models are slow\n2) Cost: Compute expensive at scale\n3) Memory: Models need lots of RAM/VRAM\n4) Throughput: Serving many users\n\nSafety:\n5) Hallucinations: False but confident outputs\n6) Bias: Reflects training data biases\n7) Toxicity: Can generate harmful content\n8) Privacy: May memorize training data\n\nSolutions: Caching, batching, distillation, quantization, prompt filtering, output verification, monitoring."
-                    },
-                    {
-                        q: "Explain LoRA (Low-Rank Adaptation) for fine-tuning.",
-                        a: "LoRA efficiently fine-tunes LLMs by adding trainable low-rank matrices. Instead of updating all weights W, add: W + AB where A, B are small matrices.\n\nAdvantages:\n1) Train only A, B (<<original params)\n2) Memory efficient\n3) Multiple adapters for one base model\n4) Can merge adapters\n\nExample: For 7B model, might train only 10M params (0.14%). Much faster/cheaper than full fine-tuning. QLoRA combines with quantization for even more efficiency."
-                    },
-                    {
-                        q: "What is Chain-of-Thought (CoT) prompting?",
-                        a: "CoT: Encouraging LLMs to show reasoning steps before answering. Dramatically improves complex reasoning.\n\nApproaches:\n1) Few-shot CoT: Show examples with reasoning\n2) Zero-shot CoT: 'Let's think step by step'\n3) Self-consistency: Generate multiple chains, pick most common answer\n\nWhy it works: Breaking down problem, intermediate steps guide final answer, more tokens = more computation. Particularly effective for math, logic, multi-step problems. Emergent ability in large models."
-                    },
-                    {
-                        q: "What are the differences between open-source and proprietary LLMs?",
-                        a: "Open-source (LLaMA, Mistral, Falcon):\n+ Can self-host (privacy, control)\n+ Customizable\n+ No API costs\n+ Transparent\n- Need infrastructure\n- May lag in capability\n\nProprietary (GPT-4, Claude, Gemini):\n+ State-of-art performance\n+ Easy API access\n+ Managed service\n- Ongoing costs\n- Less control\n- Data sent to provider\n\nChoice depends on: use case, privacy needs, resources, required capability."
-                    },
-                    {
-                        q: "Explain the concept of 'emergence' in LLMs.",
-                        a: "Emergence: Capabilities that appear suddenly at certain scale, not present in smaller models.\n\nExamples:\n1) In-context learning (few-shot)\n2) Chain-of-thought reasoning\n3) Following complex instructions\n4) Certain reasoning tasks\n\nDebate: Are these truly emergent or smooth improvements measured poorly? Some argue it's about crossing usability thresholds.\n\nImplication: Scaling may unlock new capabilities. But diminishing returns at very large scale."
-                    },
-                    {
-                        q: "What is mixture of experts (MoE) in LLMs?",
-                        a: "MoE: Architecture with multiple 'expert' networks. For each token, router selects top-k experts to process it.\n\nAdvantages:\n1) Sparse activation (not all params used per token)\n2) Can scale to huge param counts efficiently\n3) Different experts specialize\n\nExample: Mixtral 8x7B has 47B params but only activates 13B per token.\n\nChallenges: Training stability, expert imbalance, memory (all experts in RAM). Used in: GPT-4 (rumored), Mixtral, Switch Transformer."
-                    }
-                ],
-                'statistics': [
-                    {
-                        q: "What is the Central Limit Theorem and why is it important?",
-                        a: "CLT states that the sampling distribution of the mean approaches normal distribution as sample size increases, regardless of population distribution. Importance: 1) Justifies using normal distribution in hypothesis testing, 2) Foundation for confidence intervals, 3) Enables statistical inference with large samples, 4) Works even with non-normal data."
-                    },
-                    {
-                        q: "Explain p-value and common misconceptions.",
-                        a: "P-value is P(observing data as extreme | H₀ is true). NOT the probability H₀ is true, or that results are due to chance. Common misconceptions: 1) p<0.05 doesn't mean result is important, 2) p>0.05 doesn't prove null hypothesis, 3) Smaller p-value doesn't mean larger effect, 4) P-hacking and multiple testing issues."
-                    },
-                    {
-                        q: "What is Maximum Likelihood Estimation (MLE)?",
-                        a: "MLE finds parameters that maximize the likelihood of observing the data: θ̂ = argmax L(θ|data) = argmax ∏P(xᵢ|θ). Often maximize log-likelihood for numerical stability. Properties: 1) Asymptotically unbiased, 2) Consistent, 3) Asymptotically normal, 4) Asymptotically efficient. Used in logistic regression, neural networks, etc."
-                    },
-                    {
-                        q: "Explain Bayes' Theorem with a practical example.",
-                        a: "P(A|B) = P(B|A)P(A)/P(B). Example: Disease testing. P(disease|positive) = P(positive|disease) × P(disease) / P(positive). If disease rate is 0.1%, test sensitivity 99%, specificity 95%, then P(disease|positive) ≈ 2%, not 99%! Base rate matters hugely. Used in: naive Bayes, Bayesian inference, spam filtering."
-                    },
-                    {
-                        q: "What is the difference between correlation and causation?",
-                        a: "Correlation measures statistical association (r ∈ [-1,1]). Causation means X causes Y. Correlation ≠ causation because: 1) Reverse causality, 2) Confounding variables, 3) Spurious correlations. To establish causation need: 1) Randomized controlled trials, 2) Natural experiments, 3) Causal inference methods (instrumental variables, difference-in-differences, etc.)"
-                    },
-                    {
-                        q: "Explain Type I and Type II errors with consequences.",
-                        a: "Type I (α): False positive - reject true H₀. Type II (β): False negative - fail to reject false H₀. Power = 1-β. Trade-off depends on consequences. Medical test: Type I = healthy person treated unnecessarily. Type II = sick person untreated (often worse). Set α based on risk tolerance (typically 0.05)."
-                    },
-                    {
-                        q: "What's the difference between frequentist and Bayesian statistics?",
-                        a: "Frequentist: Parameters are fixed but unknown. Probability = long-run frequency. Uses MLE, p-values, confidence intervals. No prior beliefs.\n\nBayesian: Parameters are random variables with distributions. Updates prior beliefs with data using Bayes rule. Gives probability distributions over parameters. More intuitive interpretation but requires priors. Computationally intensive (MCMC)."
-                    },
-                    {
-                        q: "Explain A/B testing and key considerations.",
-                        a: "A/B testing compares two versions to determine which performs better. Steps: 1) Random assignment, 2) Run experiment, 3) Statistical test, 4) Make decision.\n\nKey considerations: 1) Sample size calculation (power analysis), 2) Multiple testing correction, 3) Novelty effects, 4) Peeking problem (sequential testing), 5) Network effects, 6) Minimum detectable effect, 7) Statistical vs practical significance."
-                    },
-                    {
-                        q: "What is the Law of Large Numbers?",
-                        a: "As sample size n → ∞, sample mean converges to expected value. Two versions:\n\nWeak LLN: Sample mean converges in probability.\nStrong LLN: Sample mean converges almost surely.\n\nDifferent from CLT: LLN is about convergence of mean; CLT describes the distribution of the mean. Foundation for: Monte Carlo methods, why larger samples are better."
-                    },
-                    {
-                        q: "Explain bootstrapping and when to use it.",
-                        a: "Bootstrapping: Resampling with replacement from observed data to estimate sampling distribution. Algorithm: 1) Draw n samples with replacement, 2) Compute statistic, 3) Repeat B times (e.g., 1000), 4) Use empirical distribution.\n\nUse when: 1) Unknown theoretical distribution, 2) Complex statistics, 3) Small samples. Gives confidence intervals, standard errors. Assumes original sample is representative."
-                    },
-                    {
-                        q: "What is the difference between covariance and correlation?",
-                        a: "Covariance: Cov(X,Y) = E[(X-μₓ)(Y-μᵧ)]. Measures linear relationship direction. Units: product of X and Y units. Range: (-∞, ∞).\n\nCorrelation: ρ = Cov(X,Y)/(σₓσᵧ). Normalized covariance. Unitless. Range: [-1, 1]. ρ=1 perfect positive, ρ=-1 perfect negative, ρ=0 no linear relationship. Correlation is standardized, easier to interpret."
-                    },
-                    {
-                        q: "Explain heteroskedasticity and its implications.",
-                        a: "Heteroskedasticity: Non-constant variance of errors across observations. Violates OLS assumption of homoskedasticity.\n\nDetection: 1) Residual plots, 2) Breusch-Pagan test, 3) White test.\n\nImplications: 1) OLS estimates still unbiased but not efficient, 2) Standard errors wrong → invalid inference, 3) Confidence intervals and hypothesis tests unreliable.\n\nSolutions: Robust standard errors, WLS, transform data, different model."
-                    },
-                    {
-                        q: "What is the Bonferroni correction and why use it?",
-                        a: "Bonferroni corrects for multiple testing. If testing m hypotheses at level α, test each at α/m.\n\nProblem: More tests → higher chance of Type I error (false positives). Family-wise error rate increases.\n\nExample: 20 tests at α=0.05 → P(≥1 false positive) ≈ 64%. Bonferroni: test each at 0.05/20 = 0.0025.\n\nTrade-off: Controls Type I but increases Type II (conservative). Alternatives: FDR, Holm-Bonferroni."
-                    },
-                    {
-                        q: "Explain the difference between parametric and non-parametric tests.",
-                        a: "Parametric: Assumes data follows specific distribution (usually normal). Examples: t-test, ANOVA, linear regression. More powerful when assumptions met. Requires specific parameters.\n\nNon-parametric: No distributional assumptions. Use ranks/medians. Examples: Mann-Whitney U, Kruskal-Wallis, Spearman correlation. More robust, less powerful. Use when: small samples, non-normal data, ordinal data."
-                    },
-                    {
-                        q: "What is multicollinearity and how to handle it?",
-                        a: "Multicollinearity: High correlation among predictors in regression. Makes it hard to isolate individual effects.\n\nProblems: 1) Unstable coefficients (high variance), 2) Insignificant p-values despite good R², 3) Coefficients change dramatically with small data changes.\n\nDetection: VIF (Variance Inflation Factor) > 10.\n\nSolutions: 1) Remove correlated variables, 2) PCA, 3) Ridge regression, 4) Domain knowledge to choose variables."
-                    },
-                    {
-                        q: "Explain statistical power and factors affecting it.",
-                        a: "Power = P(reject H₀ | H₀ is false) = 1 - β. Probability of detecting true effect.\n\nFactors increasing power:\n1) Larger sample size (most important)\n2) Larger effect size\n3) Higher significance level α (but more Type I errors)\n4) Lower variability in data\n5) One-tailed vs two-tailed test\n\nTypical target: 80% power. Use power analysis for sample size planning."
-                    }
-                ],
-                'coding': [
-                    {
-                        q: "Implement k-nearest neighbors from scratch (pseudocode).",
-                        a: "```python\ndef knn_predict(X_train, y_train, x_test, k):\n  # Calculate distances\n  distances = [euclidean_distance(x_test, x) for x in X_train]\n  # Get k nearest indices\n  k_indices = argsort(distances)[:k]\n  # Get k nearest labels\n  k_nearest_labels = [y_train[i] for i in k_indices]\n  # Return majority vote (classification) or mean (regression)\n  return mode(k_nearest_labels)  # or mean()\n```\nTime: O(n) per prediction. Space: O(n). Can optimize with KD-trees for low dimensions."
-                    },
-                    {
-                        q: "Write gradient descent for linear regression.",
-                        a: "```python\ndef gradient_descent(X, y, lr=0.01, epochs=1000):\n  m, n = X.shape\n  w = np.zeros(n)\n  b = 0\n  for _ in range(epochs):\n    y_pred = X @ w + b\n    # Gradients\n    dw = (1/m) * X.T @ (y_pred - y)\n    db = (1/m) * np.sum(y_pred - y)\n    # Update\n    w -= lr * dw\n    b -= lr * db\n  return w, b\n```\nLoss: MSE = (1/2m)∑(ŷ-y)². Derivative: ∂L/∂w = (1/m)Xᵀ(ŷ-y)"
-                    },
-                    {
-                        q: "Implement sigmoid and its derivative.",
-                        a: "```python\ndef sigmoid(x):\n  return 1 / (1 + np.exp(-x))\n\ndef sigmoid_derivative(x):\n  s = sigmoid(x)\n  return s * (1 - s)\n```\nUseful property: σ'(x) = σ(x)(1-σ(x)) makes backprop efficient. Range: (0,1). Used in logistic regression and neural network activations. Note: Can cause vanishing gradients for large |x|."
-                    },
-                    {
-                        q: "How would you implement train/validation/test split?",
-                        a: "```python\nfrom sklearn.model_selection import train_test_split\n\n# First split: separate test set (80/20)\nX_temp, X_test, y_temp, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y)\n\n# Second split: separate train/val (75/25 of temp = 60/20 overall)\nX_train, X_val, y_train, y_val = train_test_split(\n    X_temp, y_temp, test_size=0.25, random_state=42, stratify=y_temp)\n```\nRatios: 60% train, 20% val, 20% test. Use stratify for balanced splits."
-                    },
-                    {
-                        q: "Implement softmax function numerically stable.",
-                        a: "```python\ndef softmax(x):\n  # Subtract max for numerical stability\n  exp_x = np.exp(x - np.max(x, axis=-1, keepdims=True))\n  return exp_x / np.sum(exp_x, axis=-1, keepdims=True)\n```\nWithout max subtraction, exp(large number) causes overflow. This trick doesn't change result since softmax(x+c) = softmax(x). Returns probabilities summing to 1. Used in multi-class classification."
-                    },
-                    {
-                        q: "Implement logistic regression from scratch.",
-                        a: "```python\nclass LogisticRegression:\n  def __init__(self, lr=0.01, epochs=1000):\n    self.lr = lr\n    self.epochs = epochs\n  \n  def fit(self, X, y):\n    self.w = np.zeros(X.shape[1])\n    self.b = 0\n    \n    for _ in range(self.epochs):\n      z = X @ self.w + self.b\n      y_pred = 1 / (1 + np.exp(-z))\n      \n      dw = (1/len(y)) * X.T @ (y_pred - y)\n      db = (1/len(y)) * np.sum(y_pred - y)\n      \n      self.w -= self.lr * dw\n      self.b -= self.lr * db\n  \n  def predict(self, X):\n    return (1 / (1 + np.exp(-(X @ self.w + self.b)))) >= 0.5\n```"
-                    },
-                    {
-                        q: "How to handle imbalanced datasets in code?",
-                        a: "```python\n# 1. Resampling\nfrom imblearn.over_sampling import SMOTE\nsmote = SMOTE()\nX_balanced, y_balanced = smote.fit_resample(X, y)\n\n# 2. Class weights\nfrom sklearn.linear_model import LogisticRegression\nmodel = LogisticRegression(class_weight='balanced')\n\n# 3. Custom weights\nfrom sklearn.utils.class_weight import compute_class_weight\nweights = compute_class_weight('balanced', \n                                classes=np.unique(y), \n                                y=y)\n\n# 4. Threshold tuning\ny_proba = model.predict_proba(X)[:, 1]\ny_pred = (y_proba >= 0.3).astype(int)  # Lower threshold\n```"
-                    },
-                    {
-                        q: "Implement mini-batch gradient descent.",
-                        a: "```python\ndef mini_batch_gd(X, y, batch_size=32, lr=0.01, epochs=100):\n  m, n = X.shape\n  w = np.zeros(n)\n  b = 0\n  \n  for epoch in range(epochs):\n    # Shuffle data\n    indices = np.random.permutation(m)\n    X_shuffled = X[indices]\n    y_shuffled = y[indices]\n    \n    # Process mini-batches\n    for i in range(0, m, batch_size):\n      X_batch = X_shuffled[i:i+batch_size]\n      y_batch = y_shuffled[i:i+batch_size]\n      \n      y_pred = X_batch @ w + b\n      dw = (1/len(y_batch)) * X_batch.T @ (y_pred - y_batch)\n      db = (1/len(y_batch)) * np.sum(y_pred - y_batch)\n      \n      w -= lr * dw\n      b -= lr * db\n  \n  return w, b\n```"
-                    },
-                    {
-                        q: "Implement L2 regularization in linear regression.",
-                        a: "```python\ndef ridge_regression(X, y, alpha=1.0, lr=0.01, epochs=1000):\n  m, n = X.shape\n  w = np.zeros(n)\n  b = 0\n  \n  for _ in range(epochs):\n    y_pred = X @ w + b\n    \n    # Loss: MSE + L2 penalty\n    # Gradient includes regularization term\n    dw = (1/m) * X.T @ (y_pred - y) + (alpha/m) * w\n    db = (1/m) * np.sum(y_pred - y)\n    \n    w -= lr * dw\n    b -= lr * db\n  \n  return w, b\n\n# Note: Don't regularize bias term\n# alpha controls strength of regularization\n```"
-                    },
-                    {
-                        q: "Write code for cross-validation from scratch.",
-                        a: "```python\ndef k_fold_cv(X, y, model, k=5):\n  fold_size = len(X) // k\n  scores = []\n  \n  for i in range(k):\n    # Create train/val split\n    val_start = i * fold_size\n    val_end = (i + 1) * fold_size\n    \n    X_val = X[val_start:val_end]\n    y_val = y[val_start:val_end]\n    \n    X_train = np.vstack([X[:val_start], X[val_end:]])\n    y_train = np.hstack([y[:val_start], y[val_end:]])\n    \n    # Train and evaluate\n    model.fit(X_train, y_train)\n    score = model.score(X_val, y_val)\n    scores.append(score)\n  \n  return np.mean(scores), np.std(scores)\n```"
-                    },
-                    {
-                        q: "Implement dropout layer in NumPy.",
-                        a: "```python\nclass Dropout:\n  def __init__(self, p=0.5):\n    self.p = p  # Dropout probability\n    self.mask = None\n  \n  def forward(self, X, training=True):\n    if training:\n      # Create binary mask\n      self.mask = np.random.binomial(1, 1-self.p, X.shape)\n      # Apply mask and scale\n      return X * self.mask / (1 - self.p)\n    else:\n      # At test time, use all neurons (no scaling needed)\n      return X\n  \n  def backward(self, dout):\n    # Only propagate gradient through active neurons\n    return dout * self.mask / (1 - self.p)\n```"
-                    },
-                    {
-                        q: "Implement confusion matrix and metrics from scratch.",
-                        a: "```python\ndef confusion_matrix(y_true, y_pred):\n  tp = np.sum((y_true == 1) & (y_pred == 1))\n  tn = np.sum((y_true == 0) & (y_pred == 0))\n  fp = np.sum((y_true == 0) & (y_pred == 1))\n  fn = np.sum((y_true == 1) & (y_pred == 0))\n  return np.array([[tn, fp], [fn, tp]])\n\ndef precision(y_true, y_pred):\n  tp = np.sum((y_true == 1) & (y_pred == 1))\n  fp = np.sum((y_true == 0) & (y_pred == 1))\n  return tp / (tp + fp) if (tp + fp) > 0 else 0\n\ndef recall(y_true, y_pred):\n  tp = np.sum((y_true == 1) & (y_pred == 1))\n  fn = np.sum((y_true == 1) & (y_pred == 0))\n  return tp / (tp + fn) if (tp + fn) > 0 else 0\n\ndef f1_score(y_true, y_pred):\n  p = precision(y_true, y_pred)\n  r = recall(y_true, y_pred)\n  return 2 * p * r / (p + r) if (p + r) > 0 else 0\n```"
-                    },
-                    {
-                        q: "How to implement feature scaling?",
-                        a: "```python\n# 1. Standardization (Z-score normalization)\nclass StandardScaler:\n  def fit(self, X):\n    self.mean = np.mean(X, axis=0)\n    self.std = np.std(X, axis=0)\n    return self\n  \n  def transform(self, X):\n    return (X - self.mean) / self.std\n\n# 2. Min-Max Normalization\nclass MinMaxScaler:\n  def fit(self, X):\n    self.min = np.min(X, axis=0)\n    self.max = np.max(X, axis=0)\n    return self\n  \n  def transform(self, X):\n    return (X - self.min) / (self.max - self.min)\n\n# Use: scaler.fit(X_train), then transform both train and test\n```"
-                    },
-                    {
-                        q: "Implement basic decision tree node splitting.",
-                        a: "```python\ndef gini_impurity(y):\n  classes, counts = np.unique(y, return_counts=True)\n  probs = counts / len(y)\n  return 1 - np.sum(probs ** 2)\n\ndef find_best_split(X, y, feature_idx):\n  values = np.unique(X[:, feature_idx])\n  best_gain = -np.inf\n  best_threshold = None\n  \n  parent_gini = gini_impurity(y)\n  \n  for threshold in values:\n    left_mask = X[:, feature_idx] <= threshold\n    right_mask = ~left_mask\n    \n    if np.sum(left_mask) == 0 or np.sum(right_mask) == 0:\n      continue\n    \n    left_gini = gini_impurity(y[left_mask])\n    right_gini = gini_impurity(y[right_mask])\n    \n    n_left = np.sum(left_mask)\n    n_right = np.sum(right_mask)\n    weighted_gini = (n_left * left_gini + n_right * right_gini) / len(y)\n    \n    gain = parent_gini - weighted_gini\n    \n    if gain > best_gain:\n      best_gain = gain\n      best_threshold = threshold\n  \n  return best_threshold, best_gain\n```"
-                    }
-                ],
-                'quant': [
-                    {
-                        q: "Expected value of the maximum of two dice rolls?",
-                        a: "Let X, Y be two dice. E[max(X,Y)] = ∑∑ max(i,j)P(X=i,Y=j). Since independent: P(X=i,Y=j) = 1/36. Can compute: E[max] = 4.472 (≈ 161/36). Alternative: E[max] = E[X] + E[Y] - E[min]. Or use: P(max≤k) = P(X≤k)P(Y≤k) = (k/6)², then sum. Answer ≈ 4.47."
-                    },
-                    {
-                        q: "You have 100 coins, one is double-headed. You pick randomly, flip 10 times, get 10 heads. Probability it's the double-headed coin?",
-                        a: "Use Bayes: P(double|10H) = P(10H|double)P(double) / P(10H). P(double) = 1/100. P(10H|double) = 1. P(10H|normal) = (1/2)¹⁰ = 1/1024. P(10H) = (1/100)(1) + (99/100)(1/1024) = 1/100 + 99/102400. P(double|10H) = (1/100) / (1/100 + 99/102400) ≈ 0.912 or 91.2%."
-                    },
-                    {
-                        q: "Expected number of coin flips to get two heads in a row?",
-                        a: "Let E = expected flips from start. After first flip: if T (prob 1/2), start over = 1 + E. If H (prob 1/2), need one more: if T (prob 1/2), waste 2 flips, start over = 2 + E. If H (prob 1/2), done = 2. E = 1 + (1/2)E + (1/2)[(1/2)(2+E) + (1/2)(2)]. E = 1 + E/2 + (1/2)[1 + E/2 + 1]. E = 6. Answer: 6 flips."
-                    },
-                    {
-                        q: "You're given a random number from uniform[0,1]. You can accept it or reject and draw again. What strategy maximizes your expected value?",
-                        a: "Optimal stopping problem. Strategy: Set threshold T. Accept if x ≥ T, reject if x < T. E[value|accept] = (1+T)/2. P(accept immediately) = 1-T. P(reject) = T, then get new draw. E[total] = (1-T)(1+T)/2 + T·E[total]. Solve: E = (1-T²)/2/(1-T) = (1+T)/2. Maximized at T = 0, but that's trivial. With limited draws, use secretary problem logic. With infinite draws and no discounting, accept first draw."
-                    },
-                    {
-                        q: "Monty Hall problem: Should you switch doors?",
-                        a: "Yes, switch. Initial choice: P(car) = 1/3, P(goat) = 2/3. After Monty reveals goat: If you picked car initially (1/3), switching loses. If you picked goat initially (2/3), switching wins. So P(win|switch) = 2/3, P(win|stay) = 1/3. Switch doubles your chances. Bayes theorem confirms this counterintuitive result."
-                    },
-                    {
-                        q: "Expected time until first head if coin is flipped every minute?",
-                        a: "Geometric distribution: E[X] = 1/p where p = 0.5. E[flips] = 2. But note: each flip takes 1 minute, so 2 flips = 2 minutes expected? Actually, if we start timing at flip 1, then first success at flip n means n minutes. E[time] = E[flips] = 2 minutes. Variance = (1-p)/p² = 2 minutes²."
-                    },
-                    {
-                        q: "What is the Sharpe Ratio and why is it important?",
-                        a: "Sharpe Ratio = (E[R] - Rf) / σ(R), where R is return, Rf is risk-free rate, σ is standard deviation. Measures risk-adjusted return: excess return per unit of volatility. Higher is better. Typical values: <1 (bad), 1-2 (good), >2 (excellent). Issues: 1) Assumes normal distribution, 2) Uses std dev (penalizes upside volatility), 3) Can be gamed. Alternatives: Sortino (downside deviation), Calmar (max drawdown)."
-                    },
-                    {
-                        q: "Explain the Black-Scholes formula intuition.",
-                        a: "Call option: C = S₀N(d₁) - Ke^(-rT)N(d₂). Intuition: Expected value in risk-neutral world. S₀N(d₁) = expected stock value if exercised (delta-hedged). Ke^(-rT)N(d₂) = present value of strike, weighted by prob of exercise. N(d₂) ≈ risk-neutral prob of exercise. Assumes: log-normal prices, constant volatility, no dividends, continuous trading. Key insight: dynamic hedging eliminates risk."
-                    },
-                    {
-                        q: "You have a stick of length 1. Break it at two random points. What's the probability you can form a triangle?",
-                        a: "Let break points be X, Y uniform on [0,1]. Pieces: X, Y-X, 1-Y (assuming X<Y). Triangle inequality: sum of any two sides > third.\n\nConditions: X + (Y-X) > 1-Y → Y > 1/2\n(Y-X) + (1-Y) > X → X < 1/2\nX + (1-Y) > Y-X → X > 2Y-1\n\nRegion satisfying all: triangle in (X,Y) space. Area = 1/4. Probability = 1/4 = 25%."
-                    },
-                    {
-                        q: "What is Value at Risk (VaR) and its limitations?",
-                        a: "VaR(α) = maximum loss over horizon at confidence level α. Example: 1-day 95% VaR = $1M means 5% chance of losing > $1M tomorrow.\n\nCalculation: 1) Historical simulation, 2) Parametric (assume normal), 3) Monte Carlo.\n\nLimitations: 1) Doesn't capture tail risk beyond threshold, 2) Not sub-additive (can encourage concentration), 3) Ignores magnitude of extreme losses. Alternative: CVaR (Conditional VaR) = expected loss given loss > VaR."
-                    },
-                    {
-                        q: "Explain put-call parity.",
-                        a: "Put-Call Parity: C - P = S - PV(K), where C=call price, P=put price, S=stock price, K=strike, PV=present value.\n\nIntuition: Portfolio of (long call + short put) = (long stock + borrowing). Both give same payoff at expiration.\n\nArbitrage: If C - P > S - PV(K): sell call, buy put, buy stock, lend. Riskless profit. Used for: pricing, detecting arbitrage, converting positions."
-                    },
-                    {
-                        q: "Calculate expected number of rolls to see all 6 faces of a die.",
-                        a: "Coupon collector problem. Let Tᵢ = rolls to get i-th new face given (i-1) faces seen. T₁=1 (first roll always new). For i-th new face: P(new face) = (6-i+1)/6.\n\nE[Tᵢ] = 6/(6-i+1) (geometric distribution).\n\nE[Total] = ∑E[Tᵢ] = 6(1/6 + 1/5 + 1/4 + 1/3 + 1/2 + 1/1) = 6 × 2.45 ≈ 14.7 rolls.\n\nGeneral: n × H_n where H_n is n-th harmonic number."
-                    },
-                    {
-                        q: "What is the Greeks in options trading?",
-                        a: "Greeks measure option price sensitivity:\n\nDelta (Δ): ∂C/∂S, change per $1 stock move. Range: 0-1 (calls), -1-0 (puts). Hedge ratio.\n\nGamma (Γ): ∂²C/∂S², delta's rate of change. Highest ATM.\n\nTheta (Θ): ∂C/∂t, time decay. Usually negative (options lose value over time).\n\nVega (ν): ∂C/∂σ, sensitivity to volatility.\n\nRho (ρ): ∂C/∂r, sensitivity to interest rates.\n\nUsed for: risk management, hedging, position analysis."
-                    },
-                    {
-                        q: "If stock price follows geometric Brownian motion, what's the distribution of price at time T?",
-                        a: "dS = μS dt + σS dW (geometric Brownian motion).\n\nSolution: S(T) = S(0) exp((μ - σ²/2)T + σW(T)).\n\nln(S(T)/S(0)) ~ N((μ - σ²/2)T, σ²T).\n\nS(T) is log-normal: ln(S(T)) is normal.\n\nE[S(T)] = S(0)e^(μT).\nVar[S(T)] = S(0)²e^(2μT)(e^(σ²T) - 1).\n\nNote: Median ≠ Mean for log-normal. This is foundation of Black-Scholes."
-                    },
-                    {
-                        q: "You draw cards from deck until you get an ace. What's the expected number of draws?",
-                        a: "Method 1: By symmetry, expected position of first ace = (52+1)/(4+1) = 10.6.\n\nMethod 2: Calculate directly. P(first ace on draw k) = (48 choose k-1) × 4 / (52 choose k) × (k-1)!/(k-1)! = ...\n\nMethod 3: Easier - think of 52 cards + 1 imaginary card at end. 5 positions (4 aces + 1 imaginary). First ace expected at position 53/5 = 10.6.\n\nAnswer: 10.6 cards on average."
-                    },
-                    {
-                        q: "What is Kelly Criterion and when should you use it?",
-                        a: "Kelly Criterion: Optimal bet size to maximize log wealth. f* = (bp - q)/b where b=odds, p=win prob, q=1-p.\n\nExample: 60% win, 2:1 odds. f* = (2×0.6 - 0.4)/2 = 0.4 = 40% of bankroll.\n\nProperties: 1) Maximizes long-run growth rate, 2) Never risks ruin (if f*>0), 3) Aggressive (high volatility).\n\nPractice: Use fractional Kelly (e.g., 0.5× or 0.25×) to reduce volatility. Assumes: accurate probabilities, no transaction costs, divisible bets."
-                    },
-                    {
-                        q: "Explain the difference between alpha and beta in finance.",
-                        a: "Beta (β): Systematic risk. Stock's sensitivity to market. β=1 means moves with market. β>1 more volatile, β<1 less volatile. From CAPM: R = Rf + β(Rm - Rf).\n\nAlpha (α): Excess return beyond what CAPM predicts. Risk-adjusted outperformance. α>0 beats market after adjusting for risk.\n\nExample: Stock returns 12%, market returns 10%, Rf=2%, β=1.2. Expected = 2% + 1.2(10%-2%) = 11.6%. Alpha = 12% - 11.6% = 0.4%. Manager added value."
-                    },
-                    {
-                        q: "Calculate probability of winning a best-of-7 series if you have 60% chance per game.",
-                        a: "Need to win 4 games first. P(win series) = Σ P(win in exactly k games) for k=4,5,6,7.\n\nP(win in k) = (k-1 choose 3) × p⁴ × (1-p)^(k-4)  [must win game k]\n\nWith p=0.6:\nk=4: 0.6⁴ = 0.1296\nk=5: C(4,3) × 0.6⁴ × 0.4 = 0.2074\nk=6: C(5,3) × 0.6⁴ × 0.4² = 0.2074\nk=7: C(6,3) × 0.6⁴ × 0.4³ = 0.1659\n\nTotal: 0.7102 ≈ 71%"
-                    },
-                    {
-                        q: "What is volatility smile and why does it exist?",
-                        a: "Volatility smile: Implied volatility varies by strike price, forming U-shape (smile) when plotted. Black-Scholes assumes constant volatility, but market prices imply different volatilities.\n\nPattern: OTM puts and calls have higher implied vol than ATM options.\n\nReasons: 1) Fat tails (actual returns not log-normal), 2) Crash risk (puts more valuable), 3) Leverage effect (vol increases as stock falls), 4) Supply/demand for hedging.\n\nImplication: Black-Scholes incomplete. Need models like stochastic volatility."
-                    },
-                    {
-                        q: "Two players alternate flipping a fair coin. First to get heads wins. What's P(first player wins)?",
-                        a: "Let P = probability first player wins. First player wins if: gets H on first flip (prob 1/2), or both get T and we restart (prob 1/4 × P).\n\nP = 1/2 + (1/4)P\n4P = 2 + P\n3P = 2\nP = 2/3\n\nAlternatively: First player wins on flips 1,3,5,... = 1/2 + 1/8 + 1/32 + ... = (1/2)/(1-1/4) = 2/3.\n\nSecond player wins with probability 1/3."
-                    }
-                ]
-            };
-
-            const categories = [
-                { id: 'ml-theory', name: 'ML Theory', icon: BookOpen, color: 'bg-blue-500' },
-                { id: 'genai', name: 'GenAI/LLMs', icon: Sparkles, color: 'bg-pink-500' },
-                { id: 'statistics', name: 'Statistics', icon: TrendingUp, color: 'bg-purple-500' },
-                { id: 'coding', name: 'Coding', icon: Code, color: 'bg-green-500' },
-                { id: 'quant', name: 'Quant/Probability', icon: Calculator, color: 'bg-orange-500' }
-            ];
-
-            const currentQuestions = questions[activeCategory];
-
-            const nextCard = () => {
-                if (currentCard < currentQuestions.length - 1) {
-                    setCurrentCard(currentCard + 1);
-                    setShowAnswer(false);
-                }
-            };
-
-            const prevCard = () => {
-                if (currentCard > 0) {
-                    setCurrentCard(currentCard - 1);
-                    setShowAnswer(false);
-                }
-            };
-
-            const markComplete = () => {
-                const key = `${activeCategory}-${currentCard}`;
-                setCompletedCards(new Set([...completedCards, key]));
-                if (currentCard < currentQuestions.length - 1) {
-                    nextCard();
-                }
-            };
-
-            const resetProgress = () => {
-                setCompletedCards(new Set());
-                setCurrentCard(0);
-                setShowAnswer(false);
-            };
-
-            const changeCategory = (catId) => {
-                setActiveCategory(catId);
-                setCurrentCard(0);
-                setShowAnswer(false);
-            };
-
-            const isCurrentCardComplete = completedCards.has(`${activeCategory}-${currentCard}`);
-
-            return (
-                <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-4 md:p-8">
-                    <div className="max-w-6xl mx-auto">
-                        <div className="text-center mb-8 md:mb-12">
-                            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                                ML & Quant Interview Prep
-                            </h1>
-                            <p className="text-slate-300 text-base md:text-lg">Master the concepts that matter • 100+ questions</p>
-                            <button
-                                onClick={() => setShowResources(!showResources)}
-                                className="mt-4 px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 rounded-lg font-semibold text-sm md:text-base transition-all transform hover:scale-105"
-                            >
-                                {showResources ? '← Back to Questions' : '📚 Study Resources & Interview Guide'}
-                            </button>
-                        </div>
-
-                        {showResources ? (
-                            <div className="space-y-6">
-                                {/* Quick Reference Guide Header */}
-                                <div className="bg-gradient-to-r from-cyan-900/50 to-blue-900/50 rounded-xl p-6 border border-cyan-500/30 mb-6">
-                                    <h1 className="text-3xl font-bold mb-2 text-cyan-300">📘 Complete Study Material & Quick Reference</h1>
-                                    <p className="text-slate-300">Everything you need to know - formulas, concepts, and explanations</p>
-                                </div>
-
-                                {/* ML Fundamentals Study Material */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-blue-500/30">
-                                    <h2 className="text-2xl font-bold mb-4 text-blue-300">🤖 Machine Learning Fundamentals</h2>
-                                    
-                                    <div className="space-y-6">
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-blue-400 mb-3">Loss Functions</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">MSE (Regression):</span> L = (1/n)∑(yᵢ - ŷᵢ)²</div>
-                                                <div><span className="font-semibold text-white">MAE (Regression):</span> L = (1/n)∑|yᵢ - ŷᵢ|</div>
-                                                <div><span className="font-semibold text-white">Cross-Entropy (Binary):</span> L = -(1/n)∑[yᵢlog(ŷᵢ) + (1-yᵢ)log(1-ŷᵢ)]</div>
-                                                <div><span className="font-semibold text-white">Cross-Entropy (Multi-class):</span> L = -(1/n)∑∑yᵢⱼlog(ŷᵢⱼ)</div>
-                                                <div><span className="font-semibold text-white">Hinge Loss (SVM):</span> L = ∑max(0, 1 - yᵢŷᵢ)</div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-blue-400 mb-3">Evaluation Metrics</h3>
-                                            <div className="grid md:grid-cols-2 gap-4 text-sm text-slate-300">
-                                                <div>
-                                                    <div className="font-semibold text-white mb-1">Classification:</div>
-                                                    <div>• Accuracy = (TP + TN) / (TP + TN + FP + FN)</div>
-                                                    <div>• Precision = TP / (TP + FP)</div>
-                                                    <div>• Recall = TP / (TP + FN)</div>
-                                                    <div>• F1 = 2 × (Precision × Recall) / (Precision + Recall)</div>
-                                                    <div>• Specificity = TN / (TN + FP)</div>
-                                                    <div>• AUC-ROC: Area under ROC curve</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white mb-1">Regression:</div>
-                                                    <div>• MSE = (1/n)∑(yᵢ - ŷᵢ)²</div>
-                                                    <div>• RMSE = √MSE</div>
-                                                    <div>• MAE = (1/n)∑|yᵢ - ŷᵢ|</div>
-                                                    <div>• R² = 1 - (SS_res / SS_tot)</div>
-                                                    <div>• MAPE = (100/n)∑|yᵢ - ŷᵢ|/|yᵢ|</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-blue-400 mb-3">Activation Functions</h3>
-                                            <div className="grid md:grid-cols-2 gap-3 text-sm text-slate-300">
-                                                <div>
-                                                    <div className="font-semibold text-white">Sigmoid:</div>
-                                                    <div>σ(x) = 1/(1 + e⁻ˣ)</div>
-                                                    <div>Range: (0, 1)</div>
-                                                    <div>Derivative: σ(x)(1 - σ(x))</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Tanh:</div>
-                                                    <div>tanh(x) = (eˣ - e⁻ˣ)/(eˣ + e⁻ˣ)</div>
-                                                    <div>Range: (-1, 1)</div>
-                                                    <div>Derivative: 1 - tanh²(x)</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">ReLU:</div>
-                                                    <div>f(x) = max(0, x)</div>
-                                                    <div>Derivative: 1 if x > 0, else 0</div>
-                                                    <div>Pros: No vanishing gradient, fast</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Leaky ReLU:</div>
-                                                    <div>f(x) = max(αx, x), α = 0.01</div>
-                                                    <div>Fixes "dying ReLU" problem</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-blue-400 mb-3">Regularization Techniques</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">L1 (Lasso):</span> Cost = Loss + λ∑|wᵢ| → Sparse weights (feature selection)</div>
-                                                <div><span className="font-semibold text-white">L2 (Ridge):</span> Cost = Loss + λ∑wᵢ² → Small weights (prevent overfitting)</div>
-                                                <div><span className="font-semibold text-white">Elastic Net:</span> Cost = Loss + λ₁∑|wᵢ| + λ₂∑wᵢ² → Combines L1 + L2</div>
-                                                <div><span className="font-semibold text-white">Dropout:</span> Randomly set neurons to 0 with probability p (typically 0.5)</div>
-                                                <div><span className="font-semibold text-white">Early Stopping:</span> Stop training when validation error increases</div>
-                                                <div><span className="font-semibold text-white">Data Augmentation:</span> Create variations of training data (rotation, flip, noise)</div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-blue-400 mb-3">Gradient Descent Variants</h3>
-                                            <div className="space-y-3 text-sm text-slate-300">
-                                                <div>
-                                                    <div className="font-semibold text-white">Batch GD:</div>
-                                                    <div>θ = θ - α∇J(θ) → Uses entire dataset per update. Slow but stable.</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Stochastic GD:</div>
-                                                    <div>θ = θ - α∇J(θ; xᵢ, yᵢ) → One sample per update. Fast but noisy.</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Mini-batch GD:</div>
-                                                    <div>θ = θ - α∇J(θ; x_{i:i+n}, y_{i:i+n}) → Best of both worlds. Batch size typically 32-256.</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Momentum:</div>
-                                                    <div>v = βv + α∇J(θ), θ = θ - v → Accelerates in relevant direction. β typically 0.9.</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Adam:</div>
-                                                    <div>Combines momentum + RMSprop. Most popular. Typical params: α=0.001, β₁=0.9, β₂=0.999</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Statistics Study Material */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-purple-500/30">
-                                    <h2 className="text-2xl font-bold mb-4 text-purple-300">📊 Statistics & Probability</h2>
-                                    
-                                    <div className="space-y-6">
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-purple-400 mb-3">Probability Distributions</h3>
-                                            <div className="grid md:grid-cols-2 gap-4 text-sm text-slate-300">
-                                                <div>
-                                                    <div className="font-semibold text-white mb-2">Discrete:</div>
-                                                    <div><span className="font-semibold">Bernoulli:</span> P(X=1) = p, P(X=0) = 1-p</div>
-                                                    <div><span className="font-semibold">Binomial:</span> P(X=k) = C(n,k)pᵏ(1-p)ⁿ⁻ᵏ</div>
-                                                    <div>E[X] = np, Var(X) = np(1-p)</div>
-                                                    <div><span className="font-semibold">Poisson:</span> P(X=k) = (λᵏe⁻λ)/k!</div>
-                                                    <div>E[X] = Var(X) = λ</div>
-                                                    <div><span className="font-semibold">Geometric:</span> P(X=k) = (1-p)ᵏ⁻¹p</div>
-                                                    <div>E[X] = 1/p (expected trials to first success)</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white mb-2">Continuous:</div>
-                                                    <div><span className="font-semibold">Uniform:</span> f(x) = 1/(b-a) for x∈[a,b]</div>
-                                                    <div>E[X] = (a+b)/2, Var(X) = (b-a)²/12</div>
-                                                    <div><span className="font-semibold">Normal:</span> f(x) = (1/σ√2π)e^(-(x-μ)²/2σ²)</div>
-                                                    <div>E[X] = μ, Var(X) = σ²</div>
-                                                    <div><span className="font-semibold">Exponential:</span> f(x) = λe^(-λx)</div>
-                                                    <div>E[X] = 1/λ, Var(X) = 1/λ²</div>
-                                                    <div>Memoryless: P(X>s+t|X>s) = P(X>t)</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-purple-400 mb-3">Key Theorems & Rules</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">Bayes' Theorem:</span> P(A|B) = P(B|A)P(A) / P(B)</div>
-                                                <div><span className="font-semibold text-white">Law of Total Probability:</span> P(A) = ∑P(A|Bᵢ)P(Bᵢ)</div>
-                                                <div><span className="font-semibold text-white">Central Limit Theorem:</span> X̄ → N(μ, σ²/n) as n → ∞</div>
-                                                <div><span className="font-semibold text-white">Law of Large Numbers:</span> X̄ → μ as n → ∞</div>
-                                                <div><span className="font-semibold text-white">Chebyshev's Inequality:</span> P(|X-μ| ≥ kσ) ≤ 1/k²</div>
-                                                <div><span className="font-semibold text-white">Linearity of Expectation:</span> E[X+Y] = E[X] + E[Y] (always true!)</div>
-                                                <div><span className="font-semibold text-white">Variance:</span> Var(X) = E[X²] - (E[X])²</div>
-                                                <div><span className="font-semibold text-white">Covariance:</span> Cov(X,Y) = E[(X-μₓ)(Y-μᵧ)] = E[XY] - E[X]E[Y]</div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-purple-400 mb-3">Hypothesis Testing</h3>
-                                            <div className="space-y-3 text-sm text-slate-300">
-                                                <div>
-                                                    <div className="font-semibold text-white">Z-test (known σ):</div>
-                                                    <div>z = (x̄ - μ₀)/(σ/√n)</div>
-                                                    <div>Use when: Large n (n≥30) or population is normal</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">T-test (unknown σ):</div>
-                                                    <div>t = (x̄ - μ₀)/(s/√n), df = n-1</div>
-                                                    <div>Use when: Small n and population is approximately normal</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Chi-squared test:</div>
-                                                    <div>χ² = ∑(Oᵢ - Eᵢ)²/Eᵢ</div>
-                                                    <div>Use for: Goodness of fit, independence tests</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Confidence Interval:</div>
-                                                    <div>CI = x̄ ± z_{α/2}(σ/√n) or x̄ ± t_{α/2}(s/√n)</div>
-                                                    <div>95% CI: z = 1.96, 99% CI: z = 2.576</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-purple-400 mb-3">Common Probability Tricks</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">Complementary Counting:</span> P(at least one) = 1 - P(none)</div>
-                                                <div><span className="font-semibold text-white">Conditional Probability:</span> P(A∩B) = P(A|B)P(B) = P(B|A)P(A)</div>
-                                                <div><span className="font-semibold text-white">Independence:</span> P(A∩B) = P(A)P(B) ↔ P(A|B) = P(A)</div>
-                                                <div><span className="font-semibold text-white">Symmetry:</span> For identical objects, use symmetry to simplify</div>
-                                                <div><span className="font-semibold text-white">Indicator Variables:</span> E[∑Xᵢ] = ∑E[Xᵢ] where Xᵢ ∈ {0,1}</div>
-                                                <div><span className="font-semibold text-white">Geometric Series:</span> ∑rᵏ = 1/(1-r) for |r|<1</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Linear Algebra Study Material */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-green-500/30">
-                                    <h2 className="text-2xl font-bold mb-4 text-green-300">🔢 Linear Algebra for ML</h2>
-                                    
-                                    <div className="space-y-6">
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-green-400 mb-3">Matrix Operations</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">Transpose:</span> (Aᵀ)ᵢⱼ = Aⱼᵢ, (AB)ᵀ = BᵀAᵀ</div>
-                                                <div><span className="font-semibold text-white">Matrix Multiplication:</span> (AB)ᵢⱼ = ∑Aᵢₖ Bₖⱼ, O(n³) time</div>
-                                                <div><span className="font-semibold text-white">Inverse:</span> AA⁻¹ = I, (AB)⁻¹ = B⁻¹A⁻¹</div>
-                                                <div><span className="font-semibold text-white">Determinant:</span> det(AB) = det(A)det(B), det(Aᵀ) = det(A)</div>
-                                                <div><span className="font-semibold text-white">Trace:</span> tr(A) = ∑Aᵢᵢ, tr(AB) = tr(BA)</div>
-                                                <div><span className="font-semibold text-white">Rank:</span> rank(A) = # linearly independent rows/columns</div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-green-400 mb-3">Eigenvalues & Eigenvectors</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">Definition:</span> Av = λv (v is eigenvector, λ is eigenvalue)</div>
-                                                <div><span className="font-semibold text-white">Finding:</span> det(A - λI) = 0 (characteristic equation)</div>
-                                                <div><span className="font-semibold text-white">Properties:</span> tr(A) = ∑λᵢ, det(A) = ∏λᵢ</div>
-                                                <div><span className="font-semibold text-white">Diagonalization:</span> A = PDP⁻¹ where D is diagonal with eigenvalues</div>
-                                                <div><span className="font-semibold text-white">Symmetric matrices:</span> All eigenvalues real, eigenvectors orthogonal</div>
-                                                <div><span className="font-semibold text-white">PCA:</span> Uses eigenvectors of covariance matrix as principal components</div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-green-400 mb-3">Singular Value Decomposition (SVD)</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">Formula:</span> A = UΣVᵀ</div>
-                                                <div>U: left singular vectors (m×m), Σ: singular values (m×n diagonal), V: right singular vectors (n×n)</div>
-                                                <div><span className="font-semibold text-white">Properties:</span> σᵢ ≥ 0, σᵢ² are eigenvalues of AᵀA and AAᵀ</div>
-                                                <div><span className="font-semibold text-white">Uses:</span> Matrix approximation, dimensionality reduction, recommendation systems</div>
-                                                <div><span className="font-semibold text-white">Low-rank approximation:</span> Keep top k singular values for best rank-k approximation</div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-green-400 mb-3">Norms & Distances</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">L1 norm (Manhattan):</span> ||x||₁ = ∑|xᵢ|</div>
-                                                <div><span className="font-semibold text-white">L2 norm (Euclidean):</span> ||x||₂ = √(∑xᵢ²)</div>
-                                                <div><span className="font-semibold text-white">L∞ norm:</span> ||x||∞ = max|xᵢ|</div>
-                                                <div><span className="font-semibold text-white">Frobenius norm:</span> ||A||_F = √(∑∑Aᵢⱼ²) = √(tr(AᵀA))</div>
-                                                <div><span className="font-semibold text-white">Cosine similarity:</span> cos(θ) = (x·y)/(||x|| ||y||)</div>
-                                                <div><span className="font-semibold text-white">Mahalanobis distance:</span> d = √((x-μ)ᵀΣ⁻¹(x-μ))</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Quant Finance Formulas */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-orange-500/30">
-                                    <h2 className="text-2xl font-bold mb-4 text-orange-300">💰 Quantitative Finance</h2>
-                                    
-                                    <div className="space-y-6">
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-orange-400 mb-3">Options Pricing</h3>
-                                            <div className="space-y-3 text-sm text-slate-300">
-                                                <div>
-                                                    <div className="font-semibold text-white">Black-Scholes Formula:</div>
-                                                    <div>C = S₀N(d₁) - Ke^(-rT)N(d₂)</div>
-                                                    <div>P = Ke^(-rT)N(-d₂) - S₀N(-d₁)</div>
-                                                    <div>d₁ = [ln(S₀/K) + (r + σ²/2)T] / (σ√T)</div>
-                                                    <div>d₂ = d₁ - σ√T</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Put-Call Parity:</div>
-                                                    <div>C - P = S₀ - Ke^(-rT)</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white">Binomial Model:</div>
-                                                    <div>One period: C = e^(-rΔt)[pCᵤ + (1-p)Cᵈ]</div>
-                                                    <div>Risk-neutral prob: p = (e^(rΔt) - d)/(u - d)</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-orange-400 mb-3">The Greeks</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">Delta (Δ):</span> ∂C/∂S ≈ N(d₁) for calls, -N(-d₁) for puts</div>
-                                                <div><span className="font-semibold text-white">Gamma (Γ):</span> ∂²C/∂S² = N'(d₁)/(S₀σ√T)</div>
-                                                <div><span className="font-semibold text-white">Vega (ν):</span> ∂C/∂σ = S₀√T N'(d₁)</div>
-                                                <div><span className="font-semibold text-white">Theta (Θ):</span> ∂C/∂t (time decay)</div>
-                                                <div><span className="font-semibold text-white">Rho (ρ):</span> ∂C/∂r = KTe^(-rT)N(d₂)</div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-orange-400 mb-3">Risk Metrics</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">Sharpe Ratio:</span> (E[R] - Rf)/σ(R)</div>
-                                                <div><span className="font-semibold text-white">Sortino Ratio:</span> (E[R] - Rf)/σ_downside</div>
-                                                <div><span className="font-semibold text-white">Value at Risk (VaR):</span> P(Loss > VaR) = α (typically α=0.05)</div>
-                                                <div><span className="font-semibold text-white">CVaR:</span> E[Loss | Loss > VaR]</div>
-                                                <div><span className="font-semibold text-white">Beta:</span> β = Cov(R_stock, R_market)/Var(R_market)</div>
-                                                <div><span className="font-semibold text-white">CAPM:</span> E[R] = Rf + β(E[Rm] - Rf)</div>
-                                                <div><span className="font-semibold text-white">Information Ratio:</span> (R_p - R_b)/σ(R_p - R_b)</div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-orange-400 mb-3">Stochastic Processes</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">Brownian Motion:</span> dW ~ N(0, dt)</div>
-                                                <div><span className="font-semibold text-white">Geometric Brownian Motion:</span> dS = μS dt + σS dW</div>
-                                                <div><span className="font-semibold text-white">Solution:</span> S(t) = S₀ exp[(μ - σ²/2)t + σW(t)]</div>
-                                                <div><span className="font-semibold text-white">Ito's Lemma:</span> df = (∂f/∂t + μ∂f/∂S + ½σ²∂²f/∂S²)dt + σ∂f/∂S dW</div>
-                                                <div><span className="font-semibold text-white">Mean Reversion:</span> dX = κ(θ - X)dt + σdW</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Algorithm Complexity */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-cyan-500/30">
-                                    <h2 className="text-2xl font-bold mb-4 text-cyan-300">⚡ Algorithm Complexity Cheat Sheet</h2>
-                                    
-                                    <div className="space-y-4">
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-cyan-400 mb-3">Common Time Complexities</h3>
-                                            <div className="grid md:grid-cols-2 gap-3 text-sm text-slate-300">
-                                                <div>
-                                                    <div className="font-semibold text-white mb-1">Data Structures:</div>
-                                                    <div>• Array access: O(1)</div>
-                                                    <div>• Array search: O(n)</div>
-                                                    <div>• Binary search: O(log n)</div>
-                                                    <div>• Hash table avg: O(1)</div>
-                                                    <div>• Binary tree: O(log n) avg</div>
-                                                    <div>• Heap insert/delete: O(log n)</div>
-                                                </div>
-                                                <div>
-                                                    <div className="font-semibold text-white mb-1">Sorting:</div>
-                                                    <div>• Bubble/Insertion: O(n²)</div>
-                                                    <div>• Merge/Heap sort: O(n log n)</div>
-                                                    <div>• Quick sort avg: O(n log n)</div>
-                                                    <div>• Counting sort: O(n+k)</div>
-                                                    <div>• Radix sort: O(d(n+k))</div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-cyan-400 mb-3">ML Algorithm Complexity</h3>
-                                            <div className="space-y-2 text-sm text-slate-300">
-                                                <div><span className="font-semibold text-white">Linear Regression:</span> Training O(n × p²), Prediction O(p)</div>
-                                                <div><span className="font-semibold text-white">Logistic Regression:</span> Training O(n × p × iter), Prediction O(p)</div>
-                                                <div><span className="font-semibold text-white">KNN:</span> Training O(1), Prediction O(n × p)</div>
-                                                <div><span className="font-semibold text-white">Decision Tree:</span> Training O(n × p × log n), Prediction O(log n)</div>
-                                                <div><span className="font-semibold text-white">Random Forest:</span> Training O(t × n × p × log n), Prediction O(t × log n)</div>
-                                                <div><span className="font-semibold text-white">SVM:</span> Training O(n² × p) to O(n³ × p)</div>
-                                                <div><span className="font-semibold text-white">K-means:</span> O(k × n × p × iter)</div>
-                                                <div><span className="font-semibold text-white">Neural Network:</span> O(layers × units² × samples × epochs)</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Interview Timeline */}
-                                <div className="bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-xl p-6 border border-blue-500/30">
-                                    <h2 className="text-2xl font-bold mb-4 text-blue-300">📅 Interview Preparation Timeline</h2>
-                                    <div className="space-y-4">
-                                        <div className="flex gap-4">
-                                            <div className="font-bold text-blue-400 min-w-[100px]">3-4 months:</div>
-                                            <div className="text-slate-200">Full prep for career change or significant role shift. Cover all fundamentals thoroughly.</div>
-                                        </div>
-                                        <div className="flex gap-4">
-                                            <div className="font-bold text-blue-400 min-w-[100px]">6-8 weeks:</div>
-                                            <div className="text-slate-200">Standard timeline. Focus on weak areas, practice coding daily, review theory.</div>
-                                        </div>
-                                        <div className="flex gap-4">
-                                            <div className="font-bold text-blue-400 min-w-[100px]">2-3 weeks:</div>
-                                            <div className="text-slate-200">Rapid prep. Hit high-yield topics, do mock interviews, review this flashcard deck.</div>
-                                        </div>
-                                        <div className="flex gap-4">
-                                            <div className="font-bold text-blue-400 min-w-[100px]">Last week:</div>
-                                            <div className="text-slate-200">Review company-specific info, practice behavioral questions, rest well.</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Essential Books */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                                    <h2 className="text-2xl font-bold mb-4 text-purple-300">📖 Essential Books</h2>
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-green-400 mb-2">ML/Data Science</h3>
-                                            <ul className="space-y-2 text-sm text-slate-300">
-                                                <li>• <span className="font-semibold text-white">Hands-On Machine Learning</span> (Géron) - Best practical guide</li>
-                                                <li>• <span className="font-semibold text-white">Deep Learning</span> (Goodfellow et al.) - Comprehensive theory</li>
-                                                <li>• <span className="font-semibold text-white">Pattern Recognition and ML</span> (Bishop) - Mathematical foundations</li>
-                                                <li>• <span className="font-semibold text-white">Elements of Statistical Learning</span> (Hastie et al.) - Classic reference</li>
-                                            </ul>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-orange-400 mb-2">Quant/Finance</h3>
-                                            <ul className="space-y-2 text-sm text-slate-300">
-                                                <li>• <span className="font-semibold text-white">Heard on the Street</span> - Quant interview questions</li>
-                                                <li>• <span className="font-semibold text-white">A Practical Guide to Quantitative Finance Interviews</span> (Joshi)</li>
-                                                <li>• <span className="font-semibold text-white">Options, Futures, and Other Derivatives</span> (Hull)</li>
-                                                <li>• <span className="font-semibold text-white">Fifty Challenging Problems in Probability</span> (Mosteller)</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Online Resources */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                                    <h2 className="text-2xl font-bold mb-4 text-pink-300">🌐 Online Resources</h2>
-                                    <div className="grid md:grid-cols-3 gap-4">
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-blue-400 mb-2">Coding Practice</h3>
-                                            <ul className="space-y-1 text-sm text-slate-300">
-                                                <li>• LeetCode (ML, algorithms)</li>
-                                                <li>• HackerRank (ML, stats)</li>
-                                                <li>• Kaggle (competitions)</li>
-                                                <li>• Project Euler (math)</li>
-                                            </ul>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-purple-400 mb-2">Courses</h3>
-                                            <ul className="space-y-1 text-sm text-slate-300">
-                                                <li>• Stanford CS229 (ML)</li>
-                                                <li>• Fast.ai (Practical DL)</li>
-                                                <li>• Coursera ML Specialization</li>
-                                                <li>• DeepLearning.AI courses</li>
-                                            </ul>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-green-400 mb-2">Papers & Blogs</h3>
-                                            <ul className="space-y-1 text-sm text-slate-300">
-                                                <li>• Papers with Code</li>
-                                                <li>• distill.pub (visual ML)</li>
-                                                <li>• Towards Data Science</li>
-                                                <li>• Quantitative Research blog</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Interview Types */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                                    <h2 className="text-2xl font-bold mb-4 text-amber-300">🎯 Common Interview Formats</h2>
-                                    <div className="space-y-4">
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-blue-400 mb-2">1. Technical Screen (45-60 min)</h3>
-                                            <p className="text-slate-300 text-sm mb-2">Phone/video call with recruiter or engineer. Expect:</p>
-                                            <ul className="text-sm text-slate-400 ml-4 space-y-1">
-                                                <li>• Basic ML concepts (bias-variance, overfitting, metrics)</li>
-                                                <li>• Simple coding problem (implement algorithm from scratch)</li>
-                                                <li>• Resume deep-dive on past projects</li>
-                                                <li>• SQL query or data manipulation</li>
-                                            </ul>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-purple-400 mb-2">2. Coding Round (60-90 min)</h3>
-                                            <p className="text-slate-300 text-sm mb-2">Live coding session. Focus areas:</p>
-                                            <ul className="text-sm text-slate-400 ml-4 space-y-1">
-                                                <li>• Implement ML algorithms (KNN, decision tree, gradient descent)</li>
-                                                <li>• Data structures & algorithms (arrays, trees, dynamic programming)</li>
-                                                <li>• Python/NumPy/Pandas proficiency</li>
-                                                <li>• Code optimization and complexity analysis</li>
-                                            </ul>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-green-400 mb-2">3. ML System Design (60 min)</h3>
-                                            <p className="text-slate-300 text-sm mb-2">Design a complete ML system. Examples:</p>
-                                            <ul className="text-sm text-slate-400 ml-4 space-y-1">
-                                                <li>• "Design a recommendation system for Netflix"</li>
-                                                <li>• "Build a fraud detection system"</li>
-                                                <li>• "Design a search ranking algorithm"</li>
-                                                <li>• Cover: data collection, features, model choice, evaluation, deployment, monitoring</li>
-                                            </ul>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-orange-400 mb-2">4. Statistics/Probability (45-60 min)</h3>
-                                            <p className="text-slate-300 text-sm mb-2">Quant-heavy roles. Common topics:</p>
-                                            <ul className="text-sm text-slate-400 ml-4 space-y-1">
-                                                <li>• Probability puzzles (dice, cards, geometric probability)</li>
-                                                <li>• Statistical inference (hypothesis testing, confidence intervals)</li>
-                                                <li>• Bayes theorem applications</li>
-                                                <li>• Expected value calculations, variance</li>
-                                            </ul>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-pink-400 mb-2">5. Behavioral (30-45 min)</h3>
-                                            <p className="text-slate-300 text-sm mb-2">STAR method (Situation, Task, Action, Result). Prepare stories for:</p>
-                                            <ul className="text-sm text-slate-400 ml-4 space-y-1">
-                                                <li>• Challenging project and how you overcame obstacles</li>
-                                                <li>• Disagreement with team member/manager</li>
-                                                <li>• Project failure and learnings</li>
-                                                <li>• Leadership/mentorship experience</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Company-Specific Tips */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                                    <h2 className="text-2xl font-bold mb-4 text-cyan-300">🏢 Company-Specific Tips</h2>
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-blue-400 mb-2">FAANG (Tech Giants)</h3>
-                                            <ul className="space-y-2 text-sm text-slate-300">
-                                                <li>• <span className="font-semibold">Google/Meta:</span> ML system design heavy, scalability focus</li>
-                                                <li>• <span className="font-semibold">Amazon:</span> Leadership principles, behavioral questions matter</li>
-                                                <li>• <span className="font-semibold">Microsoft:</span> Balanced coding + ML theory</li>
-                                                <li>• <span className="font-semibold">Apple:</span> Deep learning focus, production ML experience valued</li>
-                                            </ul>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-4 rounded-lg">
-                                            <h3 className="font-bold text-orange-400 mb-2">Hedge Funds/Quant</h3>
-                                            <ul className="space-y-2 text-sm text-slate-300">
-                                                <li>• <span className="font-semibold">Citadel/Jane Street:</span> Extreme probability/stats, think out loud</li>
-                                                <li>• <span className="font-semibold">Two Sigma/DE Shaw:</span> Strong coding + stats, research mindset</li>
-                                                <li>• <span className="font-semibold">AQR/Bridgewater:</span> Economics + quantitative skills</li>
-                                                <li>• Expect: Brain teasers, market-making scenarios, expected value problems</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Key Interview Strategies */}
-                                <div className="bg-gradient-to-br from-green-900/50 to-emerald-900/50 rounded-xl p-6 border border-green-500/30">
-                                    <h2 className="text-2xl font-bold mb-4 text-green-300">💡 Key Interview Strategies</h2>
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <div>
-                                            <h3 className="font-bold text-green-400 mb-2">Before Interview</h3>
-                                            <ul className="space-y-1 text-sm text-slate-300">
-                                                <li>✓ Research company's ML products/tech stack</li>
-                                                <li>✓ Review job description, map skills to examples</li>
-                                                <li>✓ Prepare 3-4 STAR stories from past work</li>
-                                                <li>✓ Practice on whiteboard/shared doc (not IDE)</li>
-                                                <li>✓ Prepare questions to ask interviewer</li>
-                                            </ul>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-bold text-green-400 mb-2">During Interview</h3>
-                                            <ul className="space-y-1 text-sm text-slate-300">
-                                                <li>✓ Think out loud - show your reasoning</li>
-                                                <li>✓ Ask clarifying questions before jumping in</li>
-                                                <li>✓ Start simple, then optimize</li>
-                                                <li>✓ Discuss trade-offs (accuracy vs latency, etc.)</li>
-                                                <li>✓ If stuck, ask for hints - shows collaboration</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Common Pitfalls */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-red-500/30">
-                                    <h2 className="text-2xl font-bold mb-4 text-red-300">⚠️ Common Pitfalls to Avoid</h2>
-                                    <div className="grid md:grid-cols-3 gap-4">
-                                        <div>
-                                            <h3 className="font-bold text-red-400 mb-2 text-sm">Technical</h3>
-                                            <ul className="space-y-1 text-xs text-slate-300">
-                                                <li>❌ Jumping to complex solutions</li>
-                                                <li>❌ Not testing code with examples</li>
-                                                <li>❌ Ignoring edge cases</li>
-                                                <li>❌ Poor time complexity analysis</li>
-                                            </ul>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-bold text-red-400 mb-2 text-sm">Communication</h3>
-                                            <ul className="space-y-1 text-xs text-slate-300">
-                                                <li>❌ Silent coding (not explaining)</li>
-                                                <li>❌ Not asking clarifying questions</li>
-                                                <li>❌ Being defensive about mistakes</li>
-                                                <li>❌ Ignoring interviewer hints</li>
-                                            </ul>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-bold text-red-400 mb-2 text-sm">Behavioral</h3>
-                                            <ul className="space-y-1 text-xs text-slate-300">
-                                                <li>❌ Vague answers without specifics</li>
-                                                <li>❌ Only talking about team, not your role</li>
-                                                <li>❌ No examples of failure/learning</li>
-                                                <li>❌ Badmouthing past employers</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Day-of Checklist */}
-                                <div className="bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-xl p-6 border border-purple-500/30">
-                                    <h2 className="text-2xl font-bold mb-4 text-purple-300">✅ Day-of-Interview Checklist</h2>
-                                    <div className="grid md:grid-cols-2 gap-4 text-sm text-slate-200">
-                                        <div>
-                                            <h3 className="font-bold text-purple-400 mb-2">Technical Setup</h3>
-                                            <ul className="space-y-1">
-                                                <li>□ Test video/audio/screen share</li>
-                                                <li>□ Charge laptop, have backup device</li>
-                                                <li>□ Stable internet connection</li>
-                                                <li>□ Quiet environment, good lighting</li>
-                                                <li>□ Have water/snacks nearby</li>
-                                            </ul>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-bold text-purple-400 mb-2">Mental Prep</h3>
-                                            <ul className="space-y-1">
-                                                <li>□ Review company notes</li>
-                                                <li>□ Skim through key flashcards</li>
-                                                <li>□ Practice deep breathing</li>
-                                                <li>□ Arrive 5-10 min early</li>
-                                                <li>□ Remember: It's a conversation!</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Weekly Study Plan */}
-                                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                                    <h2 className="text-2xl font-bold mb-4 text-yellow-300">📆 Sample 6-Week Study Plan</h2>
-                                    <div className="space-y-3">
-                                        <div className="bg-slate-900/50 p-3 rounded-lg">
-                                            <div className="font-bold text-blue-400 mb-1">Week 1-2: Foundations</div>
-                                            <p className="text-sm text-slate-300">Review ML fundamentals, statistics basics. Complete 20-30 LeetCode easy problems. Study this flashcard deck daily.</p>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-3 rounded-lg">
-                                            <div className="font-bold text-purple-400 mb-1">Week 3-4: Depth</div>
-                                            <p className="text-sm text-slate-300">Deep dive into company-specific topics. LeetCode medium problems. Practice coding ML algorithms from scratch. Mock interviews.</p>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-3 rounded-lg">
-                                            <div className="font-bold text-green-400 mb-1">Week 5: System Design & Application</div>
-                                            <p className="text-sm text-slate-300">ML system design practice. Read company blog posts. Work on take-home project. Review all flashcards.</p>
-                                        </div>
-                                        <div className="bg-slate-900/50 p-3 rounded-lg">
-                                            <div className="font-bold text-orange-400 mb-1">Week 6: Polish & Rest</div>
-                                            <p className="text-sm text-slate-300">Final mock interviews. Review weak areas. Prepare behavioral stories. Rest 1-2 days before interview. Light review only.</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        ) : (
-                            <>
-                        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-6 md:mb-8">
-                            {categories.map(cat => {
-                                const Icon = cat.icon;
-                                const isActive = activeCategory === cat.id;
-                                const categoryCompleted = Array.from(completedCards).filter(k => k.startsWith(cat.id)).length;
-                                const categoryTotal = questions[cat.id].length;
-                                
-                                return (
-                                    <button
-                                        key={cat.id}
-                                        onClick={() => changeCategory(cat.id)}
-                                        className={`p-4 md:p-6 rounded-xl transition-all transform hover:scale-105 ${
-                                            isActive 
-                                                ? `${cat.color} shadow-lg` 
-                                                : 'bg-slate-800 hover:bg-slate-700'
-                                        }`}
-                                    >
-                                        <Icon className="w-6 h-6 md:w-8 md:h-8 mx-auto mb-2" />
-                                        <div className="font-semibold text-sm md:text-base mb-1">{cat.name}</div>
-                                        <div className="text-xs md:text-sm text-slate-300">{categoryCompleted}/{categoryTotal}</div>
-                                    </button>
-                                );
-                            })}
-                        </div>
-
-                        <div className="mb-6 md:mb-8">
-                            <div className="flex justify-between text-xs md:text-sm text-slate-400 mb-2">
-                                <span>Progress: {Array.from(completedCards).filter(k => k.startsWith(activeCategory)).length}/{currentQuestions.length} completed</span>
-                                <button 
-                                    onClick={resetProgress}
-                                    className="flex items-center gap-1 hover:text-white transition-colors"
-                                >
-                                    <RotateCcw className="w-3 h-3 md:w-4 md:h-4" />
-                                    Reset
-                                </button>
-                            </div>
-                            <div className="w-full bg-slate-700 rounded-full h-2 md:h-3">
-                                <div 
-                                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 md:h-3 rounded-full transition-all duration-500"
-                                    style={{ width: `${(Array.from(completedCards).filter(k => k.startsWith(activeCategory)).length / currentQuestions.length) * 100}%` }}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="bg-slate-800 rounded-2xl shadow-2xl p-6 md:p-8 mb-6 min-h-[400px]">
-                            <div className="flex justify-between items-center mb-6">
-                                <span className="text-xs md:text-sm text-slate-400">
-                                    Question {currentCard + 1} of {currentQuestions.length}
-                                </span>
-                                {isCurrentCardComplete && (
-                                    <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs md:text-sm">
-                                        ✓ Completed
-                                    </span>
-                                )}
-                            </div>
-
-                            <div className="space-y-6">
-                                <div>
-                                    <h3 className="text-xs md:text-sm uppercase tracking-wide text-slate-400 mb-2">Question</h3>
-                                    <p className="text-xl md:text-2xl font-medium leading-relaxed">
-                                        {currentQuestions[currentCard].q}
-                                    </p>
-                                </div>
-
-                                {showAnswer && (
-                                    <div className="border-t border-slate-700 pt-6">
-                                        <h3 className="text-xs md:text-sm uppercase tracking-wide text-slate-400 mb-2">Answer</h3>
-                                        <p className="text-base md:text-lg text-slate-200 leading-relaxed whitespace-pre-line">
-                                            {currentQuestions[currentCard].a}
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="flex gap-4 mt-8">
-                                {!showAnswer ? (
-                                    <button
-                                        onClick={() => setShowAnswer(true)}
-                                        className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 py-3 md:py-4 rounded-xl font-semibold text-sm md:text-base transition-all transform hover:scale-105"
-                                    >
-                                        Show Answer
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={markComplete}
-                                        className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 py-3 md:py-4 rounded-xl font-semibold text-sm md:text-base transition-all transform hover:scale-105"
-                                    >
-                                        Mark as Complete
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="flex justify-between items-center mb-8">
-                            <button
-                                onClick={prevCard}
-                                disabled={currentCard === 0}
-                                className={`flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all ${
-                                    currentCard === 0
-                                        ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                                        : 'bg-slate-700 hover:bg-slate-600'
-                                }`}
-                            >
-                                <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
-                                Previous
-                            </button>
-
-                            <button
-                                onClick={nextCard}
-                                disabled={currentCard === currentQuestions.length - 1}
-                                className={`flex items-center gap-2 px-4 md:px-6 py-2 md:py-3 rounded-xl font-semibold text-sm md:text-base transition-all ${
-                                    currentCard === currentQuestions.length - 1
-                                        ? 'bg-slate-700 text-slate-500 cursor-not-allowed'
-                                        : 'bg-slate-700 hover:bg-slate-600'
-                                }`}
-                            >
-                                Next
-                                <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
-                            </button>
-                        </div>
-
-                        <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
-                            <h3 className="font-semibold text-base md:text-lg mb-3">💡 Study Tips</h3>
-                            <ul className="space-y-2 text-sm md:text-base text-slate-300">
-                                <li>• Try to answer each question out loud before revealing the answer</li>
-                                <li>• Focus on understanding the intuition, not just memorizing formulas</li>
-                                <li>• For coding problems, practice implementing them from scratch</li>
-                                <li>• Review completed cards periodically for spaced repetition</li>
-                            </ul>
-                        </div>
-                        </>
-                        )}
-                    </div>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<InterviewPrep />);
+        displayQuestion();
     </script>
 </body>
 </html>
