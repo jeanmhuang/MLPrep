@@ -3,140 +3,1330 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML & Quant Interview Prep</title>
+    <title>ML/DS/Quant Interview Prep</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
             min-height: 100vh;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        .question {
-            background: #f8f9fa;
             padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            min-height: 200px;
         }
-        .question h3 {
-            color: #667eea;
-            margin-top: 0;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .answer {
-            background: #e8f5e9;
-            padding: 15px;
-            border-radius: 8px;
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        
+        .resource-btn {
             margin-top: 15px;
-            white-space: pre-wrap;
-        }
-        button {
-            background: #667eea;
+            padding: 12px 24px;
+            background: #f97316;
             color: white;
             border: none;
-            padding: 12px 24px;
             border-radius: 8px;
+            font-size: 1rem;
             cursor: pointer;
-            font-size: 16px;
-            margin: 5px;
+            transition: background 0.3s;
         }
-        button:hover {
-            background: #5568d3;
+        
+        .resource-btn:hover {
+            background: #ea580c;
         }
-        button:disabled {
-            background: #ccc;
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .category-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            color: #334155;
+        }
+        
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .category-btn.active {
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .category-btn.blue.active { background: #3b82f6; }
+        .category-btn.green.active { background: #10b981; }
+        .category-btn.purple.active { background: #8b5cf6; }
+        .category-btn.orange.active { background: #f97316; }
+        .category-btn.pink.active { background: #ec4899; }
+        
+        .progress-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .progress-text {
+            font-weight: 500;
+            color: #334155;
+        }
+        
+        .reset-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .reset-btn:hover {
+            color: #334155;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+            border-radius: 6px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            min-height: 400px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .card-number {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        
+        .complete-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+        
+        .complete-btn:hover {
+            background: #e2e8f0;
+        }
+        
+        .complete-btn.completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .question {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .answer {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            color: #334155;
+            line-height: 1.7;
+            white-space: pre-line;
+            margin-top: 20px;
+        }
+        
+        .show-answer-btn {
+            padding: 12px 24px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+        
+        .show-answer-btn:hover {
+            background: #2563eb;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .nav-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn.prev {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        
+        .nav-btn.prev:hover:not(:disabled) {
+            background: #cbd5e1;
+        }
+        
+        .nav-btn.next {
+            background: #334155;
+            color: white;
+        }
+        
+        .nav-btn.next:hover {
+            background: #1e293b;
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
         }
-        .hidden { display: none; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .stat-name {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .stat-value.blue { color: #3b82f6; }
+        .stat-value.green { color: #10b981; }
+        .stat-value.purple { color: #8b5cf6; }
+        .stat-value.orange { color: #f97316; }
+        .stat-value.pink { color: #ec4899; }
+        
+        .resources {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .resources h2 {
+            font-size: 2rem;
+            color: #1e293b;
+            margin-bottom: 30px;
+        }
+        
+        .resources h3 {
+            font-size: 1.3rem;
+            color: #1e293b;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .resources section {
+            margin-bottom: 30px;
+        }
+        
+        .resources ul {
+            list-style: disc;
+            padding-left: 25px;
+            color: #64748b;
+            line-height: 1.8;
+        }
+        
+        .resources p {
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-item, .format-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .timeline-item h4, .format-item h4 {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .timeline-item.blue { background: #dbeafe; color: #1e40af; }
+        .timeline-item.green { background: #d1fae5; color: #065f46; }
+        .timeline-item.orange { background: #fed7aa; color: #9a3412; }
+        .timeline-item.red { background: #fee2e2; color: #991b1b; }
+        
+        .format-item { background: #f8fafc; color: #334155; }
+        
+        .back-btn {
+            padding: 12px 24px;
+            background: #475569;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: background 0.3s;
+        }
+        
+        .back-btn:hover {
+            background: #334155;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .card {
+                padding: 25px;
+                min-height: 350px;
+            }
+            
+            .question {
+                font-size: 1.2rem;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎓 ML & Quant Interview Prep</h1>
-        
-        <div class="question">
-            <h3 id="question-text"></h3>
-            <div id="answer" class="answer hidden"></div>
-            <button id="show-btn" onclick="showAnswer()">Show Answer</button>
+        <!-- Main Content -->
+        <div id="mainContent">
+            <div class="header">
+                <h1>🎯 Interview Prep Hub</h1>
+                <p>ML • Data Science • GenAI • Quant Finance</p>
+                <button class="resource-btn" onclick="showResources()">📚 Study Resources & Interview Guide</button>
+            </div>
+
+            <div class="categories" id="categories"></div>
+
+            <div class="progress-section">
+                <div class="progress-header">
+                    <span class="progress-text" id="progressText">Progress: 0/0</span>
+                    <button class="reset-btn" onclick="resetProgress()">🔄 Reset</button>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-number" id="cardNumber">Question 1 of 0</span>
+                        <button class="complete-btn" id="completeBtn" onclick="toggleComplete()">Mark Complete</button>
+                    </div>
+
+                    <div id="questionContent">
+                        <h2 class="question" id="question"></h2>
+                        <button class="show-answer-btn" onclick="showAnswer()">Show Answer</button>
+                    </div>
+
+                    <div id="answerContent" class="hidden">
+                        <h2 class="question" id="questionWithAnswer"></h2>
+                        <div class="answer" id="answer"></div>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-btn prev" onclick="prevCard()">← Previous</button>
+                    <button class="nav-btn next" onclick="nextCard()">Next →</button>
+                </div>
+            </div>
+
+            <div class="stats" id="stats"></div>
         </div>
-        
-        <div style="text-align: center;">
-            <button onclick="prevQuestion()" id="prev-btn">← Previous</button>
-            <span id="counter" style="margin: 0 20px;"></span>
-            <button onclick="nextQuestion()" id="next-btn">Next →</button>
+
+        <!-- Resources Content -->
+        <div id="resourcesContent" class="hidden">
+            <button class="back-btn" onclick="showMain()">← Back to Flashcards</button>
+            <div class="resources">
+                <h2>📚 Study Resources & Interview Guide</h2>
+
+                <section>
+                    <h3>📐 Essential ML Concepts Explained</h3>
+                    
+                    <div class="format-item">
+                        <h4>Loss Functions - What Are They Measuring?</h4>
+                        <p><strong>MSE (Mean Squared Error):</strong> Penalizes predictions quadratically. Big errors get punished MUCH more than small ones because of the square. If you're off by 10, that's 100x worse than being off by 1. Use for regression when you really want to minimize large errors.</p>
+                        <p><strong>Cross-Entropy:</strong> Measures "surprise" - how much your predicted probability disagrees with reality. If you predicted 99% confident and were wrong, massive penalty. If you predicted 50-50, smaller penalty. Perfect for classification because it encourages the model to be confidently correct.</p>
+                        <p><strong>Hinge Loss:</strong> SVM's loss function. Only cares if you're on the right side of the margin. Once you're confidently correct (margin > 1), the loss is zero. Focuses on "borderline" examples near the decision boundary.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Regularization - Why Your Model Needs Boundaries</h4>
+                        <p><strong>The Problem:</strong> Without regularization, your model might use HUGE weights to perfectly fit training data, including noise. This kills generalization.</p>
+                        <p><strong>L1 (Lasso):</strong> Adds absolute value of weights to loss. Think of it as a "budget" - the model must use weights sparingly. Result? Many weights become exactly zero, giving you automatic feature selection. Great when you suspect only some features matter.</p>
+                        <p><strong>L2 (Ridge):</strong> Adds squared weights to loss. Prefers many small weights over few large ones. Doesn't zero out features, just shrinks them proportionally. Better when all features contribute somewhat, or when features are correlated (multicollinearity).</p>
+                        <p><strong>Why λ matters:</strong> λ is your knob - turn it up for more regularization (simpler model, less overfitting), down for less (more complex, might overfit). Cross-validation finds the sweet spot.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Activation Functions - Why Linear Isn't Enough</h4>
+                        <p><strong>The Core Problem:</strong> Stacking linear layers just gives you another linear layer. Without non-linearity, neural networks are just fancy linear regression!</p>
+                        <p><strong>ReLU (f(x) = max(0, x)):</strong> Dead simple - negative values become 0, positive pass through. Why it works: (1) Gradient is always 1 for positive values (no vanishing gradient!), (2) Induces sparsity (neurons with negative inputs are "off"), (3) Cheap to compute. Downside: "Dying ReLU" - neurons can get stuck at 0.</p>
+                        <p><strong>Sigmoid:</strong> Squashes any input to [0,1], interpretable as probability. Problem: Gradients near 0 or 1 are tiny → vanishing gradient in deep networks. Mainly used in output layer for binary classification now.</p>
+                        <p><strong>Tanh:</strong> Like sigmoid but centered at 0 (output [-1,1]). Better than sigmoid in hidden layers because zero-centered outputs help with convergence. Still has vanishing gradient problem.</p>
+                        <p><strong>Softmax:</strong> Takes vector of scores, converts to probability distribution (sums to 1). Each class gets a probability. Higher scores → higher probability. Used in output layer for multi-class classification.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Gradient Descent Variants - How Does Learning Work?</h4>
+                        <p><strong>Core Idea:</strong> Calculate which direction makes loss worse, go opposite direction. Repeat until loss stops decreasing.</p>
+                        <p><strong>Batch GD:</strong> Compute gradient using ALL training examples. Pro: Stable, smooth convergence. Con: Slow for big datasets, might need to load everything in memory. Rarely used in practice.</p>
+                        <p><strong>Stochastic GD:</strong> Compute gradient using ONE random example. Pro: Fast updates, can escape local minima, works online. Con: Noisy, jumpy convergence, might bounce around optimum.</p>
+                        <p><strong>Mini-batch GD:</strong> Compute gradient using small batch (32-512 examples). Sweet spot! Fast enough, stable enough. Can leverage GPU parallelism. This is the standard.</p>
+                        <p><strong>Adam:</strong> Adapts learning rate per parameter using moving averages of gradients and squared gradients. Parameters that have been moving consistently get bigger updates. Almost always works out of the box. Default choice for most applications.</p>
+                        <p><strong>Learning Rate:</strong> Too high → you overshoot and diverge. Too low → takes forever. Common strategy: start high (0.001), reduce when progress plateaus (learning rate scheduling).</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>📊 Statistics Explained Intuitively</h3>
+                    
+                    <div class="format-item">
+                        <h4>Central Limit Theorem - The Magic of Averages</h4>
+                        <p><strong>What it says:</strong> Take ANY distribution (even weird ones), sample from it repeatedly, and average each sample. Plot all these averages, and you get a normal distribution. Mind-blowing!</p>
+                        <p><strong>Why it matters:</strong> This is why we can use normal distribution assumptions for hypothesis tests even when our data isn't normal. We're testing means, not individual values.</p>
+                        <p><strong>Example:</strong> Roll a die (uniform distribution) 30 times, record average. Do this 1000 times. Your 1000 averages will look like a bell curve centered at 3.5, even though individual rolls are uniform.</p>
+                        <p><strong>Requirement:</strong> Sample size n≥30 is rule of thumb. Standard error = σ/√n gets smaller as n grows - more samples = more precise estimate.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>P-values - The Most Misunderstood Concept</h4>
+                        <p><strong>Correct interpretation:</strong> "If the null hypothesis were true, what's the probability of seeing data this extreme or more extreme?"</p>
+                        <p><strong>Example:</strong> You claim a coin is biased. Flip it 100 times, get 60 heads. P-value = 0.03 means: "If the coin were fair, only 3% of the time would we get 60+ or 40- heads in 100 flips." That's unlikely, so we doubt the coin is fair.</p>
+                        <p><strong>What p-value is NOT:</strong></p>
+                        <p>❌ "Probability null hypothesis is true" - NO!</p>
+                        <p>❌ "Probability of Type I error" - NO!</p>
+                        <p>❌ "Effect size" - NO! p=0.001 doesn't mean huge effect</p>
+                        <p><strong>The 0.05 threshold:</strong> Arbitrary convention. P=0.049 isn't fundamentally different from p=0.051. Consider effect size and context!</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Type I vs Type II Errors - The Trade-off</h4>
+                        <p><strong>Type I (False Positive, α):</strong> Crying wolf - saying something's there when it's not. "The treatment works!" when it doesn't. α = 0.05 means we accept 5% false positive rate.</p>
+                        <p><strong>Type II (False Negative, β):</strong> Missing the signal - saying nothing's there when it is. "The treatment doesn't work" when it actually does. Power = 1-β is our ability to detect real effects.</p>
+                        <p><strong>The Fundamental Trade-off:</strong> Stricter threshold (lower α) → harder to claim significance → more Type II errors. You can't optimize both simultaneously!</p>
+                        <p><strong>Medical Example:</strong> Testing for disease. Type I: Telling healthy person they're sick (false alarm). Type II: Telling sick person they're healthy (missed diagnosis). Which is worse depends on context!</p>
+                        <p><strong>Increasing Power:</strong> (1) Larger sample size, (2) Larger effect size (can't control), (3) Lower variability, (4) Higher α (but then more false positives).</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Confidence Intervals - Better Than P-values</h4>
+                        <p><strong>What it means:</strong> "If we repeated this study 100 times, 95 of those intervals would contain the true parameter." NOT "95% chance true value is in this interval."</p>
+                        <p><strong>Why better than p-values:</strong> Gives you range of plausible values + uncertainty, not just "significant or not." More information!</p>
+                        <p><strong>Example:</strong> Mean height = 170cm, 95% CI [165, 175]. This tells us: (1) Estimate is 170, (2) Precision is ±5cm, (3) Values near 165 or 175 are plausible, (4) Values outside range are unlikely.</p>
+                        <p><strong>Width tells you precision:</strong> Narrow CI = precise estimate (large n or low variance). Wide CI = uncertain estimate (small n or high variance).</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Hypothesis Testing - The Full Picture</h4>
+                        <p><strong>Step 1 - Set up hypotheses:</strong> H₀ (boring default) vs H₁ (interesting claim). Example: H₀: drug has no effect, H₁: drug works.</p>
+                        <p><strong>Step 2 - Choose α:</strong> How much false positive risk are you comfortable with? 0.05 is standard but arbitrary. Medical research might use 0.01 (stricter).</p>
+                        <p><strong>Step 3 - Collect data & calculate test statistic:</strong> Converts your data to a single number measuring how far from null hypothesis you are.</p>
+                        <p><strong>Step 4 - Calculate p-value:</strong> How extreme is your test statistic under H₀?</p>
+                        <p><strong>Step 5 - Decide:</strong> p < α → reject H₀ (evidence for H₁). p ≥ α → fail to reject H₀ (not enough evidence). Note: "fail to reject" ≠ "accept H₀"!</p>
+                        <p><strong>Important:</strong> Always report effect size, confidence intervals, and p-value. Statistical significance ≠ practical importance!</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Common Statistical Tests - When to Use What</h4>
+                        <p><strong>t-test:</strong> Comparing means of two groups. Example: "Do males and females have different average heights?" Assumes: normality, similar variances, independent samples.</p>
+                        <p><strong>Paired t-test:</strong> Before/after comparisons on same subjects. Example: "Does treatment reduce blood pressure?" Tests if difference ≠ 0.</p>
+                        <p><strong>Chi-square test:</strong> Are two categorical variables independent? Example: "Is smoking related to lung cancer?" Compares observed vs expected frequencies.</p>
+                        <p><strong>ANOVA:</strong> Comparing means across 3+ groups. Example: "Do drugs A, B, C have different effects?" Extension of t-test. If significant, do post-hoc tests to find which groups differ.</p>
+                        <p><strong>Mann-Whitney U:</strong> Non-parametric alternative to t-test. When data is skewed or ordinal (ranked). Tests if distributions differ, not just means.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Correlation vs Causation - Why It Matters</h4>
+                        <p><strong>Correlation:</strong> X and Y move together. When ice cream sales go up, drownings go up. Correlation coefficient r = 0.8 (strong!).</p>
+                        <p><strong>But why?</strong> Three possibilities: (1) Ice cream causes drowning (unlikely!), (2) Drowning causes ice cream sales (no!), (3) Hidden variable (summer weather) causes both.</p>
+                        <p><strong>Confounding variable:</strong> Hidden factor influencing both. Always the most likely explanation for surprising correlations.</p>
+                        <p><strong>To establish causation need:</strong> (1) Randomized controlled trial (RCT), (2) Temporal precedence (cause before effect), (3) Dose-response (more cause → more effect), (4) Rule out confounders, (5) Mechanism (how does it work?).</p>
+                        <p><strong>Real example:</strong> Countries that eat more chocolate win more Nobel Prizes. Correlation real, causation? No! Wealth confounds both (rich countries afford chocolate AND education).</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>💻 Coding Patterns Explained</h3>
+                    
+                    <div class="format-item">
+                        <h4>Two Pointers - The Efficiency Hack</h4>
+                        <p><strong>Core Idea:</strong> Instead of nested loops (O(n²)), use two pointers moving toward each other or in same direction (O(n)).</p>
+                        <p><strong>Classic Example - Two Sum in Sorted Array:</strong> Find pair that sums to target. Start with left=0, right=n-1. If sum too small, move left up. If too big, move right down. Why it works: array is sorted, so we can eliminate half the search space each step!</p>
+                        <p><strong>When to Use:</strong> (1) Array/string is sorted or can be sorted, (2) Looking for pairs/triplets, (3) Need to check both ends, (4) Removing duplicates in-place.</p>
+                        <p><strong>Common Variations:</strong> Fast-slow pointers (cycle detection in linked list - Floyd's algorithm), sliding window (variable size based on condition).</p>
+                        <p><strong>Pro Tip:</strong> If problem mentions "sorted array" or "find pair", think two pointers first!</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Sliding Window - For Subarray Problems</h4>
+                        <p><strong>Core Idea:</strong> Maintain a "window" of elements. Expand right to include new elements, contract left when condition violated. Track best solution seen.</p>
+                        <p><strong>Classic Example - Longest Substring Without Repeating Characters:</strong> Use a set to track characters in current window. If new char is duplicate, shrink window from left until duplicate removed. Track max window size. O(n) instead of O(n²)!</p>
+                        <p><strong>Two Types:</strong></p>
+                        <p>• Fixed size: "Maximum sum of subarray size k" - slide window by 1, subtract left, add right</p>
+                        <p>• Variable size: "Smallest subarray with sum ≥ k" - expand until condition met, then contract to minimize</p>
+                        <p><strong>When to Use:</strong> Problem asks for continuous subarray/substring with some property. Keywords: "contiguous", "substring", "subarray".</p>
+                        <p><strong>Template:</strong> left=0, right=0, expand right in loop, shrink left when condition breaks, track answer.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Dynamic Programming - The Art of Remembering</h4>
+                        <p><strong>Core Idea:</strong> Break problem into smaller subproblems. Solve each once, remember answer. Use remembered answers to build up to final solution. "Those who forget the past are condemned to recompute it."</p>
+                        <p><strong>Classic Example - Fibonacci:</strong> Naive recursion: fib(n) = fib(n-1) + fib(n-2). Recomputes same values exponentially! DP: Save fib(i) in array, look up instead of recompute. O(2ⁿ) → O(n)!</p>
+                        <p><strong>Two Approaches:</strong></p>
+                        <p>• Top-down (Memoization): Recursive with cache. More intuitive.</p>
+                        <p>• Bottom-up (Tabulation): Iterative, fill table. More efficient, less memory.</p>
+                        <p><strong>When to Use:</strong> (1) Optimal substructure (optimal solution contains optimal solutions to subproblems), (2) Overlapping subproblems (same subproblem computed multiple times), (3) Counting problems, optimization problems.</p>
+                        <p><strong>Common DP Problems:</strong> Knapsack, longest common subsequence, edit distance, coin change, matrix chain multiplication.</p>
+                        <p><strong>How to Recognize:</strong> "Maximum/minimum", "How many ways", "Optimal", problem can be broken into similar smaller problems.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Binary Search - More Than Just Search</h4>
+                        <p><strong>Core Idea:</strong> Divide search space in half each iteration. Works on ANY monotonic function, not just sorted arrays!</p>
+                        <p><strong>Standard Binary Search:</strong> Find element in sorted array. Check middle, if target is smaller go left half, else right half. O(log n) beats O(n) linear search.</p>
+                        <p><strong>Beyond Arrays:</strong> Can binary search on answer space! Example: "Minimum capacity to ship packages in D days." Binary search on capacity: Can we ship with capacity k? If yes, try smaller. If no, need bigger. Find minimum k that works.</p>
+                        <p><strong>Template (avoid off-by-one errors):</strong></p>
+                        <p>left, right = 0, n-1</p>
+                        <p>while left <= right:</p>
+                        <p>&nbsp;&nbsp;mid = left + (right-left)//2  # Avoid overflow</p>
+                        <p>&nbsp;&nbsp;if arr[mid] == target: return mid</p>
+                        <p>&nbsp;&nbsp;elif arr[mid] < target: left = mid+1</p>
+                        <p>&nbsp;&nbsp;else: right = mid-1</p>
+                        <p><strong>When to Use:</strong> Sorted data, search space can be partitioned, looking for first/last occurrence, optimization problems where you can check "is X feasible?"</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Backtracking - Exploring All Possibilities</h4>
+                        <p><strong>Core Idea:</strong> Try each possibility. If it works, great! If not, undo (backtrack) and try next possibility. Think of it as DFS with undo.</p>
+                        <p><strong>Classic Example - Generate All Subsets:</strong> For each element, make two choices: include it or don't. Explore both paths. Backtrack by removing element before trying next path.</p>
+                        <p><strong>The Template:</strong></p>
+                        <p>def backtrack(candidate):</p>
+                        <p>&nbsp;&nbsp;if is_solution(candidate): save(candidate)</p>
+                        <p>&nbsp;&nbsp;for next_choice in choices:</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;if is_valid(next_choice):</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make_choice(next_choice)  # Choose</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backtrack(candidate)  # Explore</p>
+                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undo_choice(next_choice)  # Unchoose</p>
+                        <p><strong>When to Use:</strong> Need all solutions (permutations, combinations, subsets), constraint satisfaction (Sudoku, N-Queens), path-finding where multiple paths exist.</p>
+                        <p><strong>Optimization - Pruning:</strong> If current path can't lead to valid solution, stop exploring (prune). Dramatically speeds up search. Example: If current sum > target in subset sum, no point adding more positive numbers.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>📈 Quant Finance Explained</h3>
+                    
+                    <div class="format-item">
+                        <h4>Options Basics - What Are You Actually Buying?</h4>
+                        <p><strong>Call Option:</strong> Right (not obligation) to BUY stock at strike price K by expiry T. You pay premium upfront. Profit if stock goes up past K + premium.</p>
+                        <p><strong>Put Option:</strong> Right to SELL stock at strike price K. Profit if stock goes down below K - premium. Think of it as insurance on your stock.</p>
+                        <p><strong>Example:</strong> AAPL is $100. Buy call with K=$110, pay $5 premium. If AAPL hits $120, exercise option: buy at $110, sell at $120, profit = $10 - $5 = $5 per share. If AAPL stays at $100, option expires worthless, lose $5.</p>
+                        <p><strong>Why Black-Scholes Matters:</strong> Before B-S, no standard way to price options. B-S gives theoretical fair value based on: stock price S, strike K, time to expiry T, risk-free rate r, volatility σ.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Black-Scholes Intuition</h4>
+                        <p><strong>The Formula:</strong> C = S·N(d₁) - K·e^(-rT)·N(d₂)</p>
+                        <p><strong>What it means:</strong> Call price = (Expected stock price if option exercised) - (Discounted strike price weighted by probability of exercise)</p>
+                        <p><strong>N(d₁):</strong> Delta, probability of finishing in-the-money adjusted for hedge ratio. How much stock to buy to replicate option.</p>
+                        <p><strong>N(d₂):</strong> Actual probability option expires in-the-money (gets exercised).</p>
+                        <p><strong>Key Insight:</strong> Higher volatility → higher option value. Why? More chance of big move in your favor (upside unlimited), but max loss is premium (limited downside).</p>
+                        <p><strong>Assumptions (often violated in reality):</strong> (1) Constant volatility (nope - volatility smile), (2) No dividends (can adjust), (3) Efficient markets (mostly), (4) Lognormal returns (fat tails in reality).</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Put-Call Parity - The No-Arbitrage Relationship</h4>
+                        <p><strong>The Equation:</strong> C - P = S - K·e^(-rT)</p>
+                        <p><strong>In Words:</strong> (Call price) - (Put price) = (Stock price) - (Present value of strike)</p>
+                        <p><strong>Why it must hold:</strong> If violated, free money (arbitrage)! Example: If C - P > S - K·e^(-rT), someone would buy put, sell call, buy stock, make risk-free profit.</p>
+                        <p><strong>Practical Use:</strong> If you know call price, can immediately calculate fair put price (or vice versa). Markets enforce this tightly - any deviation is arbitraged away instantly.</p>
+                        <p><strong>Intuition:</strong> Buying call and selling put = synthetic long stock position (you're obligated to buy at K). This must equal just buying the stock and saving the strike in the bank.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>The Greeks - Measuring Risk</h4>
+                        <p><strong>Delta (Δ):</strong> How much option price changes per $1 stock move. Call: 0 to 1, Put: -1 to 0. At-the-money ≈ 0.5. Use for hedging: If Δ=0.5, buy 100 shares to hedge 200 call options.</p>
+                        <p><strong>Gamma (Γ):</strong> How much delta changes per $1 stock move. Measures "delta risk" - how fast your hedge becomes wrong. Highest for at-the-money options near expiry (moves rapidly from out-of to in-the-money).</p>
+                        <p><strong>Theta (Θ):</strong> Time decay - money you lose per day just from passage of time. Always negative for long options. Options waste away! Accelerates near expiry. This is why buying options can be tough - time works against you.</p>
+                        <p><strong>Vega (ν):</strong> Change in option price per 1% change in volatility. Positive for long options (higher vol = higher value). During market crashes, implied vol spikes → existing options gain value even if stock drops!</p>
+                        <p><strong>Portfolio Hedging:</strong> Delta-neutral (Δ=0): Stock moves don't affect you. Gamma-neutral (Γ=0): Delta stays stable. Full hedge = neutralize all Greeks (expensive and complex!).</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Risk Metrics - How Risky Is This Really?</h4>
+                        <p><strong>Sharpe Ratio = (Return - Risk-free rate) / Volatility</strong></p>
+                        <p><strong>What it means:</strong> Return per unit of risk. Higher is better. Sharpe = 1 is decent, 2 is great, 3+ is exceptional (or suspicious!).</p>
+                        <p><strong>Example:</strong> Portfolio returns 12% with 15% volatility, risk-free = 2%. Sharpe = (12-2)/15 = 0.67. Not great - you're not getting much extra return for the risk.</p>
+                        <p><strong>Limitation:</strong> Treats upside volatility same as downside. But we like upside volatility! This is why Sortino ratio (only downside deviation) is often better.</p>
+                        <p><strong>Beta - Your Exposure to Market Risk:</strong> β=1 moves with market. β=1.5 moves 50% more. β=0.5 moves half as much. β<0 moves opposite (rare). Can't be diversified away - systematic risk.</p>
+                        <p><strong>Alpha - The Holy Grail:</strong> Return beyond what beta predicts. α=2% means you beat benchmark by 2% after adjusting for risk. This is what active managers claim to provide (and charge high fees for). Most don't deliver positive alpha consistently.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Value at Risk (VaR) - How Bad Can It Get?</h4>
+                        <p><strong>What it is:</strong> "With 95% confidence, I won't lose more than $X tomorrow." That's 95% VaR = $X.</p>
+                        <p><strong>Example:</strong> Portfolio has $10M, VaR(95%) = $200K. This means: 95% of days, you lose less than $200K. 5% of days (1 in 20), you lose more than $200K.</p>
+                        <p><strong>Why banks use it:</strong> Regulatory requirement (Basel). Simple to communicate. Can aggregate across portfolios.</p>
+                        <p><strong>Critical Flaws:</strong></p>
+                        <p>• Tells you nothing about the 5% tail - could lose $201K or $10M!</p>
+                        <p>• Not subadditive - VaR(A+B) can be > VaR(A) + VaR(B). Diversification can make VaR WORSE!</p>
+                        <p>• Ignores tail risk - what really kills you</p>
+                        <p><strong>Better Alternative - CVaR (Conditional VaR):</strong> Expected loss in that bad 5% tail. CVaR always ≥ VaR, gives you worst-case expected loss, is subadditive (plays nice with diversification).</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Kelly Criterion - Optimal Bet Sizing</h4>
+                        <p><strong>The Question:</strong> I have an edge in a bet. What fraction of my bankroll should I wager to maximize long-run growth?</p>
+                        <p><strong>The Formula:</strong> f* = (p·b - q) / b where p=win prob, q=loss prob, b=odds</p>
+                        <p><strong>Example:</strong> Coin flip, 60% win, even odds (b=1). f* = (0.6·1 - 0.4)/1 = 0.2. Bet 20% of bankroll each time.</p>
+                        <p><strong>Why it works:</strong> Maximizes expected log-wealth growth. This is the fastest way to grow wealth long-term. Less aggressive = slower growth. More aggressive = risk of ruin!</p>
+                        <p><strong>Problem:</strong> Full Kelly is very aggressive. One bad streak can hurt badly. Most practitioners use "half Kelly" or "quarter Kelly" - fractional Kelly.</p>
+                        <p><strong>Real-world use:</strong> Poker players, sports bettors, some hedge funds. Requires accurate estimation of p and b - if you overestimate your edge, Kelly will ruin you!</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🤖 GenAI/LLM Deep Dive</h3>
+                    
+                    <div class="format-item">
+                        <h4>Transformers - The Revolution Explained</h4>
+                        <p><strong>The Problem They Solved:</strong> RNNs process sequences one token at a time (slow!), and struggle with long-range dependencies (attention mechanism tries to fix this but still sequential).</p>
+                        <p><strong>The Big Idea:</strong> Process all tokens in parallel using self-attention. Each token looks at ALL other tokens simultaneously and decides which ones are important.</p>
+                        <p><strong>Self-Attention Intuition:</strong> For word "it" in "The cat sat on the mat because it was tired", attention helps model figure out "it" refers to "cat" not "mat". It computes: how related is "it" to every other word? High attention to "cat", low to "the", "on", etc.</p>
+                        <p><strong>The Math - Attention(Q,K,V) = softmax(QK^T/√d_k)V:</strong></p>
+                        <p>• Q (Query): "What am I looking for?"</p>
+                        <p>• K (Key): "What do I contain?"</p>
+                        <p>• V (Value): "What do I actually output?"</p>
+                        <p>• QK^T: Compute similarity between query and all keys</p>
+                        <p>• /√d_k: Scale to prevent softmax saturation</p>
+                        <p>• softmax: Convert to probability distribution</p>
+                        <p>• Multiply by V: Weighted sum of values</p>
+                        <p><strong>Why Multi-Head?</strong> Different heads learn different relationships - one might learn syntax, another semantics, another long-range dependencies. Then concatenate all heads.</p>
+                        <p><strong>Position Encodings:</strong> Since attention is permutation-invariant, add position info via sin/cos functions. This tells model "this word came before that word".</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>GPT vs BERT - Two Philosophies</h4>
+                        <p><strong>GPT (Generative Pre-trained Transformer):</strong></p>
+                        <p>• Decoder-only architecture, autoregressive (predicts next token)</p>
+                        <p>• Training: "The cat sat on the ___" → predict "mat"</p>
+                        <p>• Only sees previous tokens (causal mask prevents looking ahead)</p>
+                        <p>• Use cases: Text generation, completion, chatbots, creative writing</p>
+                        <p>• Scales amazingly - GPT-3, GPT-4 just scaled up same architecture</p>
+                        <p><strong>BERT (Bidirectional Encoder):</strong></p>
+                        <p>• Encoder-only, non-autoregressive</p>
+                        <p>• Training: "The [MASK] sat on the mat" → predict "cat" using both left and right context</p>
+                        <p>• Sees full context (bidirectional)</p>
+                        <p>• Use cases: Classification, NER, Q&A, sentiment analysis</p>
+                        <p>• Can't generate text (no causal structure)</p>
+                        <p><strong>Key Difference:</strong> GPT is like writing - you only know what came before. BERT is like reading - you see the whole sentence. GPT generates, BERT understands.</p>
+                        <p><strong>Modern Trend:</strong> GPT-style models winning because generation is harder and more valuable. Can fine-tune GPT for classification too!</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>RLHF - Teaching AI What We Actually Want</h4>
+                        <p><strong>The Problem:</strong> Pre-trained LLM predicts next token well but doesn't follow instructions, can be harmful/biased, not aligned with human preferences.</p>
+                        <p><strong>Step 1 - Supervised Fine-Tuning (SFT):</strong> Humans write high-quality (prompt, response) examples. Fine-tune model on these. Gets model in the right ballpark but expensive to scale.</p>
+                        <p><strong>Step 2 - Reward Model Training:</strong> Show humans pairs of responses, ask "which is better?" Collect thousands of comparisons. Train a separate model to predict human preference. This is your reward model.</p>
+                        <p><strong>Step 3 - RL Optimization:</strong> Use PPO (Proximal Policy Optimization) to optimize original model against reward model. Generate responses, reward model scores them, update policy to generate higher-scoring responses.</p>
+                        <p><strong>The Key Trick - KL Penalty:</strong> Objective = Reward - β·KL(policy || original_policy). Without KL penalty, model would collapse to generating nonsense that "hacks" the reward model. KL keeps it close to original pre-trained model.</p>
+                        <p><strong>Why It Works:</strong> Easier for humans to rank than to write. Can get more feedback. Model learns implicit human preferences beyond what's in training data.</p>
+                        <p><strong>Challenges:</strong> Reward hacking, distribution shift, reward model inaccuracies, expensive human feedback. But ChatGPT showed it's worth it!</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>RAG - Grounding LLMs in Reality</h4>
+                        <p><strong>The Hallucination Problem:</strong> LLMs are trained on internet text → make up plausible-sounding but wrong facts. They don't "know" what's true vs false, just what's probable.</p>
+                        <p><strong>RAG Solution:</strong> Don't rely on model's memory. Give it relevant documents to reference!</p>
+                        <p><strong>How It Works:</strong></p>
+                        <p>1. <strong>Indexing Phase:</strong> Take your knowledge base (docs, PDFs, etc.), split into chunks (~200-500 tokens), create embeddings for each chunk, store in vector database.</p>
+                        <p>2. <strong>Query Phase:</strong> User asks question → convert question to embedding → find top-k most similar chunks via cosine similarity → inject these chunks into the prompt → LLM generates answer based on retrieved context.</p>
+                        <p><strong>Example:</strong> User: "What's our return policy?" → Retrieve: [policy doc chunks] → Prompt: "Given these documents: [chunks], answer: What's the return policy?" → LLM: "Based on the provided policy, you can return within 30 days..."</p>
+                        <p><strong>Benefits:</strong> (1) Reduces hallucinations - grounds in real docs, (2) Up-to-date info without retraining, (3) Citable sources, (4) Works with proprietary data, (5) Easier to debug/fix than changing model.</p>
+                        <p><strong>Challenges:</strong> (1) Retrieval quality - if you don't retrieve relevant docs, answer is wrong, (2) Chunk size trade-off - too small loses context, too large exceeds context window, (3) Ranking - semantic similarity ≠ relevance always.</p>
+                        <p><strong>Advanced RAG:</strong> Hybrid search (dense + sparse), reranking, query expansion, recursive retrieval, cite sources in output.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Prompt Engineering - The New Programming</h4>
+                        <p><strong>Why It Matters:</strong> Same model, different prompt = dramatically different results. GPT-4 is powerful but dumb without good prompts.</p>
+                        <p><strong>Core Principles:</strong></p>
+                        <p>1. <strong>Be Specific:</strong> Vague prompt = vague answer. Bad: "Tell me about ML." Good: "Explain bias-variance tradeoff with concrete example for a data science interview."</p>
+                        <p>2. <strong>Provide Context:</strong> "You are an expert data scientist interviewing for FAANG roles. Answer as you would in a technical interview."</p>
+                        <p>3. <strong>Few-Shot Examples:</strong> Show 2-5 examples of input-output pairs. Model learns the pattern!</p>
+                        <p>4. <strong>Chain-of-Thought:</strong> "Let's think step by step" → Model shows reasoning → better answers on complex problems. Critical for math/logic!</p>
+                        <p>5. <strong>Output Format:</strong> "Respond in JSON with fields: {answer, confidence, sources}". Models follow structure well.</p>
+                        <p>6. <strong>Delimiters:</strong> Use ###, XML tags, etc. to separate sections. Prevents prompt injection.</p>
+                        <p><strong>Advanced Techniques:</strong></p>
+                        <p>• Self-consistency: Generate 5 answers, pick most common → better accuracy</p>
+                        <p>• Tree-of-Thoughts: Explore multiple reasoning paths, evaluate, pick best</p>
+                        <p>• ReAct: Interleave Reasoning and Acting (tool use)</p>
+                        <p><strong>Common Mistakes:</strong> Assuming model knows context, no examples, walls of text, not specifying format.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Fine-Tuning vs Prompting - When to Use What</h4>
+                        <p><strong>Prompting:</strong> Craft input to get desired output. No training needed.</p>
+                        <p>• Pros: Instant, flexible, no GPU/data needed, cheap</p>
+                        <p>• Cons: Limited to base model capabilities, context window limits, inconsistent, expensive at scale (token costs)</p>
+                        <p>• Use when: Quick prototyping, simple tasks, data privacy less concern</p>
+                        <p><strong>Fine-Tuning:</strong> Train model on task-specific data. Updates weights.</p>
+                        <p>• Pros: Better task performance, consistent behavior, can learn new facts/style, cheaper inference</p>
+                        <p>• Cons: Need labeled data (100s-1000s examples), expensive training, risk of catastrophic forgetting, less flexible</p>
+                        <p>• Use when: High volume (token costs add up), need consistency, have quality data, prompting insufficient</p>
+                        <p><strong>LoRA (Low-Rank Adaptation) - Best of Both:</strong> Fine-tune by adding small trainable matrices to frozen model. Only train <1% of parameters! Much cheaper than full fine-tuning, preserves general capabilities, can swap LoRA adapters for different tasks.</p>
+                        <p><strong>Decision Tree:</strong> Start with prompting → not good enough? Try few-shot → still not enough? Try fine-tuning → need efficiency? Use LoRA.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Common LLM Failure Modes & Fixes</h4>
+                        <p><strong>Hallucinations:</strong> Making up facts confidently.</p>
+                        <p>• Fixes: RAG (ground in real docs), temperature=0 (less random), ask for citations, use retrieval-augmented generation</p>
+                        <p><strong>Context Window Overflow:</strong> Too much text to process.</p>
+                        <p>• Fixes: Summarize first, chunk and process separately, use models with longer context (Claude 200k, GPT-4 128k), sliding window</p>
+                        <p><strong>Inconsistent Outputs:</strong> Different answer each time.</p>
+                        <p>• Fixes: temperature=0, structured output format, multiple samples + voting</p>
+                        <p><strong>Prompt Injection:</strong> User tricks model with malicious prompt.</p>
+                        <p>• Fixes: Delimiters to separate user input, content filtering, validation layer</p>
+                        <p><strong>Slow Inference:</strong> Takes too long to respond.</p>
+                        <p>• Fixes: Smaller model, quantization (8-bit, 4-bit), caching common queries, streaming responses, speculative decoding</p>
+                        <p><strong>High Cost:</strong> API bills through the roof.</p>
+                        <p>• Fixes: Prompt compression, caching, smaller model for simple tasks, self-hosting open source, fine-tuning for efficiency</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🎯 ML Model Selection Guide</h3>
+                    
+                    <div class="format-item">
+                        <h4>Classification Problems</h4>
+                        <p><strong>Small data, linear:</strong> Logistic Regression</p>
+                        <p><strong>Small data, non-linear:</strong> SVM with RBF kernel</p>
+                        <p><strong>Medium data:</strong> Random Forest, Gradient Boosting</p>
+                        <p><strong>Large data:</strong> Neural Networks (MLP, CNN for images)</p>
+                        <p><strong>Imbalanced:</strong> Use class weights, SMOTE, adjust threshold</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Regression Problems</h4>
+                        <p><strong>Linear relationship:</strong> Linear Regression (+ regularization)</p>
+                        <p><strong>Non-linear:</strong> Polynomial features, tree-based models</p>
+                        <p><strong>Complex patterns:</strong> Neural Networks, XGBoost</p>
+                        <p><strong>Time series:</strong> ARIMA, LSTM, Prophet</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>When to Use Each Algorithm</h4>
+                        <p><strong>Linear/Logistic:</strong> Interpretability needed, baseline</p>
+                        <p><strong>Decision Trees:</strong> Interpretable, handles mixed types</p>
+                        <p><strong>Random Forest:</strong> Reduce overfitting, feature importance</p>
+                        <p><strong>XGBoost/LightGBM:</strong> Tabular data competitions, high performance</p>
+                        <p><strong>Neural Networks:</strong> Images, text, audio, complex patterns</p>
+                        <p><strong>SVM:</strong> High-dimensional data, clear margin</p>
+                        <p><strong>k-NN:</strong> Simple, non-parametric, small datasets</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>⚡ Quick Reference: Time Complexities</h3>
+                    
+                    <div class="format-item">
+                        <h4>Data Structures</h4>
+                        <p><strong>Array:</strong> Access O(1), Search O(n), Insert O(n)</p>
+                        <p><strong>Hash Table:</strong> All operations O(1) average</p>
+                        <p><strong>Binary Search Tree:</strong> O(log n) average, O(n) worst</p>
+                        <p><strong>Heap:</strong> Insert/Delete O(log n), Min/Max O(1)</p>
+                        <p><strong>Trie:</strong> Search/Insert O(m) where m = key length</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Sorting Algorithms</h4>
+                        <p><strong>Quick Sort:</strong> O(n log n) average, O(n²) worst</p>
+                        <p><strong>Merge Sort:</strong> O(n log n) guaranteed, O(n) space</p>
+                        <p><strong>Heap Sort:</strong> O(n log n), O(1) space</p>
+                        <p><strong>Counting Sort:</strong> O(n+k) where k = range</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>ML Algorithms</h4>
+                        <p><strong>Linear Regression:</strong> Train O(nd²), Predict O(d)</p>
+                        <p><strong>k-NN:</strong> Train O(1), Predict O(nd)</p>
+                        <p><strong>Decision Tree:</strong> Train O(n log n × d), Predict O(log n)</p>
+                        <p><strong>Random Forest:</strong> Train O(m × n log n × d), m=trees</p>
+                        <p><strong>Neural Network:</strong> O(epochs × batch_size × layers × neurons)</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🔍 ML System Design Framework</h3>
+                    
+                    <div class="format-item">
+                        <h4>1. Clarify Requirements (5 min)</h4>
+                        <p><strong>Ask:</strong> What's the goal? Scale (users, QPS)? Latency requirements? Online/offline?</p>
+                        <p><strong>Example:</strong> "Is this real-time recommendation or batch? Mobile or web?"</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>2. Define Metrics (5 min)</h4>
+                        <p><strong>Business:</strong> Revenue, engagement, conversion</p>
+                        <p><strong>ML:</strong> Precision, recall, AUC, NDCG (ranking)</p>
+                        <p><strong>System:</strong> Latency (p99), throughput, cost</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>3. High-Level Architecture (10 min)</h4>
+                        <p><strong>Components:</strong> Data → Features → Model → Serving → Monitoring</p>
+                        <p><strong>Draw:</strong> Data sources, feature store, training pipeline, inference</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>4. Data & Features (10 min)</h4>
+                        <p><strong>Data sources:</strong> User behavior, item metadata, context</p>
+                        <p><strong>Features:</strong> User (age, history), Item (category, popularity), Context (time, device)</p>
+                        <p><strong>Engineering:</strong> Normalization, embeddings, feature crosses</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>5. Model Selection (10 min)</h4>
+                        <p><strong>Start simple:</strong> Logistic regression, collaborative filtering</p>
+                        <p><strong>Iterate:</strong> Deep learning (two-tower, transformers)</p>
+                        <p><strong>Consider:</strong> Cold start, diversity, exploration vs exploitation</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>6. Training & Evaluation (10 min)</h4>
+                        <p><strong>Train/val/test split:</strong> Time-based for temporal data</p>
+                        <p><strong>Offline eval:</strong> AUC, precision@k, NDCG</p>
+                        <p><strong>Online eval:</strong> A/B testing, interleaving</p>
+                        <p><strong>Retraining:</strong> Frequency, triggers, incremental learning</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>7. Serving & Infrastructure (5 min)</h4>
+                        <p><strong>Serving:</strong> REST API, batch processing, caching</p>
+                        <p><strong>Latency:</strong> Model size, quantization, model distillation</p>
+                        <p><strong>Scaling:</strong> Load balancing, horizontal scaling, CDN</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>8. Monitoring & Debugging (5 min)</h4>
+                        <p><strong>Monitor:</strong> Model performance, data drift, prediction distribution</p>
+                        <p><strong>Alerts:</strong> Accuracy drop, latency spike, null predictions</p>
+                        <p><strong>Debug:</strong> Feature importance, error analysis, user feedback</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>📝 Worked Example: Probability Puzzle</h3>
+                    
+                    <div class="format-item">
+                        <h4>Problem: Expected Coin Flips for HH</h4>
+                        <p><strong>Question:</strong> How many fair coin flips expected to see two heads in a row?</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Solution (Markov Chain Approach)</h4>
+                        <p><strong>States:</strong> Start (S), One Head (H), Two Heads (HH)</p>
+                        <p><strong>Define:</strong> E = expected flips from Start, E_H = from state H</p>
+                        <p><strong>From Start:</strong> E = 1 + 0.5·E_H + 0.5·E (flip, get H or T→restart)</p>
+                        <p><strong>From H:</strong> E_H = 1 + 0.5·0 + 0.5·E (flip, get H→done or T→restart)</p>
+                        <p><strong>Solve E_H:</strong> E_H = 1 + 0.5E → E_H = 2 + E</p>
+                        <p><strong>Substitute:</strong> E = 1 + 0.5(2+E) + 0.5E = 2 + E</p>
+                        <p><strong>Simplify:</strong> E = 2 + 0.5E + 0.5E = 2 + E... wait, let me recalculate:</p>
+                        <p>E_H = 1 + 0.5·0 + 0.5·E = 1 + 0.5E</p>
+                        <p>E = 1 + 0.5·E_H + 0.5·E = 1 + 0.5(1+0.5E) + 0.5E</p>
+                        <p>E = 1 + 0.5 + 0.25E + 0.5E = 1.5 + 0.75E</p>
+                        <p>0.25E = 1.5 → <strong>E = 6 flips</strong></p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🗣️ Behavioral Interview Guide (STAR Method)</h3>
+                    
+                    <div class="format-item">
+                        <h4>STAR Framework</h4>
+                        <p><strong>Situation:</strong> Set the context (15-20%)</p>
+                        <p><strong>Task:</strong> Describe your responsibility (15-20%)</p>
+                        <p><strong>Action:</strong> What YOU did, be specific (50%)</p>
+                        <p><strong>Result:</strong> Outcome, metrics, learnings (15-20%)</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Common Questions & Approach</h4>
+                        <p><strong>"Tell me about a challenging project"</strong></p>
+                        <p>→ Pick project with technical depth, show problem-solving</p>
+                        <p><strong>"Describe a time you failed"</strong></p>
+                        <p>→ Real failure, focus on learnings, what you'd do differently</p>
+                        <p><strong>"How do you handle disagreement?"</strong></p>
+                        <p>→ Show data-driven approach, respect for others, compromise</p>
+                        <p><strong>"Why ML/this company?"</strong></p>
+                        <p>→ Genuine interest, specific examples, align with values</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Prepare 5 Core Stories</h4>
+                        <p><strong>1. Technical achievement:</strong> Complex ML project, impact</p>
+                        <p><strong>2. Leadership/influence:</strong> Led initiative, mentored, drove decision</p>
+                        <p><strong>3. Failure/learning:</strong> What went wrong, what you learned</p>
+                        <p><strong>4. Collaboration:</strong> Worked across teams, resolved conflict</p>
+                        <p><strong>5. Innovation:</strong> Creative solution, new approach</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🎓 Study Strategies That Work</h3>
+                    
+                    <div class="format-item">
+                        <h4>Spaced Repetition</h4>
+                        <p><strong>Day 1:</strong> Learn new concept</p>
+                        <p><strong>Day 2:</strong> Review (quick)</p>
+                        <p><strong>Day 7:</strong> Review again</p>
+                        <p><strong>Day 30:</strong> Final review</p>
+                        <p><strong>Why:</strong> Optimal for long-term retention</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Active Learning Techniques</h4>
+                        <p><strong>Feynman Technique:</strong> Explain concept simply, identify gaps</p>
+                        <p><strong>Practice problems:</strong> Do, don't just read</p>
+                        <p><strong>Implement from scratch:</strong> Don't just use libraries</p>
+                        <p><strong>Teach others:</strong> Best way to solidify understanding</p>
+                        <p><strong>Mock interviews:</strong> Simulate pressure, get feedback</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Daily Study Routine (6 weeks out)</h4>
+                        <p><strong>Morning (2 hrs):</strong> Theory review, flashcards, watch lectures</p>
+                        <p><strong>Afternoon (2 hrs):</strong> Coding practice (2-3 problems)</p>
+                        <p><strong>Evening (1 hr):</strong> Statistics/quant puzzles, behavioral prep</p>
+                        <p><strong>Weekend:</strong> Mock interviews, weak areas, rest</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>The Week Before</h4>
+                        <p><strong>Reduce intensity:</strong> Light review only</p>
+                        <p><strong>Focus on confidence:</strong> What you know, not gaps</p>
+                        <p><strong>Prepare logistics:</strong> Test equipment, plan outfit</p>
+                        <p><strong>Sleep well:</strong> 8+ hours, no all-nighters</p>
+                        <p><strong>Light exercise:</strong> Reduce stress, stay sharp</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>📚 Recommended Resources</h3>
+                    
+                    <div class="format-item">
+                        <h4>Books (Must-Read)</h4>
+                        <p><strong>ML:</strong> Hands-On ML (Géron), Deep Learning (Goodfellow)</p>
+                        <p><strong>Stats:</strong> Statistical Inference (Casella & Berger)</p>
+                        <p><strong>Coding:</strong> Cracking the Coding Interview (McDowell)</p>
+                        <p><strong>Quant:</strong> Heard on The Street (Crack), Joshi's guide</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Online Platforms</h4>
+                        <p><strong>Coding:</strong> LeetCode (patterns), HackerRank, CodeSignal</p>
+                        <p><strong>ML:</strong> Kaggle, Papers with Code, Fast.ai</p>
+                        <p><strong>Mock Interviews:</strong> Pramp, interviewing.io</p>
+                        <p><strong>Courses:</strong> Coursera (Andrew Ng), Stanford CS229</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🏢 Company-Specific Focus Areas</h3>
+                    
+                    <div class="format-item">
+                        <h4>Tech Giants (FAANG+)</h4>
+                        <p><strong>Google/Meta:</strong> System design crucial for L4+. Behavioral via past projects. Heavy coding (LeetCode Medium/Hard). ML: scaling, A/B testing.</p>
+                        <p><strong>Amazon:</strong> 14 Leadership Principles memorize & prepare. Bar raiser round. Behavioral = 50% weight. "Tell me about a time..."</p>
+                        <p><strong>Microsoft:</strong> Collaborative culture fit important. Mix of coding + ML theory. Design: Azure/cloud integration.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Quant Firms</h4>
+                        <p><strong>Citadel/Jane Street:</strong> Fast mental math critical. Probability puzzles (coin flips, card games). Market making, options pricing. Competitive, pressure-tested.</p>
+                        <p><strong>Two Sigma/DE Shaw:</strong> PhD often expected. Research-heavy. Statistical modeling, time series. Coding: C++/Python, optimization.</p>
+                        <p><strong>AQR/WorldQuant:</strong> Factor models, backtesting. Academic rigor. Portfolio optimization, risk management.</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>AI/ML Startups</h4>
+                        <p><strong>OpenAI/Anthropic:</strong> Deep learning expertise. Research background valued. Alignment, safety considerations. Rapid prototyping.</p>
+                        <p><strong>Scale AI/Hugging Face:</strong> Practical ML deployment. MLOps. Community engagement. Open source contributions.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>🎯 Interview Day Strategy</h3>
+                    
+                    <div class="format-item">
+                        <h4>First 5 Minutes (Crucial)</h4>
+                        <p><strong>Clarify the problem:</strong> Ask questions, confirm understanding</p>
+                        <p><strong>State assumptions:</strong> "I'm assuming..."</p>
+                        <p><strong>Discuss approach:</strong> High-level before diving into code</p>
+                        <p><strong>Build rapport:</strong> Be personable, show enthusiasm</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Problem-Solving Framework</h4>
+                        <p><strong>1. Understand:</strong> Restate problem, edge cases, constraints</p>
+                        <p><strong>2. Plan:</strong> Brute force first, discuss complexity</p>
+                        <p><strong>3. Optimize:</strong> Better algorithm, explain trade-offs</p>
+                        <p><strong>4. Code:</strong> Clean, modular, test as you go</p>
+                        <p><strong>5. Test:</strong> Walk through examples, edge cases</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>When You're Stuck</h4>
+                        <p><strong>Think out loud:</strong> "I'm considering two approaches..."</p>
+                        <p><strong>Try examples:</strong> Work through small case by hand</p>
+                        <p><strong>Ask for hints:</strong> "Should I consider X approach?"</p>
+                        <p><strong>State what you know:</strong> Partial credit better than silence</p>
+                        <p><strong>Stay calm:</strong> Interviewers expect struggle, want to see resilience</p>
+                    </div>
+
+                    <div class="format-item">
+                        <h4>Red Flags to Avoid</h4>
+                        <p>❌ Going silent for minutes</p>
+                        <p>❌ Jumping to code without discussion</p>
+                        <p>❌ Being defensive about mistakes</p>
+                        <p>❌ Not testing your solution</p>
+                        <p>❌ Bad-mouthing previous employer/team</p>
+                        <p>❌ Claiming you know something you don't</p>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>📅 Final Week Checklist</h3>
+                    
+                    <div class="timeline-item blue">
+                        <h4>7 Days Before</h4>
+                        <p>✅ Review all flashcards one final time</p>
+                        <p>✅ Do 2-3 practice problems (confidence boost, not learning)</p>
+                        <p>✅ Review your projects, prepare to explain deeply</p>
+                    </div>
+                    
+                    <div class="timeline-item green">
+                        <h4>3 Days Before</h4>
+                        <p>✅ Mock interview with friend/platform</p>
+                        <p>✅ Test your setup (camera, mic, internet)</p>
+                        <p>✅ Prepare questions to ask interviewer (5-10)</p>
+                    </div>
+                    
+                    <div class="timeline-item orange">
+                        <h4>1 Day Before</h4>
+                        <p>✅ Light review of formulas only</p>
+                        <p>✅ Get 8+ hours of sleep</p>
+                        <p>✅ Prepare clothes, workspace</p>
+                        <p>✅ NO new material</p>
+                    </div>
+                    
+                    <div class="timeline-item red">
+                        <h4>Interview Day</h4>
+                        <p>✅ Eat a good meal 2 hours before</p>
+                        <p>✅ Arrive/join 10 minutes early</p>
+                        <p>✅ Have water, paper, pen ready</p>
+                        <p>✅ Take deep breaths, you've got this! 💪</p>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 
     <script>
-        const questions = [
-            {q: "What is bias-variance tradeoff?", a: "Bias-variance describes relationship between model complexity and error.\nHigh bias = underfitting (too simple)\nHigh variance = overfitting (too complex)\nGoal: minimize bias² + variance + irreducible error"},
-            {q: "Explain L1 vs L2 regularization", a: "L1 (Lasso): λ∑|w| - creates sparse weights\nL2 (Ridge): λ∑w² - shrinks all weights\nL1 for feature selection, L2 when all features relevant"},
-            {q: "What is gradient descent?", a: "Iterative optimization: w = w - α∇L(w)\nUpdates parameters toward minimum\nCan fail: local minima, bad learning rate, vanishing gradients"},
-            {q: "Precision vs Recall?", a: "Precision = TP/(TP+FP) - accuracy of positive predictions\nRecall = TP/(TP+FN) - coverage of actual positives\nF1 = harmonic mean of both"},
-            {q: "What is the Central Limit Theorem?", a: "Sampling distribution of mean → Normal(μ, σ²/n) as n increases\nWorks regardless of original distribution\nKey for hypothesis testing and confidence intervals"},
-            {q: "Explain Bayes' Theorem", a: "P(A|B) = P(B|A)P(A) / P(B)\nUpdates beliefs given new evidence\nExample: Medical tests, spam filters"},
-            {q: "What is the Sharpe Ratio?", a: "Sharpe = (Return - RiskFree) / StdDev\nMeasures risk-adjusted return\nHigher is better: >1 good, >2 excellent"},
-            {q: "Monty Hall problem - switch or stay?", a: "ALWAYS SWITCH!\nP(win|stay) = 1/3\nP(win|switch) = 2/3\nSwitching doubles your chances"},
-            {q: "Implement gradient descent pseudocode", a: "for epoch in epochs:\n  y_pred = X @ w + b\n  dw = (1/m) * X.T @ (y_pred - y)\n  db = (1/m) * sum(y_pred - y)\n  w -= lr * dw\n  b -= lr * db"},
-            {q: "What is dropout in neural networks?", a: "Randomly sets neurons to 0 with probability p during training\nPrevents overfitting by forcing redundant representations\nTypical p=0.5 for hidden layers\nScale by 1/(1-p) during training"}
-        ];
+        // Data
+        const questions = {
+            'ml-theory': [
+                { q: "What is the bias-variance tradeoff?", a: "The bias-variance tradeoff describes the relationship between model complexity and prediction error. High bias (underfitting) means the model is too simple and makes strong assumptions. High variance (overfitting) means the model is too complex and captures noise. The goal is to find the sweet spot that minimizes total error = bias² + variance + irreducible error." },
+                { q: "Explain the difference between L1 and L2 regularization.", a: "L1 (Lasso) adds the absolute value of coefficients as penalty (λ∑|w|), promoting sparsity and feature selection. L2 (Ridge) adds the square of coefficients (λ∑w²), shrinking all coefficients but rarely to zero. L1 is better for feature selection; L2 is better when all features are relevant." },
+                { q: "What is gradient descent and why might it fail?", a: "Gradient descent iteratively updates parameters in the direction of steepest descent: w = w - α∇L(w). It can fail due to: 1) Getting stuck in local minima (less common in high dimensions), 2) Poor learning rate (too high causes divergence, too low causes slow convergence), 3) Saddle points in high dimensions, 4) Vanishing/exploding gradients." },
+                { q: "Explain precision vs recall with an example.", a: "Precision = TP/(TP+FP) - of predicted positives, how many are correct. Recall = TP/(TP+FN) - of actual positives, how many did we find. Example: Email spam filter. High precision = few false alarms (good emails marked spam). High recall = catches most spam (but might flag good emails too). F1-score balances both." },
+                { q: "What is cross-validation and why use it?", a: "Cross-validation splits data into k folds, trains on k-1 and validates on 1, rotating through all folds. Benefits: 1) Better estimate of model performance on unseen data, 2) Uses all data for both training and validation, 3) Reduces variance in performance estimate. Common: 5-fold or 10-fold CV." }
+            ],
+            'statistics': [
+                { q: "Explain the Central Limit Theorem.", a: "The CLT states that the sampling distribution of the sample mean approaches a normal distribution as sample size increases, regardless of the population's distribution (given finite variance). Key points: 1) Sample size n≥30 typically sufficient, 2) Mean of sampling distribution = population mean, 3) Std dev = σ/√n. Critical for hypothesis testing and confidence intervals." },
+                { q: "What is a p-value and how do you interpret it?", a: "A p-value is the probability of observing data at least as extreme as what we got, assuming the null hypothesis is true. Low p-value (typically <0.05) suggests strong evidence against null hypothesis. NOT the probability that null is true. Common misconceptions: p=0.05 isn't a magical threshold, statistical significance ≠ practical significance." },
+                { q: "Explain Type I and Type II errors.", a: "Type I error (False Positive, α): Rejecting null hypothesis when it's true. Controlled by significance level (typically 0.05). Type II error (False Negative, β): Failing to reject null hypothesis when it's false. Power = 1-β. Trade-off: Reducing Type I error increases Type II error." },
+                { q: "What is maximum likelihood estimation (MLE)?", a: "MLE finds parameter values that maximize the likelihood of observing the given data. For parameters θ: L(θ|data) = P(data|θ). Often maximize log-likelihood for numerical stability. Steps: 1) Write likelihood function, 2) Take log, 3) Differentiate wrt parameters, 4) Set to zero and solve." }
+            ],
+            'coding': [
+                { q: "Implement k-means clustering from scratch.", a: "def kmeans(X, k, max_iters=100):\n  centroids = X[np.random.choice(len(X), k, replace=False)]\n  for _ in range(max_iters):\n    distances = np.sqrt(((X[:, None] - centroids) ** 2).sum(axis=2))\n    labels = distances.argmin(axis=1)\n    new_centroids = np.array([X[labels == i].mean(axis=0) for i in range(k)])\n    if np.allclose(centroids, new_centroids): break\n    centroids = new_centroids\n  return labels, centroids" },
+                { q: "Write a function to compute cosine similarity.", a: "def cosine_similarity(a, b):\n  return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))\n\n# Range: [-1, 1]\n# 1 = identical direction\n# -1 = opposite\n# 0 = orthogonal" },
+                { q: "Implement gradient descent for linear regression.", a: "def gradient_descent(X, y, lr=0.01, epochs=1000):\n  m, n = X.shape\n  weights = np.zeros(n)\n  bias = 0\n  for epoch in range(epochs):\n    y_pred = X @ weights + bias\n    dw = (2/m) * X.T @ (y_pred - y)\n    db = (2/m) * np.sum(y_pred - y)\n    weights -= lr * dw\n    bias -= lr * db\n  return weights, bias" }
+            ],
+            'quant': [
+                { q: "Expected coin flips for two heads in a row?", a: "Let E = expected flips from start, E_H = expected flips after seeing one H. E = 1 + 0.5*E_H + 0.5*E (if T, restart). E_H = 1 + 0.5*0 + 0.5*E (if HH done, if HT restart). Solving: E_H = 1 + 0.5*E. Substituting: E = 1 + 0.5*(1 + 0.5*E) + 0.5*E = 1.5 + 0.75*E. Answer: E = 6 flips." },
+                { q: "Explain the Sharpe ratio.", a: "Sharpe Ratio = (R_p - R_f) / σ_p measures return per unit of total volatility. R_p = portfolio return, R_f = risk-free rate, σ_p = portfolio std dev. Higher is better. Drawback: treats upside and downside volatility equally. Alternative: Sortino ratio (uses only downside deviation)." },
+                { q: "What is Value at Risk (VaR)?", a: "VaR is the maximum loss expected over a time horizon at a given confidence level. 95% VaR of $1M means 5% chance of losing more than $1M. Limitations: 1) Doesn't capture tail risk beyond VaR, 2) Not subadditive, 3) No info about loss size beyond threshold. Alternative: CVaR (Expected Shortfall)." }
+            ],
+            'genai': [
+                { q: "Explain the transformer architecture.", a: "Transformers use self-attention to process sequences in parallel. Key components: 1) Multi-head self-attention: Attention(Q,K,V) = softmax(QK^T/√d_k)V, 2) Position encoding (sine/cosine), 3) Feed-forward networks, 4) Layer normalization and residual connections. Why revolutionary: parallelizable, better long-range dependencies, scalable, transfer learning." },
+                { q: "What's the difference between GPT and BERT?", a: "GPT: Decoder-only, autoregressive, left-to-right context. Training: next token prediction. Use: generation. BERT: Encoder-only, bidirectional context. Training: masked language modeling (MLM). Use: classification, NER, Q&A. Key difference: GPT sees only past, BERT sees past and future." },
+                { q: "Explain RLHF.", a: "RLHF aligns LLMs with human preferences. Steps: 1) Supervised fine-tuning on demonstrations, 2) Train reward model on human comparisons, 3) RL optimization (PPO) against reward model. Maximize: E[r(x,y)] - β*KL(π_θ||π_ref). Used in ChatGPT, Claude. Benefits: reduces harmful outputs, improves helpfulness." },
+                { q: "What is RAG?", a: "RAG combines retrieval with generation. Process: 1) Query, 2) Retrieve relevant docs via embedding similarity, 3) Inject docs into prompt, 4) Generate answer. Benefits: reduces hallucinations, up-to-date info, citable sources, domain knowledge. Components: vector DB, embeddings, chunking, retrieval method." }
+            ]
+        };
 
-        let currentIndex = 0;
+        const categories = {
+            'ml-theory': { name: 'ML Theory', icon: '🧠', color: 'blue' },
+            'statistics': { name: 'Statistics', icon: '📊', color: 'green' },
+            'coding': { name: 'Coding', icon: '💻', color: 'purple' },
+            'quant': { name: 'Quant/Finance', icon: '📈', color: 'orange' },
+            'genai': { name: 'GenAI/LLMs', icon: '🤖', color: 'pink' }
+        };
+
+        // State
+        let activeCategory = 'ml-theory';
+        let currentCard = 0;
         let showingAnswer = false;
+        let completedCards = new Set();
 
-        function displayQuestion() {
-            const q = questions[currentIndex];
-            document.getElementById('question-text').textContent = q.q;
-            document.getElementById('answer').textContent = q.a;
-            document.getElementById('answer').classList.add('hidden');
-            document.getElementById('show-btn').textContent = 'Show Answer';
-            document.getElementById('counter').textContent = `${currentIndex + 1} / ${questions.length}`;
-            showingAnswer = false;
+        // Initialize
+        function init() {
+            renderCategories();
+            renderCard();
+            updateStats();
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categories');
+            container.innerHTML = '';
             
-            document.getElementById('prev-btn').disabled = currentIndex === 0;
-            document.getElementById('next-btn').disabled = currentIndex === questions.length - 1;
+            Object.entries(categories).forEach(([key, data]) => {
+                const btn = document.createElement('button');
+                btn.className = `category-btn ${data.color}`;
+                if (key === activeCategory) btn.classList.add('active');
+                btn.textContent = `${data.icon} ${data.name}`;
+                btn.onclick = () => switchCategory(key);
+                container.appendChild(btn);
+            });
+        }
+
+        function switchCategory(key) {
+            activeCategory = key;
+            currentCard = 0;
+            showingAnswer = false;
+            renderCategories();
+            renderCard();
+            updateStats();
+        }
+
+        function renderCard() {
+            const qs = questions[activeCategory];
+            const q = qs[currentCard];
+            
+            document.getElementById('cardNumber').textContent = `Question ${currentCard + 1} of ${qs.length}`;
+            document.getElementById('question').textContent = q.q;
+            document.getElementById('questionWithAnswer').textContent = q.q;
+            document.getElementById('answer').textContent = q.a;
+            
+            const completeBtn = document.getElementById('completeBtn');
+            const key = `${activeCategory}-${currentCard}`;
+            if (completedCards.has(key)) {
+                completeBtn.classList.add('completed');
+                completeBtn.textContent = '✓ Mastered';
+            } else {
+                completeBtn.classList.remove('completed');
+                completeBtn.textContent = 'Mark Complete';
+            }
+            
+            if (showingAnswer) {
+                document.getElementById('questionContent').classList.add('hidden');
+                document.getElementById('answerContent').classList.remove('hidden');
+            } else {
+                document.getElementById('questionContent').classList.remove('hidden');
+                document.getElementById('answerContent').classList.add('hidden');
+            }
+            
+            updateProgress();
         }
 
         function showAnswer() {
-            if (!showingAnswer) {
-                document.getElementById('answer').classList.remove('hidden');
-                document.getElementById('show-btn').textContent = 'Hide Answer';
-                showingAnswer = true;
+            showingAnswer = true;
+            renderCard();
+        }
+
+        function nextCard() {
+            const qs = questions[activeCategory];
+            currentCard = (currentCard + 1) % qs.length;
+            showingAnswer = false;
+            renderCard();
+        }
+
+        function prevCard() {
+            const qs = questions[activeCategory];
+            currentCard = (currentCard - 1 + qs.length) % qs.length;
+            showingAnswer = false;
+            renderCard();
+        }
+
+        function toggleComplete() {
+            const key = `${activeCategory}-${currentCard}`;
+            if (completedCards.has(key)) {
+                completedCards.delete(key);
             } else {
-                document.getElementById('answer').classList.add('hidden');
-                document.getElementById('show-btn').textContent = 'Show Answer';
+                completedCards.add(key);
+            }
+            renderCard();
+            updateStats();
+        }
+
+        function updateProgress() {
+            const qs = questions[activeCategory];
+            const completed = Array.from(completedCards).filter(k => k.startsWith(activeCategory)).length;
+            const total = qs.length;
+            const percent = (completed / total) * 100;
+            
+            document.getElementById('progressText').textContent = `Progress: ${completed}/${total}`;
+            document.getElementById('progressFill').style.width = `${percent}%`;
+        }
+
+        function updateStats() {
+            const container = document.getElementById('stats');
+            container.innerHTML = '';
+            
+            Object.entries(categories).forEach(([key, data]) => {
+                const completed = Array.from(completedCards).filter(k => k.startsWith(key)).length;
+                const total = questions[key].length;
+                
+                const card = document.createElement('div');
+                card.className = 'stat-card';
+                card.innerHTML = `
+                    <div class="stat-icon">${data.icon}</div>
+                    <div class="stat-name">${data.name}</div>
+                    <div class="stat-value ${data.color}">${completed}/${total}</div>
+                `;
+                container.appendChild(card);
+            });
+            
+            updateProgress();
+        }
+
+        function resetProgress() {
+            if (confirm('Reset all progress?')) {
+                completedCards.clear();
+                currentCard = 0;
                 showingAnswer = false;
+                renderCard();
+                updateStats();
             }
         }
 
-        function nextQuestion() {
-            if (currentIndex < questions.length - 1) {
-                currentIndex++;
-                displayQuestion();
-            }
+        function showResources() {
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('resourcesContent').classList.remove('hidden');
         }
 
-        function prevQuestion() {
-            if (currentIndex > 0) {
-                currentIndex--;
-                displayQuestion();
-            }
+        function showMain() {
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.getElementById('resourcesContent').classList.add('hidden');
         }
 
-        displayQuestion();
+        // Start the app
+        init();
     </script>
 </body>
 </html>
