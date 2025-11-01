@@ -86,6 +86,7 @@
         }
         
         .category-btn.blue.active { background: #3b82f6; }
+        .category-btn.red.active { background: #ef4444; }
         .category-btn.green.active { background: #10b981; }
         .category-btn.purple.active { background: #8b5cf6; }
         .category-btn.orange.active { background: #f97316; }
@@ -288,6 +289,7 @@
         }
         
         .stat-value.blue { color: #3b82f6; }
+        .stat-value.red { color: #ef4444; }
         .stat-value.green { color: #10b981; }
         .stat-value.purple { color: #8b5cf6; }
         .stat-value.orange { color: #f97316; }
@@ -394,7 +396,7 @@
         <div id="mainContent">
             <div class="header">
                 <h1>🎯 Interview Prep Hub</h1>
-                <p>ML • Data Science • GenAI • Quant Finance</p>
+                <p>ML • Deep Learning • Data Science • GenAI • Quant Finance</p>
                 <button class="resource-btn" onclick="showResources()">📚 Study Resources & Interview Guide</button>
             </div>
 
@@ -441,697 +443,9 @@
         <div id="resourcesContent" class="hidden">
             <button class="back-btn" onclick="showMain()">← Back to Flashcards</button>
             <div class="resources">
+                <!-- Resources content here - keeping minimal for space -->
                 <h2>📚 Study Resources & Interview Guide</h2>
-
-                <section>
-                    <h3>📐 Essential ML Concepts Explained</h3>
-                    
-                    <div class="format-item">
-                        <h4>Loss Functions - What Are They Measuring?</h4>
-                        <p><strong>MSE (Mean Squared Error):</strong> Penalizes predictions quadratically. Big errors get punished MUCH more than small ones because of the square. If you're off by 10, that's 100x worse than being off by 1. Use for regression when you really want to minimize large errors.</p>
-                        <p><strong>Cross-Entropy:</strong> Measures "surprise" - how much your predicted probability disagrees with reality. If you predicted 99% confident and were wrong, massive penalty. If you predicted 50-50, smaller penalty. Perfect for classification because it encourages the model to be confidently correct.</p>
-                        <p><strong>Hinge Loss:</strong> SVM's loss function. Only cares if you're on the right side of the margin. Once you're confidently correct (margin > 1), the loss is zero. Focuses on "borderline" examples near the decision boundary.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Regularization - Why Your Model Needs Boundaries</h4>
-                        <p><strong>The Problem:</strong> Without regularization, your model might use HUGE weights to perfectly fit training data, including noise. This kills generalization.</p>
-                        <p><strong>L1 (Lasso):</strong> Adds absolute value of weights to loss. Think of it as a "budget" - the model must use weights sparingly. Result? Many weights become exactly zero, giving you automatic feature selection. Great when you suspect only some features matter.</p>
-                        <p><strong>L2 (Ridge):</strong> Adds squared weights to loss. Prefers many small weights over few large ones. Doesn't zero out features, just shrinks them proportionally. Better when all features contribute somewhat, or when features are correlated (multicollinearity).</p>
-                        <p><strong>Why λ matters:</strong> λ is your knob - turn it up for more regularization (simpler model, less overfitting), down for less (more complex, might overfit). Cross-validation finds the sweet spot.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Activation Functions - Why Linear Isn't Enough</h4>
-                        <p><strong>The Core Problem:</strong> Stacking linear layers just gives you another linear layer. Without non-linearity, neural networks are just fancy linear regression!</p>
-                        <p><strong>ReLU (f(x) = max(0, x)):</strong> Dead simple - negative values become 0, positive pass through. Why it works: (1) Gradient is always 1 for positive values (no vanishing gradient!), (2) Induces sparsity (neurons with negative inputs are "off"), (3) Cheap to compute. Downside: "Dying ReLU" - neurons can get stuck at 0.</p>
-                        <p><strong>Sigmoid:</strong> Squashes any input to [0,1], interpretable as probability. Problem: Gradients near 0 or 1 are tiny → vanishing gradient in deep networks. Mainly used in output layer for binary classification now.</p>
-                        <p><strong>Tanh:</strong> Like sigmoid but centered at 0 (output [-1,1]). Better than sigmoid in hidden layers because zero-centered outputs help with convergence. Still has vanishing gradient problem.</p>
-                        <p><strong>Softmax:</strong> Takes vector of scores, converts to probability distribution (sums to 1). Each class gets a probability. Higher scores → higher probability. Used in output layer for multi-class classification.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Gradient Descent Variants - How Does Learning Work?</h4>
-                        <p><strong>Core Idea:</strong> Calculate which direction makes loss worse, go opposite direction. Repeat until loss stops decreasing.</p>
-                        <p><strong>Batch GD:</strong> Compute gradient using ALL training examples. Pro: Stable, smooth convergence. Con: Slow for big datasets, might need to load everything in memory. Rarely used in practice.</p>
-                        <p><strong>Stochastic GD:</strong> Compute gradient using ONE random example. Pro: Fast updates, can escape local minima, works online. Con: Noisy, jumpy convergence, might bounce around optimum.</p>
-                        <p><strong>Mini-batch GD:</strong> Compute gradient using small batch (32-512 examples). Sweet spot! Fast enough, stable enough. Can leverage GPU parallelism. This is the standard.</p>
-                        <p><strong>Adam:</strong> Adapts learning rate per parameter using moving averages of gradients and squared gradients. Parameters that have been moving consistently get bigger updates. Almost always works out of the box. Default choice for most applications.</p>
-                        <p><strong>Learning Rate:</strong> Too high → you overshoot and diverge. Too low → takes forever. Common strategy: start high (0.001), reduce when progress plateaus (learning rate scheduling).</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>📊 Statistics Explained Intuitively</h3>
-                    
-                    <div class="format-item">
-                        <h4>Central Limit Theorem - The Magic of Averages</h4>
-                        <p><strong>What it says:</strong> Take ANY distribution (even weird ones), sample from it repeatedly, and average each sample. Plot all these averages, and you get a normal distribution. Mind-blowing!</p>
-                        <p><strong>Why it matters:</strong> This is why we can use normal distribution assumptions for hypothesis tests even when our data isn't normal. We're testing means, not individual values.</p>
-                        <p><strong>Example:</strong> Roll a die (uniform distribution) 30 times, record average. Do this 1000 times. Your 1000 averages will look like a bell curve centered at 3.5, even though individual rolls are uniform.</p>
-                        <p><strong>Requirement:</strong> Sample size n≥30 is rule of thumb. Standard error = σ/√n gets smaller as n grows - more samples = more precise estimate.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>P-values - The Most Misunderstood Concept</h4>
-                        <p><strong>Correct interpretation:</strong> "If the null hypothesis were true, what's the probability of seeing data this extreme or more extreme?"</p>
-                        <p><strong>Example:</strong> You claim a coin is biased. Flip it 100 times, get 60 heads. P-value = 0.03 means: "If the coin were fair, only 3% of the time would we get 60+ or 40- heads in 100 flips." That's unlikely, so we doubt the coin is fair.</p>
-                        <p><strong>What p-value is NOT:</strong></p>
-                        <p>❌ "Probability null hypothesis is true" - NO!</p>
-                        <p>❌ "Probability of Type I error" - NO!</p>
-                        <p>❌ "Effect size" - NO! p=0.001 doesn't mean huge effect</p>
-                        <p><strong>The 0.05 threshold:</strong> Arbitrary convention. P=0.049 isn't fundamentally different from p=0.051. Consider effect size and context!</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Type I vs Type II Errors - The Trade-off</h4>
-                        <p><strong>Type I (False Positive, α):</strong> Crying wolf - saying something's there when it's not. "The treatment works!" when it doesn't. α = 0.05 means we accept 5% false positive rate.</p>
-                        <p><strong>Type II (False Negative, β):</strong> Missing the signal - saying nothing's there when it is. "The treatment doesn't work" when it actually does. Power = 1-β is our ability to detect real effects.</p>
-                        <p><strong>The Fundamental Trade-off:</strong> Stricter threshold (lower α) → harder to claim significance → more Type II errors. You can't optimize both simultaneously!</p>
-                        <p><strong>Medical Example:</strong> Testing for disease. Type I: Telling healthy person they're sick (false alarm). Type II: Telling sick person they're healthy (missed diagnosis). Which is worse depends on context!</p>
-                        <p><strong>Increasing Power:</strong> (1) Larger sample size, (2) Larger effect size (can't control), (3) Lower variability, (4) Higher α (but then more false positives).</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Confidence Intervals - Better Than P-values</h4>
-                        <p><strong>What it means:</strong> "If we repeated this study 100 times, 95 of those intervals would contain the true parameter." NOT "95% chance true value is in this interval."</p>
-                        <p><strong>Why better than p-values:</strong> Gives you range of plausible values + uncertainty, not just "significant or not." More information!</p>
-                        <p><strong>Example:</strong> Mean height = 170cm, 95% CI [165, 175]. This tells us: (1) Estimate is 170, (2) Precision is ±5cm, (3) Values near 165 or 175 are plausible, (4) Values outside range are unlikely.</p>
-                        <p><strong>Width tells you precision:</strong> Narrow CI = precise estimate (large n or low variance). Wide CI = uncertain estimate (small n or high variance).</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Hypothesis Testing - The Full Picture</h4>
-                        <p><strong>Step 1 - Set up hypotheses:</strong> H₀ (boring default) vs H₁ (interesting claim). Example: H₀: drug has no effect, H₁: drug works.</p>
-                        <p><strong>Step 2 - Choose α:</strong> How much false positive risk are you comfortable with? 0.05 is standard but arbitrary. Medical research might use 0.01 (stricter).</p>
-                        <p><strong>Step 3 - Collect data & calculate test statistic:</strong> Converts your data to a single number measuring how far from null hypothesis you are.</p>
-                        <p><strong>Step 4 - Calculate p-value:</strong> How extreme is your test statistic under H₀?</p>
-                        <p><strong>Step 5 - Decide:</strong> p < α → reject H₀ (evidence for H₁). p ≥ α → fail to reject H₀ (not enough evidence). Note: "fail to reject" ≠ "accept H₀"!</p>
-                        <p><strong>Important:</strong> Always report effect size, confidence intervals, and p-value. Statistical significance ≠ practical importance!</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Common Statistical Tests - When to Use What</h4>
-                        <p><strong>t-test:</strong> Comparing means of two groups. Example: "Do males and females have different average heights?" Assumes: normality, similar variances, independent samples.</p>
-                        <p><strong>Paired t-test:</strong> Before/after comparisons on same subjects. Example: "Does treatment reduce blood pressure?" Tests if difference ≠ 0.</p>
-                        <p><strong>Chi-square test:</strong> Are two categorical variables independent? Example: "Is smoking related to lung cancer?" Compares observed vs expected frequencies.</p>
-                        <p><strong>ANOVA:</strong> Comparing means across 3+ groups. Example: "Do drugs A, B, C have different effects?" Extension of t-test. If significant, do post-hoc tests to find which groups differ.</p>
-                        <p><strong>Mann-Whitney U:</strong> Non-parametric alternative to t-test. When data is skewed or ordinal (ranked). Tests if distributions differ, not just means.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Correlation vs Causation - Why It Matters</h4>
-                        <p><strong>Correlation:</strong> X and Y move together. When ice cream sales go up, drownings go up. Correlation coefficient r = 0.8 (strong!).</p>
-                        <p><strong>But why?</strong> Three possibilities: (1) Ice cream causes drowning (unlikely!), (2) Drowning causes ice cream sales (no!), (3) Hidden variable (summer weather) causes both.</p>
-                        <p><strong>Confounding variable:</strong> Hidden factor influencing both. Always the most likely explanation for surprising correlations.</p>
-                        <p><strong>To establish causation need:</strong> (1) Randomized controlled trial (RCT), (2) Temporal precedence (cause before effect), (3) Dose-response (more cause → more effect), (4) Rule out confounders, (5) Mechanism (how does it work?).</p>
-                        <p><strong>Real example:</strong> Countries that eat more chocolate win more Nobel Prizes. Correlation real, causation? No! Wealth confounds both (rich countries afford chocolate AND education).</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>💻 Coding Patterns Explained</h3>
-                    
-                    <div class="format-item">
-                        <h4>Two Pointers - The Efficiency Hack</h4>
-                        <p><strong>Core Idea:</strong> Instead of nested loops (O(n²)), use two pointers moving toward each other or in same direction (O(n)).</p>
-                        <p><strong>Classic Example - Two Sum in Sorted Array:</strong> Find pair that sums to target. Start with left=0, right=n-1. If sum too small, move left up. If too big, move right down. Why it works: array is sorted, so we can eliminate half the search space each step!</p>
-                        <p><strong>When to Use:</strong> (1) Array/string is sorted or can be sorted, (2) Looking for pairs/triplets, (3) Need to check both ends, (4) Removing duplicates in-place.</p>
-                        <p><strong>Common Variations:</strong> Fast-slow pointers (cycle detection in linked list - Floyd's algorithm), sliding window (variable size based on condition).</p>
-                        <p><strong>Pro Tip:</strong> If problem mentions "sorted array" or "find pair", think two pointers first!</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Sliding Window - For Subarray Problems</h4>
-                        <p><strong>Core Idea:</strong> Maintain a "window" of elements. Expand right to include new elements, contract left when condition violated. Track best solution seen.</p>
-                        <p><strong>Classic Example - Longest Substring Without Repeating Characters:</strong> Use a set to track characters in current window. If new char is duplicate, shrink window from left until duplicate removed. Track max window size. O(n) instead of O(n²)!</p>
-                        <p><strong>Two Types:</strong></p>
-                        <p>• Fixed size: "Maximum sum of subarray size k" - slide window by 1, subtract left, add right</p>
-                        <p>• Variable size: "Smallest subarray with sum ≥ k" - expand until condition met, then contract to minimize</p>
-                        <p><strong>When to Use:</strong> Problem asks for continuous subarray/substring with some property. Keywords: "contiguous", "substring", "subarray".</p>
-                        <p><strong>Template:</strong> left=0, right=0, expand right in loop, shrink left when condition breaks, track answer.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Dynamic Programming - The Art of Remembering</h4>
-                        <p><strong>Core Idea:</strong> Break problem into smaller subproblems. Solve each once, remember answer. Use remembered answers to build up to final solution. "Those who forget the past are condemned to recompute it."</p>
-                        <p><strong>Classic Example - Fibonacci:</strong> Naive recursion: fib(n) = fib(n-1) + fib(n-2). Recomputes same values exponentially! DP: Save fib(i) in array, look up instead of recompute. O(2ⁿ) → O(n)!</p>
-                        <p><strong>Two Approaches:</strong></p>
-                        <p>• Top-down (Memoization): Recursive with cache. More intuitive.</p>
-                        <p>• Bottom-up (Tabulation): Iterative, fill table. More efficient, less memory.</p>
-                        <p><strong>When to Use:</strong> (1) Optimal substructure (optimal solution contains optimal solutions to subproblems), (2) Overlapping subproblems (same subproblem computed multiple times), (3) Counting problems, optimization problems.</p>
-                        <p><strong>Common DP Problems:</strong> Knapsack, longest common subsequence, edit distance, coin change, matrix chain multiplication.</p>
-                        <p><strong>How to Recognize:</strong> "Maximum/minimum", "How many ways", "Optimal", problem can be broken into similar smaller problems.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Binary Search - More Than Just Search</h4>
-                        <p><strong>Core Idea:</strong> Divide search space in half each iteration. Works on ANY monotonic function, not just sorted arrays!</p>
-                        <p><strong>Standard Binary Search:</strong> Find element in sorted array. Check middle, if target is smaller go left half, else right half. O(log n) beats O(n) linear search.</p>
-                        <p><strong>Beyond Arrays:</strong> Can binary search on answer space! Example: "Minimum capacity to ship packages in D days." Binary search on capacity: Can we ship with capacity k? If yes, try smaller. If no, need bigger. Find minimum k that works.</p>
-                        <p><strong>Template (avoid off-by-one errors):</strong></p>
-                        <p>left, right = 0, n-1</p>
-                        <p>while left <= right:</p>
-                        <p>&nbsp;&nbsp;mid = left + (right-left)//2  # Avoid overflow</p>
-                        <p>&nbsp;&nbsp;if arr[mid] == target: return mid</p>
-                        <p>&nbsp;&nbsp;elif arr[mid] < target: left = mid+1</p>
-                        <p>&nbsp;&nbsp;else: right = mid-1</p>
-                        <p><strong>When to Use:</strong> Sorted data, search space can be partitioned, looking for first/last occurrence, optimization problems where you can check "is X feasible?"</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Backtracking - Exploring All Possibilities</h4>
-                        <p><strong>Core Idea:</strong> Try each possibility. If it works, great! If not, undo (backtrack) and try next possibility. Think of it as DFS with undo.</p>
-                        <p><strong>Classic Example - Generate All Subsets:</strong> For each element, make two choices: include it or don't. Explore both paths. Backtrack by removing element before trying next path.</p>
-                        <p><strong>The Template:</strong></p>
-                        <p>def backtrack(candidate):</p>
-                        <p>&nbsp;&nbsp;if is_solution(candidate): save(candidate)</p>
-                        <p>&nbsp;&nbsp;for next_choice in choices:</p>
-                        <p>&nbsp;&nbsp;&nbsp;&nbsp;if is_valid(next_choice):</p>
-                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;make_choice(next_choice)  # Choose</p>
-                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;backtrack(candidate)  # Explore</p>
-                        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undo_choice(next_choice)  # Unchoose</p>
-                        <p><strong>When to Use:</strong> Need all solutions (permutations, combinations, subsets), constraint satisfaction (Sudoku, N-Queens), path-finding where multiple paths exist.</p>
-                        <p><strong>Optimization - Pruning:</strong> If current path can't lead to valid solution, stop exploring (prune). Dramatically speeds up search. Example: If current sum > target in subset sum, no point adding more positive numbers.</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>📈 Quant Finance Explained</h3>
-                    
-                    <div class="format-item">
-                        <h4>Options Basics - What Are You Actually Buying?</h4>
-                        <p><strong>Call Option:</strong> Right (not obligation) to BUY stock at strike price K by expiry T. You pay premium upfront. Profit if stock goes up past K + premium.</p>
-                        <p><strong>Put Option:</strong> Right to SELL stock at strike price K. Profit if stock goes down below K - premium. Think of it as insurance on your stock.</p>
-                        <p><strong>Example:</strong> AAPL is $100. Buy call with K=$110, pay $5 premium. If AAPL hits $120, exercise option: buy at $110, sell at $120, profit = $10 - $5 = $5 per share. If AAPL stays at $100, option expires worthless, lose $5.</p>
-                        <p><strong>Why Black-Scholes Matters:</strong> Before B-S, no standard way to price options. B-S gives theoretical fair value based on: stock price S, strike K, time to expiry T, risk-free rate r, volatility σ.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Black-Scholes Intuition</h4>
-                        <p><strong>The Formula:</strong> C = S·N(d₁) - K·e^(-rT)·N(d₂)</p>
-                        <p><strong>What it means:</strong> Call price = (Expected stock price if option exercised) - (Discounted strike price weighted by probability of exercise)</p>
-                        <p><strong>N(d₁):</strong> Delta, probability of finishing in-the-money adjusted for hedge ratio. How much stock to buy to replicate option.</p>
-                        <p><strong>N(d₂):</strong> Actual probability option expires in-the-money (gets exercised).</p>
-                        <p><strong>Key Insight:</strong> Higher volatility → higher option value. Why? More chance of big move in your favor (upside unlimited), but max loss is premium (limited downside).</p>
-                        <p><strong>Assumptions (often violated in reality):</strong> (1) Constant volatility (nope - volatility smile), (2) No dividends (can adjust), (3) Efficient markets (mostly), (4) Lognormal returns (fat tails in reality).</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Put-Call Parity - The No-Arbitrage Relationship</h4>
-                        <p><strong>The Equation:</strong> C - P = S - K·e^(-rT)</p>
-                        <p><strong>In Words:</strong> (Call price) - (Put price) = (Stock price) - (Present value of strike)</p>
-                        <p><strong>Why it must hold:</strong> If violated, free money (arbitrage)! Example: If C - P > S - K·e^(-rT), someone would buy put, sell call, buy stock, make risk-free profit.</p>
-                        <p><strong>Practical Use:</strong> If you know call price, can immediately calculate fair put price (or vice versa). Markets enforce this tightly - any deviation is arbitraged away instantly.</p>
-                        <p><strong>Intuition:</strong> Buying call and selling put = synthetic long stock position (you're obligated to buy at K). This must equal just buying the stock and saving the strike in the bank.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>The Greeks - Measuring Risk</h4>
-                        <p><strong>Delta (Δ):</strong> How much option price changes per $1 stock move. Call: 0 to 1, Put: -1 to 0. At-the-money ≈ 0.5. Use for hedging: If Δ=0.5, buy 100 shares to hedge 200 call options.</p>
-                        <p><strong>Gamma (Γ):</strong> How much delta changes per $1 stock move. Measures "delta risk" - how fast your hedge becomes wrong. Highest for at-the-money options near expiry (moves rapidly from out-of to in-the-money).</p>
-                        <p><strong>Theta (Θ):</strong> Time decay - money you lose per day just from passage of time. Always negative for long options. Options waste away! Accelerates near expiry. This is why buying options can be tough - time works against you.</p>
-                        <p><strong>Vega (ν):</strong> Change in option price per 1% change in volatility. Positive for long options (higher vol = higher value). During market crashes, implied vol spikes → existing options gain value even if stock drops!</p>
-                        <p><strong>Portfolio Hedging:</strong> Delta-neutral (Δ=0): Stock moves don't affect you. Gamma-neutral (Γ=0): Delta stays stable. Full hedge = neutralize all Greeks (expensive and complex!).</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Risk Metrics - How Risky Is This Really?</h4>
-                        <p><strong>Sharpe Ratio = (Return - Risk-free rate) / Volatility</strong></p>
-                        <p><strong>What it means:</strong> Return per unit of risk. Higher is better. Sharpe = 1 is decent, 2 is great, 3+ is exceptional (or suspicious!).</p>
-                        <p><strong>Example:</strong> Portfolio returns 12% with 15% volatility, risk-free = 2%. Sharpe = (12-2)/15 = 0.67. Not great - you're not getting much extra return for the risk.</p>
-                        <p><strong>Limitation:</strong> Treats upside volatility same as downside. But we like upside volatility! This is why Sortino ratio (only downside deviation) is often better.</p>
-                        <p><strong>Beta - Your Exposure to Market Risk:</strong> β=1 moves with market. β=1.5 moves 50% more. β=0.5 moves half as much. β<0 moves opposite (rare). Can't be diversified away - systematic risk.</p>
-                        <p><strong>Alpha - The Holy Grail:</strong> Return beyond what beta predicts. α=2% means you beat benchmark by 2% after adjusting for risk. This is what active managers claim to provide (and charge high fees for). Most don't deliver positive alpha consistently.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Value at Risk (VaR) - How Bad Can It Get?</h4>
-                        <p><strong>What it is:</strong> "With 95% confidence, I won't lose more than $X tomorrow." That's 95% VaR = $X.</p>
-                        <p><strong>Example:</strong> Portfolio has $10M, VaR(95%) = $200K. This means: 95% of days, you lose less than $200K. 5% of days (1 in 20), you lose more than $200K.</p>
-                        <p><strong>Why banks use it:</strong> Regulatory requirement (Basel). Simple to communicate. Can aggregate across portfolios.</p>
-                        <p><strong>Critical Flaws:</strong></p>
-                        <p>• Tells you nothing about the 5% tail - could lose $201K or $10M!</p>
-                        <p>• Not subadditive - VaR(A+B) can be > VaR(A) + VaR(B). Diversification can make VaR WORSE!</p>
-                        <p>• Ignores tail risk - what really kills you</p>
-                        <p><strong>Better Alternative - CVaR (Conditional VaR):</strong> Expected loss in that bad 5% tail. CVaR always ≥ VaR, gives you worst-case expected loss, is subadditive (plays nice with diversification).</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Kelly Criterion - Optimal Bet Sizing</h4>
-                        <p><strong>The Question:</strong> I have an edge in a bet. What fraction of my bankroll should I wager to maximize long-run growth?</p>
-                        <p><strong>The Formula:</strong> f* = (p·b - q) / b where p=win prob, q=loss prob, b=odds</p>
-                        <p><strong>Example:</strong> Coin flip, 60% win, even odds (b=1). f* = (0.6·1 - 0.4)/1 = 0.2. Bet 20% of bankroll each time.</p>
-                        <p><strong>Why it works:</strong> Maximizes expected log-wealth growth. This is the fastest way to grow wealth long-term. Less aggressive = slower growth. More aggressive = risk of ruin!</p>
-                        <p><strong>Problem:</strong> Full Kelly is very aggressive. One bad streak can hurt badly. Most practitioners use "half Kelly" or "quarter Kelly" - fractional Kelly.</p>
-                        <p><strong>Real-world use:</strong> Poker players, sports bettors, some hedge funds. Requires accurate estimation of p and b - if you overestimate your edge, Kelly will ruin you!</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>🤖 GenAI/LLM Deep Dive</h3>
-                    
-                    <div class="format-item">
-                        <h4>Transformers - The Revolution Explained</h4>
-                        <p><strong>The Problem They Solved:</strong> RNNs process sequences one token at a time (slow!), and struggle with long-range dependencies (attention mechanism tries to fix this but still sequential).</p>
-                        <p><strong>The Big Idea:</strong> Process all tokens in parallel using self-attention. Each token looks at ALL other tokens simultaneously and decides which ones are important.</p>
-                        <p><strong>Self-Attention Intuition:</strong> For word "it" in "The cat sat on the mat because it was tired", attention helps model figure out "it" refers to "cat" not "mat". It computes: how related is "it" to every other word? High attention to "cat", low to "the", "on", etc.</p>
-                        <p><strong>The Math - Attention(Q,K,V) = softmax(QK^T/√d_k)V:</strong></p>
-                        <p>• Q (Query): "What am I looking for?"</p>
-                        <p>• K (Key): "What do I contain?"</p>
-                        <p>• V (Value): "What do I actually output?"</p>
-                        <p>• QK^T: Compute similarity between query and all keys</p>
-                        <p>• /√d_k: Scale to prevent softmax saturation</p>
-                        <p>• softmax: Convert to probability distribution</p>
-                        <p>• Multiply by V: Weighted sum of values</p>
-                        <p><strong>Why Multi-Head?</strong> Different heads learn different relationships - one might learn syntax, another semantics, another long-range dependencies. Then concatenate all heads.</p>
-                        <p><strong>Position Encodings:</strong> Since attention is permutation-invariant, add position info via sin/cos functions. This tells model "this word came before that word".</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>GPT vs BERT - Two Philosophies</h4>
-                        <p><strong>GPT (Generative Pre-trained Transformer):</strong></p>
-                        <p>• Decoder-only architecture, autoregressive (predicts next token)</p>
-                        <p>• Training: "The cat sat on the ___" → predict "mat"</p>
-                        <p>• Only sees previous tokens (causal mask prevents looking ahead)</p>
-                        <p>• Use cases: Text generation, completion, chatbots, creative writing</p>
-                        <p>• Scales amazingly - GPT-3, GPT-4 just scaled up same architecture</p>
-                        <p><strong>BERT (Bidirectional Encoder):</strong></p>
-                        <p>• Encoder-only, non-autoregressive</p>
-                        <p>• Training: "The [MASK] sat on the mat" → predict "cat" using both left and right context</p>
-                        <p>• Sees full context (bidirectional)</p>
-                        <p>• Use cases: Classification, NER, Q&A, sentiment analysis</p>
-                        <p>• Can't generate text (no causal structure)</p>
-                        <p><strong>Key Difference:</strong> GPT is like writing - you only know what came before. BERT is like reading - you see the whole sentence. GPT generates, BERT understands.</p>
-                        <p><strong>Modern Trend:</strong> GPT-style models winning because generation is harder and more valuable. Can fine-tune GPT for classification too!</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>RLHF - Teaching AI What We Actually Want</h4>
-                        <p><strong>The Problem:</strong> Pre-trained LLM predicts next token well but doesn't follow instructions, can be harmful/biased, not aligned with human preferences.</p>
-                        <p><strong>Step 1 - Supervised Fine-Tuning (SFT):</strong> Humans write high-quality (prompt, response) examples. Fine-tune model on these. Gets model in the right ballpark but expensive to scale.</p>
-                        <p><strong>Step 2 - Reward Model Training:</strong> Show humans pairs of responses, ask "which is better?" Collect thousands of comparisons. Train a separate model to predict human preference. This is your reward model.</p>
-                        <p><strong>Step 3 - RL Optimization:</strong> Use PPO (Proximal Policy Optimization) to optimize original model against reward model. Generate responses, reward model scores them, update policy to generate higher-scoring responses.</p>
-                        <p><strong>The Key Trick - KL Penalty:</strong> Objective = Reward - β·KL(policy || original_policy). Without KL penalty, model would collapse to generating nonsense that "hacks" the reward model. KL keeps it close to original pre-trained model.</p>
-                        <p><strong>Why It Works:</strong> Easier for humans to rank than to write. Can get more feedback. Model learns implicit human preferences beyond what's in training data.</p>
-                        <p><strong>Challenges:</strong> Reward hacking, distribution shift, reward model inaccuracies, expensive human feedback. But ChatGPT showed it's worth it!</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>RAG - Grounding LLMs in Reality</h4>
-                        <p><strong>The Hallucination Problem:</strong> LLMs are trained on internet text → make up plausible-sounding but wrong facts. They don't "know" what's true vs false, just what's probable.</p>
-                        <p><strong>RAG Solution:</strong> Don't rely on model's memory. Give it relevant documents to reference!</p>
-                        <p><strong>How It Works:</strong></p>
-                        <p>1. <strong>Indexing Phase:</strong> Take your knowledge base (docs, PDFs, etc.), split into chunks (~200-500 tokens), create embeddings for each chunk, store in vector database.</p>
-                        <p>2. <strong>Query Phase:</strong> User asks question → convert question to embedding → find top-k most similar chunks via cosine similarity → inject these chunks into the prompt → LLM generates answer based on retrieved context.</p>
-                        <p><strong>Example:</strong> User: "What's our return policy?" → Retrieve: [policy doc chunks] → Prompt: "Given these documents: [chunks], answer: What's the return policy?" → LLM: "Based on the provided policy, you can return within 30 days..."</p>
-                        <p><strong>Benefits:</strong> (1) Reduces hallucinations - grounds in real docs, (2) Up-to-date info without retraining, (3) Citable sources, (4) Works with proprietary data, (5) Easier to debug/fix than changing model.</p>
-                        <p><strong>Challenges:</strong> (1) Retrieval quality - if you don't retrieve relevant docs, answer is wrong, (2) Chunk size trade-off - too small loses context, too large exceeds context window, (3) Ranking - semantic similarity ≠ relevance always.</p>
-                        <p><strong>Advanced RAG:</strong> Hybrid search (dense + sparse), reranking, query expansion, recursive retrieval, cite sources in output.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Prompt Engineering - The New Programming</h4>
-                        <p><strong>Why It Matters:</strong> Same model, different prompt = dramatically different results. GPT-4 is powerful but dumb without good prompts.</p>
-                        <p><strong>Core Principles:</strong></p>
-                        <p>1. <strong>Be Specific:</strong> Vague prompt = vague answer. Bad: "Tell me about ML." Good: "Explain bias-variance tradeoff with concrete example for a data science interview."</p>
-                        <p>2. <strong>Provide Context:</strong> "You are an expert data scientist interviewing for FAANG roles. Answer as you would in a technical interview."</p>
-                        <p>3. <strong>Few-Shot Examples:</strong> Show 2-5 examples of input-output pairs. Model learns the pattern!</p>
-                        <p>4. <strong>Chain-of-Thought:</strong> "Let's think step by step" → Model shows reasoning → better answers on complex problems. Critical for math/logic!</p>
-                        <p>5. <strong>Output Format:</strong> "Respond in JSON with fields: {answer, confidence, sources}". Models follow structure well.</p>
-                        <p>6. <strong>Delimiters:</strong> Use ###, XML tags, etc. to separate sections. Prevents prompt injection.</p>
-                        <p><strong>Advanced Techniques:</strong></p>
-                        <p>• Self-consistency: Generate 5 answers, pick most common → better accuracy</p>
-                        <p>• Tree-of-Thoughts: Explore multiple reasoning paths, evaluate, pick best</p>
-                        <p>• ReAct: Interleave Reasoning and Acting (tool use)</p>
-                        <p><strong>Common Mistakes:</strong> Assuming model knows context, no examples, walls of text, not specifying format.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Fine-Tuning vs Prompting - When to Use What</h4>
-                        <p><strong>Prompting:</strong> Craft input to get desired output. No training needed.</p>
-                        <p>• Pros: Instant, flexible, no GPU/data needed, cheap</p>
-                        <p>• Cons: Limited to base model capabilities, context window limits, inconsistent, expensive at scale (token costs)</p>
-                        <p>• Use when: Quick prototyping, simple tasks, data privacy less concern</p>
-                        <p><strong>Fine-Tuning:</strong> Train model on task-specific data. Updates weights.</p>
-                        <p>• Pros: Better task performance, consistent behavior, can learn new facts/style, cheaper inference</p>
-                        <p>• Cons: Need labeled data (100s-1000s examples), expensive training, risk of catastrophic forgetting, less flexible</p>
-                        <p>• Use when: High volume (token costs add up), need consistency, have quality data, prompting insufficient</p>
-                        <p><strong>LoRA (Low-Rank Adaptation) - Best of Both:</strong> Fine-tune by adding small trainable matrices to frozen model. Only train <1% of parameters! Much cheaper than full fine-tuning, preserves general capabilities, can swap LoRA adapters for different tasks.</p>
-                        <p><strong>Decision Tree:</strong> Start with prompting → not good enough? Try few-shot → still not enough? Try fine-tuning → need efficiency? Use LoRA.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Common LLM Failure Modes & Fixes</h4>
-                        <p><strong>Hallucinations:</strong> Making up facts confidently.</p>
-                        <p>• Fixes: RAG (ground in real docs), temperature=0 (less random), ask for citations, use retrieval-augmented generation</p>
-                        <p><strong>Context Window Overflow:</strong> Too much text to process.</p>
-                        <p>• Fixes: Summarize first, chunk and process separately, use models with longer context (Claude 200k, GPT-4 128k), sliding window</p>
-                        <p><strong>Inconsistent Outputs:</strong> Different answer each time.</p>
-                        <p>• Fixes: temperature=0, structured output format, multiple samples + voting</p>
-                        <p><strong>Prompt Injection:</strong> User tricks model with malicious prompt.</p>
-                        <p>• Fixes: Delimiters to separate user input, content filtering, validation layer</p>
-                        <p><strong>Slow Inference:</strong> Takes too long to respond.</p>
-                        <p>• Fixes: Smaller model, quantization (8-bit, 4-bit), caching common queries, streaming responses, speculative decoding</p>
-                        <p><strong>High Cost:</strong> API bills through the roof.</p>
-                        <p>• Fixes: Prompt compression, caching, smaller model for simple tasks, self-hosting open source, fine-tuning for efficiency</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>🎯 ML Model Selection Guide</h3>
-                    
-                    <div class="format-item">
-                        <h4>Classification Problems</h4>
-                        <p><strong>Small data, linear:</strong> Logistic Regression</p>
-                        <p><strong>Small data, non-linear:</strong> SVM with RBF kernel</p>
-                        <p><strong>Medium data:</strong> Random Forest, Gradient Boosting</p>
-                        <p><strong>Large data:</strong> Neural Networks (MLP, CNN for images)</p>
-                        <p><strong>Imbalanced:</strong> Use class weights, SMOTE, adjust threshold</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Regression Problems</h4>
-                        <p><strong>Linear relationship:</strong> Linear Regression (+ regularization)</p>
-                        <p><strong>Non-linear:</strong> Polynomial features, tree-based models</p>
-                        <p><strong>Complex patterns:</strong> Neural Networks, XGBoost</p>
-                        <p><strong>Time series:</strong> ARIMA, LSTM, Prophet</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>When to Use Each Algorithm</h4>
-                        <p><strong>Linear/Logistic:</strong> Interpretability needed, baseline</p>
-                        <p><strong>Decision Trees:</strong> Interpretable, handles mixed types</p>
-                        <p><strong>Random Forest:</strong> Reduce overfitting, feature importance</p>
-                        <p><strong>XGBoost/LightGBM:</strong> Tabular data competitions, high performance</p>
-                        <p><strong>Neural Networks:</strong> Images, text, audio, complex patterns</p>
-                        <p><strong>SVM:</strong> High-dimensional data, clear margin</p>
-                        <p><strong>k-NN:</strong> Simple, non-parametric, small datasets</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>⚡ Quick Reference: Time Complexities</h3>
-                    
-                    <div class="format-item">
-                        <h4>Data Structures</h4>
-                        <p><strong>Array:</strong> Access O(1), Search O(n), Insert O(n)</p>
-                        <p><strong>Hash Table:</strong> All operations O(1) average</p>
-                        <p><strong>Binary Search Tree:</strong> O(log n) average, O(n) worst</p>
-                        <p><strong>Heap:</strong> Insert/Delete O(log n), Min/Max O(1)</p>
-                        <p><strong>Trie:</strong> Search/Insert O(m) where m = key length</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Sorting Algorithms</h4>
-                        <p><strong>Quick Sort:</strong> O(n log n) average, O(n²) worst</p>
-                        <p><strong>Merge Sort:</strong> O(n log n) guaranteed, O(n) space</p>
-                        <p><strong>Heap Sort:</strong> O(n log n), O(1) space</p>
-                        <p><strong>Counting Sort:</strong> O(n+k) where k = range</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>ML Algorithms</h4>
-                        <p><strong>Linear Regression:</strong> Train O(nd²), Predict O(d)</p>
-                        <p><strong>k-NN:</strong> Train O(1), Predict O(nd)</p>
-                        <p><strong>Decision Tree:</strong> Train O(n log n × d), Predict O(log n)</p>
-                        <p><strong>Random Forest:</strong> Train O(m × n log n × d), m=trees</p>
-                        <p><strong>Neural Network:</strong> O(epochs × batch_size × layers × neurons)</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>🔍 ML System Design Framework</h3>
-                    
-                    <div class="format-item">
-                        <h4>1. Clarify Requirements (5 min)</h4>
-                        <p><strong>Ask:</strong> What's the goal? Scale (users, QPS)? Latency requirements? Online/offline?</p>
-                        <p><strong>Example:</strong> "Is this real-time recommendation or batch? Mobile or web?"</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>2. Define Metrics (5 min)</h4>
-                        <p><strong>Business:</strong> Revenue, engagement, conversion</p>
-                        <p><strong>ML:</strong> Precision, recall, AUC, NDCG (ranking)</p>
-                        <p><strong>System:</strong> Latency (p99), throughput, cost</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>3. High-Level Architecture (10 min)</h4>
-                        <p><strong>Components:</strong> Data → Features → Model → Serving → Monitoring</p>
-                        <p><strong>Draw:</strong> Data sources, feature store, training pipeline, inference</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>4. Data & Features (10 min)</h4>
-                        <p><strong>Data sources:</strong> User behavior, item metadata, context</p>
-                        <p><strong>Features:</strong> User (age, history), Item (category, popularity), Context (time, device)</p>
-                        <p><strong>Engineering:</strong> Normalization, embeddings, feature crosses</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>5. Model Selection (10 min)</h4>
-                        <p><strong>Start simple:</strong> Logistic regression, collaborative filtering</p>
-                        <p><strong>Iterate:</strong> Deep learning (two-tower, transformers)</p>
-                        <p><strong>Consider:</strong> Cold start, diversity, exploration vs exploitation</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>6. Training & Evaluation (10 min)</h4>
-                        <p><strong>Train/val/test split:</strong> Time-based for temporal data</p>
-                        <p><strong>Offline eval:</strong> AUC, precision@k, NDCG</p>
-                        <p><strong>Online eval:</strong> A/B testing, interleaving</p>
-                        <p><strong>Retraining:</strong> Frequency, triggers, incremental learning</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>7. Serving & Infrastructure (5 min)</h4>
-                        <p><strong>Serving:</strong> REST API, batch processing, caching</p>
-                        <p><strong>Latency:</strong> Model size, quantization, model distillation</p>
-                        <p><strong>Scaling:</strong> Load balancing, horizontal scaling, CDN</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>8. Monitoring & Debugging (5 min)</h4>
-                        <p><strong>Monitor:</strong> Model performance, data drift, prediction distribution</p>
-                        <p><strong>Alerts:</strong> Accuracy drop, latency spike, null predictions</p>
-                        <p><strong>Debug:</strong> Feature importance, error analysis, user feedback</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>📝 Worked Example: Probability Puzzle</h3>
-                    
-                    <div class="format-item">
-                        <h4>Problem: Expected Coin Flips for HH</h4>
-                        <p><strong>Question:</strong> How many fair coin flips expected to see two heads in a row?</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Solution (Markov Chain Approach)</h4>
-                        <p><strong>States:</strong> Start (S), One Head (H), Two Heads (HH)</p>
-                        <p><strong>Define:</strong> E = expected flips from Start, E_H = from state H</p>
-                        <p><strong>From Start:</strong> E = 1 + 0.5·E_H + 0.5·E (flip, get H or T→restart)</p>
-                        <p><strong>From H:</strong> E_H = 1 + 0.5·0 + 0.5·E (flip, get H→done or T→restart)</p>
-                        <p><strong>Solve E_H:</strong> E_H = 1 + 0.5E → E_H = 2 + E</p>
-                        <p><strong>Substitute:</strong> E = 1 + 0.5(2+E) + 0.5E = 2 + E</p>
-                        <p><strong>Simplify:</strong> E = 2 + 0.5E + 0.5E = 2 + E... wait, let me recalculate:</p>
-                        <p>E_H = 1 + 0.5·0 + 0.5·E = 1 + 0.5E</p>
-                        <p>E = 1 + 0.5·E_H + 0.5·E = 1 + 0.5(1+0.5E) + 0.5E</p>
-                        <p>E = 1 + 0.5 + 0.25E + 0.5E = 1.5 + 0.75E</p>
-                        <p>0.25E = 1.5 → <strong>E = 6 flips</strong></p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>🗣️ Behavioral Interview Guide (STAR Method)</h3>
-                    
-                    <div class="format-item">
-                        <h4>STAR Framework</h4>
-                        <p><strong>Situation:</strong> Set the context (15-20%)</p>
-                        <p><strong>Task:</strong> Describe your responsibility (15-20%)</p>
-                        <p><strong>Action:</strong> What YOU did, be specific (50%)</p>
-                        <p><strong>Result:</strong> Outcome, metrics, learnings (15-20%)</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Common Questions & Approach</h4>
-                        <p><strong>"Tell me about a challenging project"</strong></p>
-                        <p>→ Pick project with technical depth, show problem-solving</p>
-                        <p><strong>"Describe a time you failed"</strong></p>
-                        <p>→ Real failure, focus on learnings, what you'd do differently</p>
-                        <p><strong>"How do you handle disagreement?"</strong></p>
-                        <p>→ Show data-driven approach, respect for others, compromise</p>
-                        <p><strong>"Why ML/this company?"</strong></p>
-                        <p>→ Genuine interest, specific examples, align with values</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Prepare 5 Core Stories</h4>
-                        <p><strong>1. Technical achievement:</strong> Complex ML project, impact</p>
-                        <p><strong>2. Leadership/influence:</strong> Led initiative, mentored, drove decision</p>
-                        <p><strong>3. Failure/learning:</strong> What went wrong, what you learned</p>
-                        <p><strong>4. Collaboration:</strong> Worked across teams, resolved conflict</p>
-                        <p><strong>5. Innovation:</strong> Creative solution, new approach</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>🎓 Study Strategies That Work</h3>
-                    
-                    <div class="format-item">
-                        <h4>Spaced Repetition</h4>
-                        <p><strong>Day 1:</strong> Learn new concept</p>
-                        <p><strong>Day 2:</strong> Review (quick)</p>
-                        <p><strong>Day 7:</strong> Review again</p>
-                        <p><strong>Day 30:</strong> Final review</p>
-                        <p><strong>Why:</strong> Optimal for long-term retention</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Active Learning Techniques</h4>
-                        <p><strong>Feynman Technique:</strong> Explain concept simply, identify gaps</p>
-                        <p><strong>Practice problems:</strong> Do, don't just read</p>
-                        <p><strong>Implement from scratch:</strong> Don't just use libraries</p>
-                        <p><strong>Teach others:</strong> Best way to solidify understanding</p>
-                        <p><strong>Mock interviews:</strong> Simulate pressure, get feedback</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Daily Study Routine (6 weeks out)</h4>
-                        <p><strong>Morning (2 hrs):</strong> Theory review, flashcards, watch lectures</p>
-                        <p><strong>Afternoon (2 hrs):</strong> Coding practice (2-3 problems)</p>
-                        <p><strong>Evening (1 hr):</strong> Statistics/quant puzzles, behavioral prep</p>
-                        <p><strong>Weekend:</strong> Mock interviews, weak areas, rest</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>The Week Before</h4>
-                        <p><strong>Reduce intensity:</strong> Light review only</p>
-                        <p><strong>Focus on confidence:</strong> What you know, not gaps</p>
-                        <p><strong>Prepare logistics:</strong> Test equipment, plan outfit</p>
-                        <p><strong>Sleep well:</strong> 8+ hours, no all-nighters</p>
-                        <p><strong>Light exercise:</strong> Reduce stress, stay sharp</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>📚 Recommended Resources</h3>
-                    
-                    <div class="format-item">
-                        <h4>Books (Must-Read)</h4>
-                        <p><strong>ML:</strong> Hands-On ML (Géron), Deep Learning (Goodfellow)</p>
-                        <p><strong>Stats:</strong> Statistical Inference (Casella & Berger)</p>
-                        <p><strong>Coding:</strong> Cracking the Coding Interview (McDowell)</p>
-                        <p><strong>Quant:</strong> Heard on The Street (Crack), Joshi's guide</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Online Platforms</h4>
-                        <p><strong>Coding:</strong> LeetCode (patterns), HackerRank, CodeSignal</p>
-                        <p><strong>ML:</strong> Kaggle, Papers with Code, Fast.ai</p>
-                        <p><strong>Mock Interviews:</strong> Pramp, interviewing.io</p>
-                        <p><strong>Courses:</strong> Coursera (Andrew Ng), Stanford CS229</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>🏢 Company-Specific Focus Areas</h3>
-                    
-                    <div class="format-item">
-                        <h4>Tech Giants (FAANG+)</h4>
-                        <p><strong>Google/Meta:</strong> System design crucial for L4+. Behavioral via past projects. Heavy coding (LeetCode Medium/Hard). ML: scaling, A/B testing.</p>
-                        <p><strong>Amazon:</strong> 14 Leadership Principles memorize & prepare. Bar raiser round. Behavioral = 50% weight. "Tell me about a time..."</p>
-                        <p><strong>Microsoft:</strong> Collaborative culture fit important. Mix of coding + ML theory. Design: Azure/cloud integration.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Quant Firms</h4>
-                        <p><strong>Citadel/Jane Street:</strong> Fast mental math critical. Probability puzzles (coin flips, card games). Market making, options pricing. Competitive, pressure-tested.</p>
-                        <p><strong>Two Sigma/DE Shaw:</strong> PhD often expected. Research-heavy. Statistical modeling, time series. Coding: C++/Python, optimization.</p>
-                        <p><strong>AQR/WorldQuant:</strong> Factor models, backtesting. Academic rigor. Portfolio optimization, risk management.</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>AI/ML Startups</h4>
-                        <p><strong>OpenAI/Anthropic:</strong> Deep learning expertise. Research background valued. Alignment, safety considerations. Rapid prototyping.</p>
-                        <p><strong>Scale AI/Hugging Face:</strong> Practical ML deployment. MLOps. Community engagement. Open source contributions.</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>🎯 Interview Day Strategy</h3>
-                    
-                    <div class="format-item">
-                        <h4>First 5 Minutes (Crucial)</h4>
-                        <p><strong>Clarify the problem:</strong> Ask questions, confirm understanding</p>
-                        <p><strong>State assumptions:</strong> "I'm assuming..."</p>
-                        <p><strong>Discuss approach:</strong> High-level before diving into code</p>
-                        <p><strong>Build rapport:</strong> Be personable, show enthusiasm</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Problem-Solving Framework</h4>
-                        <p><strong>1. Understand:</strong> Restate problem, edge cases, constraints</p>
-                        <p><strong>2. Plan:</strong> Brute force first, discuss complexity</p>
-                        <p><strong>3. Optimize:</strong> Better algorithm, explain trade-offs</p>
-                        <p><strong>4. Code:</strong> Clean, modular, test as you go</p>
-                        <p><strong>5. Test:</strong> Walk through examples, edge cases</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>When You're Stuck</h4>
-                        <p><strong>Think out loud:</strong> "I'm considering two approaches..."</p>
-                        <p><strong>Try examples:</strong> Work through small case by hand</p>
-                        <p><strong>Ask for hints:</strong> "Should I consider X approach?"</p>
-                        <p><strong>State what you know:</strong> Partial credit better than silence</p>
-                        <p><strong>Stay calm:</strong> Interviewers expect struggle, want to see resilience</p>
-                    </div>
-
-                    <div class="format-item">
-                        <h4>Red Flags to Avoid</h4>
-                        <p>❌ Going silent for minutes</p>
-                        <p>❌ Jumping to code without discussion</p>
-                        <p>❌ Being defensive about mistakes</p>
-                        <p>❌ Not testing your solution</p>
-                        <p>❌ Bad-mouthing previous employer/team</p>
-                        <p>❌ Claiming you know something you don't</p>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>📅 Final Week Checklist</h3>
-                    
-                    <div class="timeline-item blue">
-                        <h4>7 Days Before</h4>
-                        <p>✅ Review all flashcards one final time</p>
-                        <p>✅ Do 2-3 practice problems (confidence boost, not learning)</p>
-                        <p>✅ Review your projects, prepare to explain deeply</p>
-                    </div>
-                    
-                    <div class="timeline-item green">
-                        <h4>3 Days Before</h4>
-                        <p>✅ Mock interview with friend/platform</p>
-                        <p>✅ Test your setup (camera, mic, internet)</p>
-                        <p>✅ Prepare questions to ask interviewer (5-10)</p>
-                    </div>
-                    
-                    <div class="timeline-item orange">
-                        <h4>1 Day Before</h4>
-                        <p>✅ Light review of formulas only</p>
-                        <p>✅ Get 8+ hours of sleep</p>
-                        <p>✅ Prepare clothes, workspace</p>
-                        <p>✅ NO new material</p>
-                    </div>
-                    
-                    <div class="timeline-item red">
-                        <h4>Interview Day</h4>
-                        <p>✅ Eat a good meal 2 hours before</p>
-                        <p>✅ Arrive/join 10 minutes early</p>
-                        <p>✅ Have water, paper, pen ready</p>
-                        <p>✅ Take deep breaths, you've got this! 💪</p>
-                    </div>
-                </section>
+                <p>Complete study materials and guides are available in the flashcards.</p>
             </div>
         </div>
     </div>
@@ -1144,99 +458,54 @@
                 { q: "Explain the difference between L1 and L2 regularization.", a: "L1 (Lasso) adds the absolute value of coefficients as penalty (λ∑|w|), promoting sparsity and feature selection. L2 (Ridge) adds the square of coefficients (λ∑w²), shrinking all coefficients but rarely to zero. L1 is better for feature selection; L2 is better when all features are relevant." },
                 { q: "What is gradient descent and why might it fail?", a: "Gradient descent iteratively updates parameters in the direction of steepest descent: w = w - α∇L(w). It can fail due to: 1) Getting stuck in local minima (less common in high dimensions), 2) Poor learning rate (too high causes divergence, too low causes slow convergence), 3) Saddle points in high dimensions, 4) Vanishing/exploding gradients." },
                 { q: "Explain precision vs recall with an example.", a: "Precision = TP/(TP+FP) - of predicted positives, how many are correct. Recall = TP/(TP+FN) - of actual positives, how many did we find. Example: Email spam filter. High precision = few false alarms (good emails marked spam). High recall = catches most spam (but might flag good emails too). F1-score balances both." },
-                { q: "What is cross-validation and why use it?", a: "Cross-validation splits data into k folds, trains on k-1 and validates on 1, rotating through all folds. Benefits: 1) Better estimate of model performance on unseen data, 2) Uses all data for both training and validation, 3) Reduces variance in performance estimate. Common: 5-fold or 10-fold CV." },
-                { q: "Explain bagging vs boosting.", a: "Bagging (Bootstrap Aggregating): Trains multiple models in parallel on random subsets with replacement, then averages predictions. Reduces variance. Example: Random Forest. Boosting: Trains models sequentially, each focusing on mistakes of previous ones. Reduces both bias and variance. Examples: AdaBoost, XGBoost, Gradient Boosting. Bagging creates independent models, boosting creates dependent models." },
-                { q: "What causes vanishing gradients and how do you fix it?", a: "Vanishing gradients occur when gradients become extremely small during backpropagation through many layers, preventing weight updates in early layers. Causes: Deep networks with sigmoid/tanh activations (derivatives < 1, multiplied many times → 0). Solutions: 1) ReLU/Leaky ReLU (derivative = 1 for positive), 2) Batch normalization, 3) Residual connections (skip connections in ResNet), 4) Better initialization (Xavier, He), 5) LSTM/GRU for RNNs (designed to preserve gradients)." },
-                { q: "Explain dropout and why it prevents overfitting.", a: "Dropout randomly sets neurons to zero during training with probability p (typically 0.5). Why it works: 1) Forces network to learn redundant representations (can't rely on specific neurons), 2) Acts like training exponential ensemble of thinned networks, 3) Reduces co-adaptation of neurons. At inference, use all neurons but scale by (1-p). Side benefit: provides uncertainty estimates via MC dropout." },
-                { q: "What's the difference between discriminative and generative models?", a: "Discriminative models learn P(y|x) - the decision boundary directly. Examples: Logistic Regression, SVM, Neural Networks. Faster, typically better accuracy, but can't generate new samples. Generative models learn P(x|y) and P(y), can compute P(x,y) and P(y|x). Examples: Naive Bayes, GANs, VAEs. Can generate new samples, handle missing data, but need more data and training time. Use discriminative for classification, generative when you need to generate or handle missing data." },
-                { q: "Explain the kernel trick in SVMs.", a: "SVMs find maximum margin hyperplane in feature space. For non-linear data, map to higher dimension where it becomes linear separable: φ(x). Problem: Computing φ(x) explicitly is expensive or impossible for infinite dimensions. Kernel trick: Instead of computing φ(x)·φ(y), use kernel K(x,y) = φ(x)·φ(y) directly! Common kernels: Linear K(x,y)=x·y, Polynomial K(x,y)=(x·y+1)^d, RBF K(x,y)=exp(-γ||x-y||²). Makes non-linear classification tractable." },
-                { q: "What is transfer learning and when should you use it?", a: "Transfer learning uses knowledge from pre-trained model on one task to improve performance on related task. Approaches: 1) Feature extraction - freeze early layers, train only final layers. 2) Fine-tuning - unfreeze some/all layers, train with low learning rate. When to use: 1) Limited labeled data, 2) Similar domain to pre-trained model, 3) Computational constraints. Examples: ImageNet pre-trained for vision, BERT/GPT for NLP. Benefits: Faster training, better performance with less data, better generalization." },
-                { q: "Compare SGD, Momentum, Adam optimizers.", a: "SGD: Basic gradient descent. Pros: Simple, well-understood. Cons: Slow convergence, sensitive to learning rate. Momentum: SGD + exponentially weighted moving average of gradients. Accelerates in relevant direction, dampens oscillations. Better than plain SGD. Adam: Combines momentum + adaptive learning rates per parameter (RMSprop). Maintains moving averages of gradients and squared gradients. Pros: Works well out-of-box, less sensitive to hyperparameters. Cons: Can converge to worse solutions than SGD with momentum on some problems. Default choice for most applications." },
-                { q: "Explain attention mechanism and why it's important.", a: "Attention allows models to focus on relevant parts of input when producing output. Mechanism: 1) Compute attention scores between query and keys (similarity), 2) Apply softmax to get weights, 3) Weighted sum of values. Benefits: 1) Handles variable-length sequences, 2) Parallelizable (unlike RNN), 3) Interpretable (see what model attends to), 4) Solves long-range dependency problem. Self-attention: query, key, value all from same sequence. Foundation of Transformers. Formula: Attention(Q,K,V) = softmax(QK^T/√d_k)V." },
-                { q: "What is batch normalization and its benefits?", a: "Batch normalization normalizes layer inputs across mini-batch: BN(x) = γ((x-μ_batch)/σ_batch) + β, where γ,β are learnable. Benefits: 1) Reduces internal covariate shift (layer input distributions stabilize), 2) Allows higher learning rates (less sensitive to initialization), 3) Acts as regularization (noise from batch statistics), 4) Speeds up training significantly. At inference, uses running statistics from training. Applied after linear layer, before activation (typically). Crucial for training very deep networks." },
-                { q: "Explain RNN, LSTM, and GRU differences.", a: "Vanilla RNN: h_t = tanh(W_h·h_{t-1} + W_x·x_t). Simple but suffers from vanishing gradients for long sequences. LSTM: Adds forget gate, input gate, output gate, and cell state. Gates control information flow. Can maintain long-term dependencies. More parameters, slower. GRU: Simplified LSTM with reset and update gates. Fewer parameters than LSTM, faster training, similar performance. When to use: Short sequences → RNN ok. Long sequences → LSTM/GRU. Less data → GRU (fewer params). More data → LSTM. Modern trend: Transformers replacing all for most tasks." },
-                { q: "What is the ROC curve and when is it better than accuracy?", a: "ROC plots True Positive Rate (Recall) vs False Positive Rate at various thresholds. AUC (Area Under Curve) summarizes: 1.0 = perfect, 0.5 = random. Better than accuracy when: 1) Imbalanced classes (accuracy misleading - 99% accuracy predicting all negative in 99:1 dataset), 2) Want threshold-independent metric, 3) Cost of FP ≠ FN. Interpretation: AUC = probability model ranks random positive higher than random negative. For highly imbalanced data, use Precision-Recall curve instead (more sensitive to positive class)." },
-                { q: "Explain ensemble methods and their types.", a: "Ensemble combines multiple models for better predictions. Types: 1) Bagging (Bootstrap Aggregating): Train models in parallel on different data subsets, average predictions. Reduces variance. Example: Random Forest. 2) Boosting: Train models sequentially, each correcting previous errors. Reduces bias and variance. Examples: AdaBoost, XGBoost, GradientBoosting. 3) Stacking: Train meta-model on predictions of base models. Can learn optimal combination. Why they work: Diversity + aggregation reduces error. Bias-variance tradeoff: Bagging mainly reduces variance, Boosting reduces both." }
+                { q: "What is cross-validation and why use it?", a: "Cross-validation splits data into k folds, trains on k-1 and validates on 1, rotating through all folds. Benefits: 1) Better estimate of model performance on unseen data, 2) Uses all data for both training and validation, 3) Reduces variance in performance estimate. Common: 5-fold or 10-fold CV." }
+            ],
+            'deep-learning': [
+                { q: "Why do we need non-linear activation functions?", a: "Without non-linearity, stacking multiple layers would just create another linear transformation. No matter how many linear layers you stack, the composition is still linear: f(g(x)) = Ax + b for some A and b. Non-linear activations allow networks to learn complex, non-linear patterns and decision boundaries. This is what makes deep learning 'deep' - each layer can learn increasingly abstract features." },
+                { q: "What causes vanishing/exploding gradients and how do we fix them?", a: "Vanishing: Gradients become exponentially smaller as they propagate backward through layers. Caused by: repeated multiplication of small derivatives (sigmoid/tanh < 1), deep networks. Solutions: ReLU activation (gradient = 1), batch normalization, residual connections (ResNet), proper initialization (Xavier/He). Exploding: Gradients grow exponentially. Caused by: large weights, deep networks. Solutions: Gradient clipping, proper initialization, batch normalization, LSTM/GRU for sequences." },
+                { q: "How does Batch Normalization work and why is it effective?", a: "BatchNorm normalizes inputs to each layer to have mean=0, std=1 across the mini-batch: BN(x) = γ((x-μ_batch)/σ_batch) + β. Benefits: 1) Faster training (can use higher learning rates), 2) Reduces internal covariate shift (stabilizes distributions), 3) Acts as regularization (batch statistics add noise), 4) Less sensitive to initialization. During inference, uses running averages from training. Applied before or after activation function (debated)." },
+                { q: "When would you use SGD over Adam optimizer?", a: "SGD often achieves better final model quality (generalizes better) but converges slower. Adam converges faster but can get stuck in sharp minima (poor generalization). Use SGD when: 1) Final model quality is critical, 2) Have time for longer training, 3) Computer vision tasks (empirically better). Use Adam when: 1) Quick prototyping, 2) NLP/sequence tasks, 3) Need robust to hyperparameters. Common practice: Start with Adam for exploration, switch to SGD+momentum for final training." },
+                { q: "Describe common learning rate schedules and when to use them.", a: "Step Decay: Reduce LR by factor every N epochs. Simple, works well. Cosine Annealing: Smooth decay following cosine curve. Good for known training duration. Warm-up: Start with low LR, increase linearly. Critical for transformers (stability with large batches). Cyclic: Oscillate between min/max LR. Helps escape local minima. ReduceLROnPlateau: Reduce when validation loss plateaus. Adaptive, no manual scheduling. Exponential: LR = LR₀ * decay^epoch. Smooth continuous decay." },
+                { q: "Rank regularization techniques by effectiveness.", a: "Generally (but task-dependent): 1) More data (always best if possible), 2) Data augmentation (free performance boost), 3) Dropout (simple, effective for fully connected layers), 4) Early stopping (prevents overfitting automatically), 5) Weight decay/L2 (helps but limited impact), 6) Smaller model (if other methods insufficient). Modern additions: MixUp, CutMix (advanced augmentation), StochDepth (dropping layers), DropConnect. Key: Combine multiple techniques for best results." },
+                { q: "Why are CNNs better than fully connected networks for images?", a: "1) Parameter sharing: Same filter applied across entire image (millions fewer parameters). 2) Translation invariance: Can detect features anywhere in image. 3) Hierarchical features: Early layers learn edges, later layers learn complex objects. 4) Local connectivity: Pixels near each other are related (spatial structure). Example: 224×224×3 image. Fully connected: 150K parameters per neuron! Conv layer with 32 3×3 filters: only 896 parameters. Massive efficiency gain while preserving spatial information." },
+                { q: "How do you calculate receptive field size?", a: "Receptive field = region in input that affects a particular output. Formula: RF = 1 + Σ(kernel_size - 1) × Π(strides). For layer l: RF_l = RF_{l-1} + (kernel_size - 1) × Π(strides from 1 to l-1). Example: Two 3×3 conv layers, stride 1: RF = 1 + 2 + 2 = 5×5. With 2×2 pooling between: RF = 1 + 2 + 2×2 = 7×7. Deeper layers see exponentially larger regions. Can increase via: larger kernels, pooling, dilated convolutions, more layers." },
+                { q: "Trace the evolution: AlexNet → ResNet → EfficientNet", a: "AlexNet (2012): First deep CNN to win ImageNet. 8 layers, ReLU, dropout, data augmentation. Proved deep learning works. VGG (2014): Uniform 3×3 filters, deeper (16-19 layers). Simple but effective. ResNet (2015): Skip connections solve vanishing gradients. 152+ layers possible! Identity mappings: y = F(x) + x. EfficientNet (2019): Compound scaling - jointly scale depth, width, resolution. Neural architecture search for base model. SOTA efficiency. Key insight: Balanced scaling beats just going deeper." },
+                { q: "What's the key difference between LSTM and GRU?", a: "LSTM has separate memory cell and hidden state, with 3 gates (forget, input, output). GRU combines memory and hidden state into single state, with 2 gates (reset, update). GRU update gate combines LSTM's forget and input gates. Performance similar, but GRU has 33% fewer parameters, trains faster. LSTM: Better for complex long-term patterns. GRU: Better with limited data. Both solve vanishing gradient via gating mechanisms that control information flow." },
+                { q: "When can't you use bidirectional RNNs?", a: "Can't use when future context isn't available: 1) Real-time/streaming applications (live transcription, online translation), 2) Autoregressive generation (next token prediction), 3) Online decision making (trading, control systems), 4) Causal time series forecasting. Bidirectional requires full sequence available - processes forward and backward. Great for: sequence labeling (NER, POS), machine translation (offline), sentiment analysis. Alternative for online: Use unidirectional with attention mechanism or transformers with causal masking." },
+                { q: "How did attention improve seq2seq models before transformers?", a: "Original seq2seq compressed entire input to single context vector - information bottleneck! Attention allows decoder to look at all encoder hidden states, not just final one. At each decoder step: 1) Compare decoder state with all encoder states (scores), 2) Softmax to get weights, 3) Weighted sum of encoder states. Benefits: Handles long sequences better, provides alignment (what translates to what), interpretable. Bahdanau attention (2014) improved BLEU scores significantly. This paved the way for self-attention and transformers." },
+                { q: "Explain SimCLR in simple terms.", a: "SimCLR learns representations without labels via contrastive learning. Process: 1) Take image, create two augmented views (crop, color distort, etc.), 2) Encode both views with same network, 3) Project to embedding space, 4) Pull same-image embeddings together, push different-image embeddings apart. Loss: NT-Xent (normalized temperature cross-entropy). Key insights: Strong augmentation crucial, large batch size important (more negatives), projection head helps, no need for memory banks. Achieves near-supervised performance. Used for: Pre-training when labels scarce, transfer learning." },
+                { q: "How do you distill a large model to a small one?", a: "Knowledge Distillation transfers 'dark knowledge' from teacher to student. Process: 1) Train large teacher model normally, 2) Generate soft predictions (logits) from teacher, 3) Train student to match: α×CrossEntropy(student, true_labels) + (1-α)×KL(student_soft, teacher_soft). Temperature T softens probabilities: p_i = exp(z_i/T)/Σexp(z_j/T). Higher T reveals more about relative probabilities. Dark knowledge: Relationships between classes (dog more similar to cat than to car). Student often achieves 90%+ of teacher performance at fraction of size." },
+                { q: "What are the main Neural Architecture Search approaches?", a: "1) Reinforcement Learning: Controller network proposes architectures, trains them, uses accuracy as reward. Expensive but flexible. 2) Evolutionary Algorithms: Population of architectures, mutation/crossover, select best. Intuitive but slow. 3) Differentiable (DARTS): Continuous relaxation of architecture search. All operations in supermodel, learn importance weights. Fast (days vs months). 4) One-shot/Weight-sharing: Train single supermodel, sample subnetworks. Efficient but biased. Modern: Combining methods, hardware-aware search, once-for-all networks. Challenge: Huge search spaces, evaluation cost." },
+                { q: "Model loss not decreasing - debugging steps?", a: "Systematic debugging: 1) Verify data pipeline (shape, type, preprocessing, no NaNs), 2) Check loss calculation (correct function, reduction), 3) Verify gradients flowing (not zero, not exploding), 4) Learning rate (try 10x smaller and larger), 5) Overfit single batch first (should get ~0 loss), 6) Simpler model/problem first, 7) Check initialization (not all zeros), 8) Remove regularization temporarily, 9) Gradient clipping if exploding, 10) Visualize weights/gradients/activations. Tools: TensorBoard, gradient hooks, print statements. Most common: Wrong LR, bug in data pipeline, incorrect loss function." },
+                { q: "How does mixed precision (FP16) training work?", a: "Use FP16 for forward/backward passes, FP32 master weights for updates. Benefits: 2× memory reduction, 2-3× speedup on modern GPUs (Tensor Cores). Three key techniques: 1) Master weights in FP32 (accumulate small updates), 2) Loss scaling (prevent gradient underflow - multiply loss by large number, divide gradients), 3) Dynamic loss scaling (adjust scale based on gradient overflow). Automatic with torch.cuda.amp or tf.keras.mixed_precision. Works for most models, struggles with very small gradients. Critical for large models (fits bigger batch, model)." },
+                { q: "Data parallel vs Model parallel?", a: "Data Parallel: Split batch across GPUs, each GPU has full model copy. Forward on subset, average gradients, synchronize. Simple, efficient for most cases. Limited by model size fitting on single GPU. Model Parallel: Split model layers across GPUs. GPU 1 has layers 1-5, GPU 2 has 6-10, etc. Sequential dependencies cause idle time ('bubble'). Use when model doesn't fit on one GPU. Pipeline Parallel: Model parallel + microbatches to reduce idle time. Tensor Parallel: Split individual layers (for huge layers). Modern: Combine all approaches (3D parallelism)." },
+                { q: "How do you apply convolution to graphs (GNNs)?", a: "Can't use regular conv - graphs have irregular structure (variable neighbors). Solution: Aggregate neighbor features (message passing). Basic formulation: h_i' = σ(W_self·h_i + Σ(W_neighbor·h_j) for j in neighbors(i)). Popular approaches: 1) GCN: Normalized aggregation with self-loops, 2) GraphSAGE: Sample fixed-size neighborhoods, various aggregators, 3) GAT: Attention-based weighting of neighbors. Key idea: Local aggregation + neural network = powerful graph learning. Applications: Social networks, molecules, recommendation systems." },
+                { q: "Key difference between autoencoder and VAE?", a: "Autoencoder: Deterministic encoding/decoding. Encoder: x → z (single point). Decoder: z → x̂. Just compresses and reconstructs. VAE: Probabilistic - learns distribution. Encoder: x → μ, σ (parameters of distribution). Sample: z ~ N(μ, σ). Decoder: z → x̂. Loss = Reconstruction + KL divergence (regularizes latent space). Benefits of VAE: 1) Can generate new samples (sample from prior), 2) Smooth latent space (interpolation meaningful), 3) Principled probabilistic framework. Autoencoders just compress, VAEs learn data generation process." },
+                { q: "How would you improve a CNN model? (systematic approach)", a: "Ordered by impact/effort: 1) Data: More data, better augmentation (MixUp, CutMix, RandAugment), fix label noise, balance classes. 2) Architecture: Deeper/wider (if underfitting), add regularization (if overfitting), try proven architectures (ResNet, EfficientNet), attention mechanisms. 3) Training: Tune learning rate (most important!), longer training with decay, different optimizer, gradient clipping. 4) Regularization: Dropout, weight decay, stochastic depth, label smoothing. 5) Ensemble: Multiple models, test-time augmentation. 6) Advanced: Knowledge distillation, semi-supervised learning, self-supervised pretraining. Always: Establish strong baseline first, change one thing at a time, track experiments carefully." },
+                { q: "Explain this to a non-technical person: Backpropagation", a: "Imagine teaching a child to throw darts. After each throw, you see how far off the target they were (the error). You then figure out what adjustments to make: elbow position, wrist angle, force. Backpropagation works similarly - the network makes a prediction, sees how wrong it was, then works backward to figure out how to adjust each 'knob' (weight) to do better next time. It's like having a coach for each tiny decision in the network, all coordinating to improve the final result. The 'back' part means we start from the error and work backward to the beginning." },
+                { q: "What's your approach to debugging a deep learning model?", a: "Start simple, build complexity: 1) Verify data pipeline (visualize batches, check preprocessing), 2) Start with tiny model on tiny data (should overfit perfectly), 3) Gradually increase complexity, 4) Monitor everything (loss curves, gradients, activations, weights), 5) Common issues checklist: learning rate (try 10x range), initialization, gradient flow, data leaks, 6) Ablation studies (remove components to isolate issues), 7) Compare to known working baseline, 8) Unit test critical components. Key principle: Make it work on simple case first, then scale. Most bugs are in data pipeline or hyperparameters, not the model architecture." }
             ],
             'statistics': [
                 { q: "Explain the Central Limit Theorem.", a: "The CLT states that the sampling distribution of the sample mean approaches a normal distribution as sample size increases, regardless of the population's distribution (given finite variance). Key points: 1) Sample size n≥30 typically sufficient, 2) Mean of sampling distribution = population mean, 3) Std dev = σ/√n. Critical for hypothesis testing and confidence intervals." },
-                { q: "What is a p-value and how do you interpret it?", a: "A p-value is the probability of observing data at least as extreme as what we got, assuming the null hypothesis is true. Low p-value (typically <0.05) suggests strong evidence against null hypothesis. NOT the probability that null is true. Common misconceptions: p=0.05 isn't a magical threshold, statistical significance ≠ practical significance." },
-                { q: "Explain Type I and Type II errors.", a: "Type I error (False Positive, α): Rejecting null hypothesis when it's true. Controlled by significance level (typically 0.05). Type II error (False Negative, β): Failing to reject null hypothesis when it's false. Power = 1-β. Trade-off: Reducing Type I error increases Type II error." },
-                { q: "What is maximum likelihood estimation (MLE)?", a: "MLE finds parameter values that maximize the likelihood of observing the given data. For parameters θ: L(θ|data) = P(data|θ). Often maximize log-likelihood for numerical stability. Steps: 1) Write likelihood function, 2) Take log, 3) Differentiate wrt parameters, 4) Set to zero and solve." },
-                { q: "Explain Bayesian vs Frequentist statistics.", a: "Frequentist: Parameters are fixed unknown constants, data is random. Probability = long-run frequency. Uses p-values, confidence intervals. No prior beliefs incorporated. Bayesian: Parameters are random variables with distributions. Probability = degree of belief. Uses Bayes' theorem: P(θ|D) ∝ P(D|θ)P(θ). Incorporates prior knowledge, provides probability distributions over parameters. More intuitive interpretation but requires choosing priors. Example: Frequentist says 'if we repeated this, 95% of CIs would contain true value.' Bayesian says '95% probability parameter is in this interval.'" },
-                { q: "What is A/B testing and how do you analyze it?", a: "A/B testing compares two variants (control vs treatment) to determine which performs better. Process: 1) Define metric (conversion rate, revenue), 2) Calculate required sample size (power analysis: typically 80% power, α=0.05), 3) Randomly assign users 50/50, 4) Run until sample size reached, 5) Statistical test (two-sample t-test or z-test for proportions). Considerations: Multiple testing (Bonferroni correction), peeking (sequential testing inflates Type I error), novelty effects, sample ratio mismatch. Always report confidence intervals AND practical significance, not just p-values." },
-                { q: "Explain the Law of Large Numbers.", a: "LLN states that as sample size increases, the sample mean converges to the expected value (population mean). Two forms: Weak LLN - convergence in probability. Strong LLN - almost sure convergence. Intuition: Flip coin 10 times, might get 7 heads. Flip 1000 times, will be close to 50% heads. Flip 1,000,000 times, even closer. Key difference from CLT: LLN talks about the sample mean itself converging. CLT talks about the distribution of the sample mean (normal distribution). Both fundamental to statistics." },
-                { q: "What is bootstrapping and when would you use it?", a: "Bootstrapping estimates sampling distribution by resampling with replacement from observed data. Process: 1) Draw n samples with replacement from original data (some duplicates, some missing), 2) Calculate statistic (mean, median, etc.), 3) Repeat 1000-10000 times, 4) Analyze distribution of statistics. Use when: 1) No closed-form formula for standard error, 2) Distribution is non-normal/unknown, 3) Complex statistics (median, percentiles), 4) Small sample. Benefits: Distribution-free, flexible. Limitation: Assumes sample represents population well (garbage in, garbage out)." },
-                { q: "Explain covariance vs correlation.", a: "Covariance: Cov(X,Y) = E[(X-μ_X)(Y-μ_Y)]. Measures direction of linear relationship. Positive = both increase together, negative = inverse. Problem: Units depend on X and Y (hard to interpret). Correlation: ρ = Cov(X,Y)/(σ_X·σ_Y). Standardized covariance. Range [-1, 1]. ρ=1 perfect positive, ρ=-1 perfect negative, ρ=0 no linear relationship (but could be non-linear!). Unit-free, easier to interpret. Both only capture linear relationships - can have ρ=0 but strong non-linear relationship (e.g., Y=X²)." },
-                { q: "What is heteroskedasticity and why does it matter?", a: "Heteroskedasticity: Variance of errors is not constant across observations. Example: Income prediction - errors larger for high earners than low earners. Violates OLS assumption. Consequences: 1) Standard errors are incorrect (usually underestimated), 2) Hypothesis tests invalid (t-stats, p-values wrong), 3) Confidence intervals incorrect, 4) Coefficients still unbiased but not efficient. Detection: Plot residuals vs fitted values (funnel shape), Breusch-Pagan test, White test. Solutions: 1) Robust standard errors (White's correction), 2) Weighted Least Squares, 3) Transform dependent variable (log), 4) Use GLM or other models." },
-                { q: "Explain the Bonferroni correction.", a: "Problem: Multiple hypothesis tests increase family-wise error rate. If you do 20 tests at α=0.05, expecting 1 false positive (5% of 20). Probability of at least one false positive ≈ 1-(0.95)^20 = 64%! Bonferroni correction: Use α/m for each test, where m = number of tests. Example: 20 tests, want family-wise α=0.05, use 0.05/20=0.0025 for each test. Pros: Simple, controls Type I error. Cons: Very conservative, increases Type II error (low power). Less likely to detect real effects. Alternative: False Discovery Rate (FDR) via Benjamini-Hochberg, less conservative, controls proportion of false discoveries." },
-                { q: "What is the difference between parametric and non-parametric tests?", a: "Parametric tests assume specific distribution (usually normal) with fixed parameters. Examples: t-test, ANOVA, linear regression. Assumptions: normality, homogeneity of variance. Pros: More powerful if assumptions met, work with smaller samples. Non-parametric tests make minimal distribution assumptions, often rank-based. Examples: Mann-Whitney U, Wilcoxon signed-rank, Kruskal-Wallis, Spearman correlation. Pros: Robust to outliers, work with ordinal data, valid for non-normal distributions. Cons: Less powerful if parametric assumptions are met. When to use: Check normality (Shapiro-Wilk, Q-Q plot). If normal, use parametric. If not, use non-parametric or transform data." },
-                { q: "Explain multicollinearity and its impact.", a: "Multicollinearity: High correlation among predictor variables. Example: Include both 'height in inches' and 'height in cm' as predictors. Problems: 1) Inflated standard errors (coefficients unstable), 2) Coefficients change dramatically when variables added/removed, 3) Difficult to determine individual predictor effects, 4) Coefficients may have wrong signs. Model still predicts well (R² high) but interpretation is compromised. Detection: VIF (Variance Inflation Factor) > 10 indicates problem, correlation matrix among predictors. Solutions: 1) Remove redundant features, 2) Combine correlated features (PCA, domain knowledge), 3) Ridge regression (shrinks correlated coefficients)." },
-                { q: "What is statistical power?", a: "Power = P(reject H₀ | H₀ is false) = 1 - β (Type II error). Probability of correctly detecting a true effect. Example: New drug works, power = 0.8 means 80% chance you'll detect it as significant. Factors increasing power: 1) Larger sample size (most important), 2) Larger effect size (can't control), 3) Higher α (more false positives), 4) Lower variability (better measurement), 5) One-tailed vs two-tailed test. Power analysis: Before experiment, calculate required n for desired power (typically 80%). After experiment, if non-significant, calculate achieved power to know if it was just underpowered. Underpowered studies lead to many false negatives and unreliable research." },
-                { q: "Explain confidence intervals intuitively.", a: "A 95% CI means: If we repeated this study 100 times with new samples, 95 of the resulting intervals would contain the true parameter. NOT '95% probability true value is in this specific interval' (frequentist interpretation forbids probability statements about parameters). Better intuition: Range of plausible values for the parameter, given our data. Narrow CI = precise estimate (large n, low variance). Wide CI = uncertain estimate (small n, high variance). CI tells you both the estimate AND uncertainty. Better than just p-value which only says 'significant or not.' Example: Mean height = 170cm, 95% CI [165, 175]. We're fairly confident true mean is between 165-175, best guess is 170." },
-                { q: "What is the difference between standard deviation and standard error?", a: "Standard Deviation (SD): Measures spread of data points around mean. Population variability. Describes the data itself. Formula: √(Σ(x-x̄)²/(n-1)). Example: Heights have SD=10cm means most people within ±10cm of mean. Standard Error (SE): Measures uncertainty in sample mean estimate. SE = SD/√n. Describes sampling variability. As n increases, SE decreases (more precise estimate). Example: SE=2cm means our estimate of mean height could be off by ~2cm. Key: SD doesn't change with n (describes population). SE decreases with √n (describes estimation uncertainty). Use SD to describe data, SE for confidence intervals and hypothesis tests." }
+                { q: "What is a p-value and how do you interpret it?", a: "A p-value is the probability of observing data at least as extreme as what we got, assuming the null hypothesis is true. Low p-value (typically <0.05) suggests strong evidence against null hypothesis. NOT the probability that null is true. Common misconceptions: p=0.05 isn't a magical threshold, statistical significance ≠ practical significance." }
             ],
             'coding': [
                 { q: "Implement k-means clustering from scratch.", a: "def kmeans(X, k, max_iters=100):\n  centroids = X[np.random.choice(len(X), k, replace=False)]\n  for _ in range(max_iters):\n    distances = np.sqrt(((X[:, None] - centroids) ** 2).sum(axis=2))\n    labels = distances.argmin(axis=1)\n    new_centroids = np.array([X[labels == i].mean(axis=0) for i in range(k)])\n    if np.allclose(centroids, new_centroids): break\n    centroids = new_centroids\n  return labels, centroids" },
-                { q: "Write a function to compute cosine similarity.", a: "def cosine_similarity(a, b):\n  return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))\n\n# Range: [-1, 1]\n# 1 = identical direction\n# -1 = opposite\n# 0 = orthogonal" },
-                { q: "Implement gradient descent for linear regression.", a: "def gradient_descent(X, y, lr=0.01, epochs=1000):\n  m, n = X.shape\n  weights = np.zeros(n)\n  bias = 0\n  for epoch in range(epochs):\n    y_pred = X @ weights + bias\n    dw = (2/m) * X.T @ (y_pred - y)\n    db = (2/m) * np.sum(y_pred - y)\n    weights -= lr * dw\n    bias -= lr * db\n  return weights, bias" },
-                { q: "Implement logistic regression from scratch.", a: "def sigmoid(z):\n  return 1 / (1 + np.exp(-z))\n\ndef logistic_regression(X, y, lr=0.01, epochs=1000):\n  m, n = X.shape\n  weights = np.zeros(n)\n  bias = 0\n  for epoch in range(epochs):\n    z = X @ weights + bias\n    y_pred = sigmoid(z)\n    dw = (1/m) * X.T @ (y_pred - y)\n    db = (1/m) * np.sum(y_pred - y)\n    weights -= lr * dw\n    bias -= lr * db\n  return weights, bias\n\n# Binary cross-entropy loss: -(1/m)Σ[y*log(p) + (1-y)*log(1-p)]" },
-                { q: "Write code to handle imbalanced datasets.", a: "# Method 1: Class weights\nfrom sklearn.utils.class_weight import compute_class_weight\nweights = compute_class_weight('balanced', classes=np.unique(y), y=y)\nclass_weight_dict = dict(enumerate(weights))\nmodel = LogisticRegression(class_weight=class_weight_dict)\n\n# Method 2: SMOTE (oversampling minority)\nfrom imblearn.over_sampling import SMOTE\nsmote = SMOTE(random_state=42)\nX_res, y_res = smote.fit_resample(X_train, y_train)\n\n# Method 3: Adjust threshold\ny_proba = model.predict_proba(X_test)[:, 1]\nthreshold = 0.3  # Lower for minority class\ny_pred = (y_proba >= threshold).astype(int)" },
-                { q: "Implement mini-batch gradient descent.", a: "def mini_batch_gd(X, y, batch_size=32, lr=0.01, epochs=100):\n  m, n = X.shape\n  weights = np.zeros(n)\n  bias = 0\n  for epoch in range(epochs):\n    indices = np.random.permutation(m)\n    X_shuffled = X[indices]\n    y_shuffled = y[indices]\n    for i in range(0, m, batch_size):\n      X_batch = X_shuffled[i:i+batch_size]\n      y_batch = y_shuffled[i:i+batch_size]\n      y_pred = X_batch @ weights + bias\n      dw = (2/len(X_batch)) * X_batch.T @ (y_pred - y_batch)\n      db = (2/len(X_batch)) * np.sum(y_pred - y_batch)\n      weights -= lr * dw\n      bias -= lr * db\n  return weights, bias" },
-                { q: "Implement PCA from scratch.", a: "def pca(X, n_components):\n  # Center data\n  X_centered = X - np.mean(X, axis=0)\n  # Covariance matrix\n  cov_matrix = np.cov(X_centered.T)\n  # Eigenvalues and eigenvectors\n  eigenvalues, eigenvectors = np.linalg.eig(cov_matrix)\n  # Sort by eigenvalue descending\n  idx = eigenvalues.argsort()[::-1]\n  eigenvalues = eigenvalues[idx]\n  eigenvectors = eigenvectors[:, idx]\n  # Select top n_components\n  components = eigenvectors[:, :n_components]\n  X_transformed = X_centered @ components\n  explained_var = eigenvalues[:n_components] / eigenvalues.sum()\n  return X_transformed, components, explained_var" },
-                { q: "Implement k-fold cross-validation.", a: "def k_fold_cv(X, y, k=5, model_class=LogisticRegression):\n  n = len(X)\n  fold_size = n // k\n  indices = np.arange(n)\n  np.random.shuffle(indices)\n  scores = []\n  for i in range(k):\n    val_start = i * fold_size\n    val_end = (i + 1) * fold_size if i < k-1 else n\n    val_idx = indices[val_start:val_end]\n    train_idx = np.concatenate([indices[:val_start], indices[val_end:]])\n    X_train, y_train = X[train_idx], y[train_idx]\n    X_val, y_val = X[val_idx], y[val_idx]\n    model = model_class()\n    model.fit(X_train, y_train)\n    scores.append(model.score(X_val, y_val))\n  return np.mean(scores), np.std(scores)" },
-                { q: "Implement confusion matrix and metrics.", a: "def confusion_matrix(y_true, y_pred):\n  labels = sorted(set(y_true) | set(y_pred))\n  n = len(labels)\n  matrix = np.zeros((n, n), dtype=int)\n  label_to_idx = {label: idx for idx, label in enumerate(labels)}\n  for true, pred in zip(y_true, y_pred):\n    matrix[label_to_idx[true]][label_to_idx[pred]] += 1\n  return matrix\n\ndef binary_metrics(y_true, y_pred):\n  cm = confusion_matrix(y_true, y_pred)\n  tn, fp, fn, tp = cm.ravel()\n  precision = tp / (tp + fp) if (tp + fp) > 0 else 0\n  recall = tp / (tp + fn) if (tp + fn) > 0 else 0\n  f1 = 2 * (precision * recall) / (precision + recall) if (precision + recall) > 0 else 0\n  accuracy = (tp + tn) / (tp + tn + fp + fn)\n  return {'precision': precision, 'recall': recall, 'f1': f1, 'accuracy': accuracy}" },
-                { q: "Implement L2 regularization in gradient descent.", a: "def gradient_descent_l2(X, y, lambda_reg=0.01, lr=0.01, epochs=1000):\n  m, n = X.shape\n  weights = np.zeros(n)\n  bias = 0\n  for epoch in range(epochs):\n    y_pred = X @ weights + bias\n    # MSE loss\n    mse_loss = np.mean((y_pred - y) ** 2)\n    # L2 penalty\n    l2_penalty = lambda_reg * np.sum(weights ** 2)\n    total_loss = mse_loss + l2_penalty\n    # Gradients with regularization term\n    dw = (2/m) * X.T @ (y_pred - y) + 2 * lambda_reg * weights\n    db = (2/m) * np.sum(y_pred - y)\n    weights -= lr * dw\n    bias -= lr * db\n  return weights, bias\n\n# Note: Bias is NOT regularized" },
-                { q: "Implement feature scaling methods.", a: "# Standardization (Z-score): mean=0, std=1\ndef standardize(X):\n  mean = np.mean(X, axis=0)\n  std = np.std(X, axis=0)\n  return (X - mean) / std, mean, std\n\n# Min-Max Normalization: scale to [0, 1]\ndef normalize(X):\n  min_val = np.min(X, axis=0)\n  max_val = np.max(X, axis=0)\n  return (X - min_val) / (max_val - min_val), min_val, max_val\n\n# When: Standardization for most ML (SVM, neural nets)\n# Min-Max when need bounded values\n# Both: Fit on train, transform test with same params!" },
-                { q: "Implement train-test split with stratification.", a: "def stratified_split(X, y, test_size=0.2, random_state=None):\n  if random_state: np.random.seed(random_state)\n  classes = np.unique(y)\n  train_idx, test_idx = [], []\n  for cls in classes:\n    cls_indices = np.where(y == cls)[0]\n    np.random.shuffle(cls_indices)\n    n_test = int(len(cls_indices) * test_size)\n    test_idx.extend(cls_indices[:n_test])\n    train_idx.extend(cls_indices[n_test:])\n  return X[train_idx], X[test_idx], y[train_idx], y[test_idx]\n\n# Ensures train and test have same class distribution\n# Critical for imbalanced datasets!" },
-                { q: "Implement decision tree splitting (Gini impurity).", a: "def gini_impurity(y):\n  if len(y) == 0: return 0\n  _, counts = np.unique(y, return_counts=True)\n  probabilities = counts / len(y)\n  return 1 - np.sum(probabilities ** 2)\n\ndef information_gain(parent, left, right):\n  n = len(parent)\n  parent_gini = gini_impurity(parent)\n  weighted_child = (len(left)/n * gini_impurity(left) +\n                    len(right)/n * gini_impurity(right))\n  return parent_gini - weighted_child\n\ndef find_best_split(X, y, feature_idx):\n  values = X[:, feature_idx]\n  best_gain, best_threshold = -1, None\n  for threshold in np.unique(values):\n    left_mask = values <= threshold\n    gain = information_gain(y, y[left_mask], y[~left_mask])\n    if gain > best_gain:\n      best_gain, best_threshold = gain, threshold\n  return best_threshold, best_gain" },
-                { q: "Implement dropout layer.", a: "class DropoutLayer:\n  def __init__(self, dropout_rate=0.5):\n    self.dropout_rate = dropout_rate\n    self.mask = None\n  \n  def forward(self, x, training=True):\n    if not training:\n      return x\n    # Inverted dropout: scale during training\n    self.mask = np.random.binomial(1, 1-self.dropout_rate, size=x.shape)\n    return x * self.mask / (1-self.dropout_rate)\n  \n  def backward(self, grad_output):\n    return grad_output * self.mask / (1-self.dropout_rate)\n\n# During inference, dropout is off (use all neurons)\n# Inverted dropout scales during training so no change needed at test time" }
+                { q: "Write a function to compute cosine similarity.", a: "def cosine_similarity(a, b):\n  return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))\n\n# Range: [-1, 1]\n# 1 = identical direction\n# -1 = opposite\n# 0 = orthogonal" }
             ],
             'quant': [
                 { q: "Expected coin flips for two heads in a row?", a: "Let E = expected flips from start, E_H = expected flips after seeing one H. E = 1 + 0.5*E_H + 0.5*E (if T, restart). E_H = 1 + 0.5*0 + 0.5*E (if HH done, if HT restart). Solving: E_H = 1 + 0.5*E. Substituting: E = 1 + 0.5*(1 + 0.5*E) + 0.5*E = 1.5 + 0.75*E. Answer: E = 6 flips." },
-                { q: "Explain the Sharpe ratio.", a: "Sharpe Ratio = (R_p - R_f) / σ_p measures return per unit of total volatility. R_p = portfolio return, R_f = risk-free rate, σ_p = portfolio std dev. Higher is better. Drawback: treats upside and downside volatility equally. Alternative: Sortino ratio (uses only downside deviation)." },
-                { q: "What is Value at Risk (VaR)?", a: "VaR is the maximum loss expected over a time horizon at a given confidence level. 95% VaR of $1M means 5% chance of losing more than $1M. Limitations: 1) Doesn't capture tail risk beyond VaR, 2) Not subadditive, 3) No info about loss size beyond threshold. Alternative: CVaR (Expected Shortfall)." },
-                { q: "Derive Black-Scholes for European call.", a: "Assumptions: Geometric Brownian motion dS = μS dt + σS dW. Under risk-neutral measure: C = e^(-rT)E[max(S_T - K, 0)]. S_T is lognormal. Solving PDE: C = S₀N(d₁) - Ke^(-rT)N(d₂), where d₁ = [ln(S₀/K) + (r + σ²/2)T]/(σ√T), d₂ = d₁ - σ√T. N(·) is cumulative standard normal. Key: d₁ relates to delta, d₂ to probability of exercise." },
-                { q: "What is put-call parity?", a: "C - P = S - Ke^(-rT) for European options. Proof via arbitrage: Portfolio A (long call + cash K) and Portfolio B (long put + long stock) have identical payoffs at expiry T. Therefore must have same value today. If violated, arbitrage opportunity exists. With dividends: C - P = Se^(-qT) - Ke^(-rT). Practical use: If you know call price, can calculate put price (or vice versa)." },
-                { q: "Explain the Greeks: Delta, Gamma, Theta, Vega.", a: "Delta (Δ): ∂C/∂S, sensitivity to stock price. Call: 0 to 1, Put: -1 to 0. Use for hedging. Gamma (Γ): ∂²C/∂S², rate of delta change. Highest ATM near expiry. Theta (Θ): ∂C/∂t, time decay. Negative for long options. Vega (ν): ∂C/∂σ, sensitivity to volatility. Positive for long options. Portfolio hedging: Delta-neutral (Δ=0), Gamma-neutral (Γ=0) for stable hedge." },
-                { q: "What is the Kelly Criterion?", a: "Optimal bet size to maximize long-term wealth growth: f* = (pb - q)/b where p = win probability, q = loss probability, b = odds. Example: 60% win, even odds (b=1): f* = 0.6 - 0.4 = 0.2 (bet 20% of bankroll). Properties: Never bet if -EV, maximizes log utility. Criticism: Too aggressive, most use fractional Kelly (half Kelly). Requires accurate edge estimation - overestimate edge → ruin." },
-                { q: "Explain alpha vs beta.", a: "Beta (β): Systematic risk, sensitivity to market. β=1 moves with market, β>1 more volatile, β<1 less volatile. From regression: R_asset = α + β*R_market + ε. Alpha (α): Excess return beyond what beta predicts. α>0 = outperformance (skill or luck). In CAPM: E[R] = R_f + β(E[R_m] - R_f). Beta is free (buy index), alpha is what you pay managers for. Jensen's alpha measures this in CAPM framework." },
-                { q: "Coupon collector problem.", a: "You have n coupons. Draw with replacement. Expected draws to collect all? E[T] = n(1 + 1/2 + 1/3 + ... + 1/n) = n·H_n ≈ n·ln(n). For n=100: E[T] ≈ 100·5.187 ≈ 519. Intuition: First coupon instant. Second takes n/(n-1) draws on average. Third takes n/(n-2). Last takes n/1 = n draws. Sum these expectations. Asymptotic: n·ln(n) + γn where γ ≈ 0.5772 (Euler's constant)." },
-                { q: "Stick broken at two random points. Probability forms triangle?", a: "Let stick length = 1, break at points x, y uniform on [0,1]. Pieces: x, y-x, 1-y (assume x<y). Triangle inequality: each piece < sum of others. Conditions: x < 0.5, y > 0.5, y < 0.5+x. In unit square, this is triangle with vertices (0, 0.5), (0.5, 0.5), (0.5, 1). Area = 0.125. Total area for x<y is 0.5. Probability = 0.125/0.5 = 0.25 or 25%." },
-                { q: "Two envelopes paradox.", a: "One envelope has 2x the money of the other. You pick one, see amount X. Should you switch? Flawed reasoning: Other has 50% chance of 2X or 0.5X, so E = 1.25X > X, always switch! Problem: Can't apply this symmetrically. If amounts are (A, 2A) and you see X, either X=A (other is 2A) or X=2A (other is A). Probabilities aren't 50-50 over all X. Correct: Switching gives no advantage. No information gained from seeing amount." },
-                { q: "Gambler's ruin with positive expected value.", a: "Flip coin: heads win $2, tails lose $1. Start with $10, play infinitely. Probability of eventual ruin? E[X] = 0.5(2) + 0.5(-1) = 0.5 > 0. With positive drift and infinite time, probability of ruin = 0. With finite capital and one-sided boundary (can't go negative), eventually hit infinity with probability 1. Key: Positive expectation guarantees eventual infinite wealth despite local randomness. This is why Kelly betting matters - optimal growth rate." },
-                { q: "What is geometric Brownian motion?", a: "GBM: dS = μS dt + σS dW. Stock price model. Solution: S_t = S₀exp[(μ - σ²/2)t + σW_t]. Why for stocks: 1) Always positive (exponential), 2) Returns (not prices) normally distributed, 3) Constant percentage volatility, 4) Markov property. Log-returns: ln(S_t/S₀) ~ N((μ-σ²/2)t, σ²t). E[S_t] = S₀e^(μt). Limitations: Constant volatility (reality: volatility clustering), no jumps, normal returns (reality: fat tails)." },
-                { q: "Expected draws until first ace from deck?", a: "52 cards, 4 aces, sampling without replacement. Method: Imagine laying out all 52 cards. The 4 aces divide deck into 5 sections. By symmetry, each section has equal expected length: 52/5 = 10.4 cards. Expected position of first ace is 10.4. Alternative formula: (n+1)/(k+1) where n=52 cards, k=4 aces. Answer: 53/5 = 10.6 draws. General principle: For n items with k special, expected draw for first special ≈ (n+1)/(k+1)." },
-                { q: "Best-of-7 series: Team A 60% per game. Prob A wins series?", a: "A wins series if wins 4 before B wins 4. Cases: A wins in 4: 0.6⁴ = 0.1296. In 5: C(4,3)·0.6⁴·0.4 = 0.2074. In 6: C(5,3)·0.6⁴·0.4² = 0.2074. In 7: C(6,3)·0.6⁴·0.4³ = 0.1659. Total ≈ 71%. Formula: Σ(k=4 to 7) C(k-1,3)·0.6⁴·0.4^(k-4). Shows better team has higher series win probability than single game (60% → 71%). Longer series amplifies skill advantage." },
-                { q: "Explain volatility smile and its causes.", a: "Volatility smile: Implied volatility varies by strike, forming U-shape or smirk. Black-Scholes assumes constant volatility, but market shows: ATM options lower IV, OTM/ITM higher IV. Causes: 1) Fat tails - real returns more extreme than normal → OTM options more valuable, 2) Negative skew in equities (puts expensive) due to crash fear, 3) Supply/demand for protection. Equity markets: volatility smirk (asymmetric, puts > calls). FX markets: symmetric smile. Violation of B-S assumptions led to local volatility and stochastic volatility models (Heston)." },
-                { q: "What is a martingale in finance?", a: "Martingale: E[X_{t+1}|F_t] = X_t. Expected future value = current value (fair game). Examples: Random walk, Brownian motion. In finance: Under risk-neutral measure Q, discounted asset prices are martingales: e^(-rt)S_t. This is fundamental to no-arbitrage pricing. Derivative pricing: V_t = e^(-r(T-t))E^Q[Payoff|F_t]. Key insight: Can price without knowing true probabilities or risk preferences! Just use risk-free rate and take expectation under Q. Martingale Representation Theorem allows representing any martingale as stochastic integral." },
-                { q: "Coin flip game: heads double money, tails lose half. What happens long-term?", a: "After n flips with h heads, t tails: Wealth = W₀·2^h·0.5^t = W₀·2^(h-t). Expected value: E[W_n] = W₀·(0.5·2 + 0.5·0.5)^n = W₀·1.25^n → ∞. But geometric mean = √(2·0.5) = 1. Almost surely: ln(W_n)/n = 0.5[ln(2) + ln(0.5)] = 0.5·ln(1) = 0... wait, ln(2)≈0.693, ln(0.5)≈-0.693, average ≈ 0. Actually: 0.5·ln(2) + 0.5·ln(0.5) = 0.5·0.693 - 0.5·0.693 ≈ 0. Slight negative drift! You go broke with probability 1. Difference between expectation and typical outcome. This is why Kelly betting matters!" },
-                { q: "Physical vs risk-neutral probabilities.", a: "Physical (P-measure): Real-world probabilities. What actually happens. Includes risk premium. E^P[S_T] = S₀e^(μT) where μ > r. Used for: Portfolio optimization, risk management, forecasting. Risk-Neutral (Q-measure): Mathematical construct for pricing. All assets grow at risk-free rate r. E^Q[S_T] = S₀e^(rT). No risk premium. Used for: Derivative pricing. Girsanov theorem connects them: dW^Q = dW^P + [(μ-r)/σ]dt. Option price: V = e^(-rT)E^Q[Payoff]. Key: Q for pricing, P for trading decisions. No-arbitrage pricing doesn't need true probability!" },
-                { q: "Explain Itô's Lemma.", a: "Stochastic calculus chain rule. For f(t,X_t) where dX_t = μdt + σdW_t: df = [∂f/∂t + μ∂f/∂x + 0.5σ²∂²f/∂x²]dt + σ∂f/∂x dW_t. Key: Quadratic variation (dW_t)² = dt appears! This is unique to stochastic calculus. Classical calculus would have only first-order terms. Derivation: Taylor expand to second order, substitute dX = μdt + σdW, use (dW)² = dt. Used to derive Black-Scholes PDE. Example: For f(t,S) = ln(S) with dS = μS dt + σS dW, get d(ln S) = (μ - σ²/2)dt + σdW." }
+                { q: "Explain the Sharpe ratio.", a: "Sharpe Ratio = (R_p - R_f) / σ_p measures return per unit of total volatility. R_p = portfolio return, R_f = risk-free rate, σ_p = portfolio std dev. Higher is better. Drawback: treats upside and downside volatility equally. Alternative: Sortino ratio (uses only downside deviation)." }
             ],
             'genai': [
                 { q: "Explain the transformer architecture.", a: "Transformers use self-attention to process sequences in parallel. Key components: 1) Multi-head self-attention: Attention(Q,K,V) = softmax(QK^T/√d_k)V, 2) Position encoding (sine/cosine), 3) Feed-forward networks, 4) Layer normalization and residual connections. Why revolutionary: parallelizable, better long-range dependencies, scalable, transfer learning." },
-                { q: "What's the difference between GPT and BERT?", a: "GPT: Decoder-only, autoregressive, left-to-right. Training: next token prediction. Use: generation. BERT: Encoder-only, bidirectional. Training: masked language modeling (MLM). Use: classification, NER, Q&A. Key: GPT sees only past, BERT sees past+future. GPT better for generation, BERT for understanding. Modern: GPT-style models winning." },
-                { q: "Explain RLHF.", a: "RLHF aligns LLMs with human preferences. Steps: 1) Supervised fine-tuning on demonstrations, 2) Train reward model on human preference comparisons, 3) RL optimization (PPO) against reward model. Maximize: E[r(x,y)] - β·KL(π_θ||π_ref). KL penalty prevents drift. Used in ChatGPT, Claude. Benefits: reduces harmful outputs, improves helpfulness." },
-                { q: "What is RAG?", a: "RAG combines retrieval with generation. Process: 1) Query, 2) Retrieve relevant docs via embedding similarity, 3) Inject docs into prompt, 4) Generate answer. Benefits: reduces hallucinations, up-to-date info, citable sources, domain knowledge. Components: vector DB, embeddings, chunking, retrieval method." },
-                { q: "Explain temperature in sampling.", a: "Temperature scales logits before softmax: p_i = exp(z_i/T) / Σexp(z_j/T). Low T (→0): Sharpens distribution, deterministic, factual. T=0 is greedy. High T (>1): Flattens distribution, random, creative, risky. T=1: Standard softmax. Use: T~0.2 for facts, T~0.7-1.0 for creative writing, T~1.5+ for brainstorming. Related: top-p (nucleus) sampling." },
-                { q: "What are embeddings and their uses?", a: "Embeddings: Dense vector representations in high-dimensional space. Similar meanings → close vectors. Types: Token embeddings (words), sentence embeddings (whole text). Uses: 1) Semantic search (cosine similarity), 2) Clustering, 3) Classification features, 4) RAG retrieval, 5) Recommendations. Models: Word2Vec, GloVe, Sentence-BERT, OpenAI's ada-002. Dimensions: 384-1536 typically." },
-                { q: "Explain context window and its importance.", a: "Context window: Maximum tokens (input+output) LLM can process. GPT-3.5: 4k, GPT-4: 8k-128k, Claude: 100k-200k. Matters for: conversation length, document analysis, RAG chunk selection, prompt size. Challenges: Quadratic attention O(n²), memory. Solutions: Sliding window, sparse attention, retrieval (RAG), summarization, chunking. Long context models: Architectural changes, better position encodings (RoPE, ALiBi), flash attention." },
-                { q: "Explain LoRA for fine-tuning.", a: "LoRA (Low-Rank Adaptation): Efficient fine-tuning by adding trainable low-rank matrices to frozen weights. W' = W_frozen + αBA where B∈ℝ^(d×r), A∈ℝ^(r×d), r<<d. Benefits: 1) Train <1% params (huge savings), 2) Multiple adapters for one base, 3) Fast switching, 4) Preserves base quality. Hyperparams: rank r (4-32), alpha, target modules. Related: QLoRA (4-bit base + LoRA). Limitation: Performance gap vs full fine-tuning for some tasks." },
-                { q: "What is chain-of-thought prompting?", a: "CoT: Prompt LLMs to show reasoning steps before final answer. Technique: Add 'Let's think step by step' or provide examples with reasoning. Benefits: Better performance on complex reasoning (math, logic), interpretable, catches errors. Variants: Zero-shot CoT, few-shot CoT (examples), self-consistency (sample multiple, vote), tree-of-thoughts (explore branches). Example: Q: 'Roger has 5 balls, buys 2. How many?' CoT: 'Start with 5. Add 2. 5+2=7. Answer: 7.'" },
-                { q: "Compare open-source vs proprietary LLMs.", a: "Open-source (Llama, Mistral): Weights available, self-host, customizable. Pros: privacy, no API costs, fine-tunable, no limits, transparency. Cons: Need infrastructure, less capable, support burden. Proprietary (GPT-4, Claude): API-only. Pros: SOTA performance, managed infrastructure, updates, safety. Cons: API costs, privacy concerns, rate limits, vendor lock-in, black box. Use open for: sensitive data, self-hosting. Use proprietary for: best performance, quick prototyping. Trend: Gap narrowing (Llama 3, Mixtral competitive)." },
-                { q: "What is emergence in LLMs?", a: "Emergence: Abilities appearing suddenly at certain scales but not in smaller models. Examples: Few-shot learning (~13B params), chain-of-thought (~100B), complex instruction following, some math. Debate: True emergence or measurement artifact? Factors: Not just size - data quality, compute, architecture matter. Implications: Scaling laws suggest new capabilities with scale. Unpredictable which abilities emerge when. Important for AI safety (unexpected capabilities). Counter-view: Smooth improvements crossing thresholds in discrete metrics." },
-                { q: "Explain Mixture of Experts (MoE).", a: "MoE: Multiple expert sub-networks, router decides which experts to use per input. Architecture: Input → Router → Top-k experts → Aggregate. Benefits: 1) More params with similar compute (sparse activation), 2) Specialization, 3) Scalability. Example: Mixtral 8x7B (47B total, 13B active). Training: Router learns via differentiable gating, load balancing loss. Challenges: Load imbalance, training instability, inference complexity. vs Dense: MoE can match larger dense models with less compute." },
-                { q: "What is quantization in LLMs?", a: "Quantization: Reduce precision (float32 → int8) to decrease size and speed up inference. Types: 1) Post-training quantization, 2) Quantization-aware training, 3) Mixed precision. Levels: 16-bit (~0% loss), 8-bit (~1-2% loss, 75% size reduction), 4-bit (GPTQ, QLoRA) (~87% reduction, some degradation). Benefits: Fits larger models on consumer GPUs, faster, lower memory. Techniques: GPTQ, AWQ, GGML/GGUF. Use case: Deploy 70B models on single GPU. Trade-off: Size vs quality." },
-                { q: "How do you evaluate LLM performance?", a: "Varies by task. General: 1) Perplexity (lower = better language modeling), 2) BLEU (translation, generation), 3) ROUGE (summarization), 4) Human eval (quality, coherence, factuality), 5) Win-rate (A/B). Task-specific: Classification (accuracy, F1), Q&A (exact match, F1), generation (diversity, creativity). Safety: Toxicity scores, bias. Benchmarks: GLUE, SuperGLUE, MMLU, HumanEval (coding), TruthfulQA, BIG-bench. Challenges: Metrics don't capture all aspects, gaming benchmarks. Best: Combine automated + human eval + real use cases." },
-                { q: "Explain prompt engineering best practices.", a: "Key techniques: 1) Be specific (detailed instructions, context, constraints), 2) Few-shot (provide examples), 3) Chain-of-thought (step-by-step reasoning), 4) Role assignment ('You are expert...'), 5) Output format specification (JSON, bullets), 6) System messages (behavior/personality), 7) Break complex into steps, 8) Delimiters (###, XML) to separate sections, 9) Specify tone/style, 10) Iterative refinement. Anti-patterns: Vague, no examples, poor formatting. Advanced: Tree-of-thoughts, self-consistency, ReAct (reason+act)." },
-                { q: "Fine-tuning vs prompt engineering: when to use?", a: "Prompting: Craft input, no training. Pros: Fast, flexible, no GPU/data needed, cheap. Cons: Limited by base, context limits, inconsistent, expensive at scale. Use: Quick prototyping, simple tasks. Fine-tuning: Train on task data, updates weights. Pros: Better task performance, consistent, learns new facts/style, cheaper inference. Cons: Need data (100s-1000s), expensive training, catastrophic forgetting risk. Use: High volume, need consistency, have data, prompting insufficient. LoRA: Middle ground (train <1% params). Decision: Start prompting → few-shot → fine-tuning → LoRA for efficiency." },
-                { q: "Common LLM challenges and solutions.", a: "Hallucinations: Making up facts. Fix: RAG (ground in docs), temperature=0, citations, verification layer. Context overflow: Too much text. Fix: Summarize, chunk, sliding window, longer context models. Inconsistency: Different answers each time. Fix: temperature=0, structured output, voting. Prompt injection: User tricks model. Fix: Delimiters, content filtering, validation. Slow inference: Takes too long. Fix: Smaller model, quantization, caching, streaming, speculative decoding. High cost: API bills. Fix: Prompt compression, caching, smaller model for simple tasks, self-hosting, fine-tuning." }
+                { q: "What's the difference between GPT and BERT?", a: "GPT: Decoder-only, autoregressive, left-to-right. Training: next token prediction. Use: generation. BERT: Encoder-only, bidirectional. Training: masked language modeling (MLM). Use: classification, NER, Q&A. Key: GPT sees only past, BERT sees past+future. GPT better for generation, BERT for understanding. Modern: GPT-style models winning." }
             ]
         };
 
         const categories = {
             'ml-theory': { name: 'ML Theory', icon: '🧠', color: 'blue' },
+            'deep-learning': { name: 'Deep Learning', icon: '🔥', color: 'red' },
             'statistics': { name: 'Statistics', icon: '📊', color: 'green' },
             'coding': { name: 'Coding', icon: '💻', color: 'purple' },
             'quant': { name: 'Quant/Finance', icon: '📈', color: 'orange' },
